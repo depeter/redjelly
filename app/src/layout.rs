@@ -31,10 +31,14 @@ pub fn row_height(style: i32, has_title: bool) -> f32 {
     body + if has_title { ROW_TITLE } else { 0.0 }
 }
 
-/// Vertical offset that puts row `focus` at the top of the rows area.
+/// Vertical offset that puts row `focus` at the top of the rows area. A
+/// leading button row (home toolbar, Play/Resume) stays visible above it.
 pub fn scroll_y(rows: &[(i32, bool)], focus: usize) -> f32 {
     let top: f32 = rows.iter().take(focus).map(|&(s, t)| row_height(s, t) + ROW_SPACING).sum();
-    top
+    match rows.first() {
+        Some(&(STYLE_BUTTON, t)) if focus > 0 => (top - row_height(STYLE_BUTTON, t) - ROW_SPACING).max(0.0),
+        _ => top,
+    }
 }
 
 /// Whole cards that fit in a row at this window width.
@@ -74,6 +78,13 @@ mod tests {
         // 1280 wide: 48 left pad, 48 right margin → 7 posters of 160+16.
         assert_eq!(grid_columns(1280.0), 6);
         assert_eq!(visible_cards(1280.0, STYLE_POSTER), 7);
+    }
+
+    #[test]
+    fn leading_toolbar_stays_visible() {
+        let rows = [(STYLE_BUTTON, false), (STYLE_WIDE, true), (STYLE_POSTER, true)];
+        assert_eq!(scroll_y(&rows, 1), 0.0);
+        assert_eq!(scroll_y(&rows, 2), row_height(STYLE_WIDE, true) + ROW_SPACING);
     }
 
     #[test]

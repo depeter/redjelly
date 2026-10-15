@@ -75,6 +75,12 @@ fn main() {
     let wide = |s| Some(fake_image(288, 162, s));
     let poster = |s| Some(fake_image(160, 240, s));
     let rows = vec![
+        row("", 2, vec![
+            card("Search · or just type", "", None, -1.0, false),
+            card("Settings", "", None, -1.0, false),
+            card("AI subtitle jobs", "", None, -1.0, false),
+            card("Switch user", "", None, -1.0, false),
+        ]),
         row("Continue watching", 1, vec![
             card("Fate", "Billy the Kid · S01E06", wide(10), 0.23, false),
             card("A very long episode title that should elide", "Some Show · S03E11", wide(40), 0.8, false),
@@ -85,7 +91,7 @@ fn main() {
     ];
     ui.set_rows(ModelRc::new(VecModel::from(rows)));
     ui.set_header_visible(false);
-    ui.set_focus_row(0);
+    ui.set_focus_row(1);
     ui.set_focus_col(0);
     ui.set_toast("Arrow keys to move · Enter to open · ? for all keys".into());
     save(&window, &format!("{out}/home.png"));

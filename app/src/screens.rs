@@ -296,18 +296,20 @@ pub async fn home(c: &Client) -> anyhow::Result<Content> {
         ));
     }
     rows.retain(|r| !r.cards.is_empty());
-    // Reachable without keyboard shortcuts (controller, mouse).
-    rows.push(row(
-        "More",
-        STYLE_BUTTON,
+    // The same buttons on top (press Up from the first row) and at the
+    // bottom; focus still starts on the first content row.
+    let toolbar = || {
         vec![
-            button("Search", Target::Open(Source::Search { term: String::new() })),
+            button("Search · or just type", Target::Open(Source::Search { term: String::new() })),
             button("Settings", Target::Open(Source::Settings)),
             button("AI subtitle jobs", Target::Open(Source::Jobs)),
             button("Switch user", Target::SwitchUser),
-        ],
-    ));
-    Ok(Content { source: Source::Home, header: None, rows, focus: (0, 0), paging: None })
+        ]
+    };
+    rows.push(row("More", STYLE_BUTTON, toolbar()));
+    rows.insert(0, row("", STYLE_BUTTON, toolbar()));
+    let focus = if rows.len() > 1 { (1, 0) } else { (0, 0) };
+    Ok(Content { source: Source::Home, header: None, rows, focus, paging: None })
 }
 
 fn library_query(parent_id: &str, collection_type: Option<&str>) -> Vec<(String, String)> {

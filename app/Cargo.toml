@@ -1,0 +1,37 @@
+[package]
+name = "redjelly"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Native Jellyfin client"
+
+[dependencies]
+rj-core.workspace = true
+rj-jellyfin.workspace = true
+rj-player.workspace = true
+rj-subs.workspace = true
+rj-ai = { workspace = true, features = ["translate"] }
+rj-input.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+slint = { version = "1.18", features = ["raw-window-handle-06"] }
+glow = "0.18"
+raw-window-handle = "0.6"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
+reqwest.workspace = true
+serde_json.workspace = true
+zip = { version = "9", default-features = false, features = ["deflate"] }
+
+[build-dependencies]
+slint-build = "1.18"
+
+[target.'cfg(not(windows))'.dependencies]
+flate2 = "1"
+tar = "0.4"
+
+[target.'cfg(windows)'.dependencies]
+keyring-core = "1"
+windows-native-keyring-store = "1"

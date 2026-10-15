@@ -1,0 +1,21 @@
+[package]
+name = "rj-ai"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+# Translation (candle, pure Rust) is a feature so crates that only need the
+# pipeline types stay light. Whisper runs as the official whisper-cli binary.
+[features]
+translate = ["dep:candle-core", "dep:candle-nn", "dep:candle-transformers"]
+
+[dependencies]
+rj-core.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+unicode-normalization = "0.1"
+candle-core = { version = "0.11", optional = true }
+candle-nn = { version = "0.11", optional = true }
+candle-transformers = { version = "0.11", optional = true }

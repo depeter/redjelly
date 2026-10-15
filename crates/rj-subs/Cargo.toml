@@ -1,0 +1,19 @@
+[package]
+name = "rj-subs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+rj-core.workspace = true
+rj-jellyfin.workspace = true
+async-trait.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+chardetng = "0.1"
+zip = { version = "9", default-features = false, features = ["deflate"] }
+encoding_rs = "0.8"
+alass-core = "2"

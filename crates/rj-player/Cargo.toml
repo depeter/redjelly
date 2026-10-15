@@ -1,0 +1,12 @@
+[package]
+name = "rj-player"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+rj-core.workspace = true
+rj-input.workspace = true
+libmpv2 = "6"
+thiserror.workspace = true
+tracing.workspace = true

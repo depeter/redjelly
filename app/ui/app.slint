@@ -1,0 +1,887 @@
+// redjelly UI. Rust owns all state and focus: every key goes to `key`, which
+// maps it to an Action and updates the properties below (SPEC §4.1). Slint
+// only renders what it is given, so focus can never get lost in the UI.
+
+import { LineEdit, Button } from "std-widgets.slint";
+
+// Sizes here must match src/layout.rs, which computes scrolling.
+global Theme {
+    out property <color> bg: #0e0e12;
+    out property <color> card: #1c1c23;
+    out property <color> card-focus: #2b2b35;
+    out property <color> accent: #e5484d;
+    out property <color> text: #f4f4f5;
+    out property <color> muted: #a1a1aa;
+    out property <length> side-pad: 48px;
+    out property <length> gap: 16px;
+}
+
+export struct Card {
+    title: string,
+    subtitle: string,
+    image: image,
+    has-image: bool,
+    /// 0..1 resume position, negative = none.
+    progress: float,
+    played: bool,
+}
+
+/// style: 0 = poster (2:3), 1 = wide (16:9), 2 = button, 3 = setting
+/// (label + value).
+export struct Row {
+    title: string,
+    style: int,
+    cards: [Card],
+    /// Horizontal scroll, in cards.
+    scroll: int,
+}
+
+export struct Header {
+    title: string,
+    meta: string,
+    info: string,
+    overview: string,
+    backdrop: image,
+    has-backdrop: bool,
+}
+
+/// One line in the subtitle panel. Headers are not selectable.
+export struct PanelItem {
+    title: string,
+    detail: string,
+    badge: string,
+    header: bool,
+    dimmed: bool,
+}
+
+export struct KeyHelp {
+    key: string,
+    action: string,
+}
+
+component PlayIcon inherits Rectangle {
+    in property <bool> paused;
+    width: 18px;
+    height: 18px;
+    // Drawn as shapes: symbol glyphs are missing from many fonts.
+    if root.paused: HorizontalLayout {
+        spacing: 5px;
+        Rectangle { width: 5px; background: white; }
+        Rectangle { width: 5px; background: white; }
+    }
+    if !root.paused: Path {
+        width: 16px;
+        height: 18px;
+        commands: "M 0 0 L 16 9 L 0 18 Z";
+        fill: white;
+    }
+}
+
+component CardView inherits Rectangle {
+    in property <Card> card;
+    in property <int> style;
+    in property <bool> focused;
+    callback clicked();
+
+    property <length> img-w: style == 1 ? 288px : 160px;
+    property <length> img-h: style == 1 ? 162px : 240px;
+    width: style == 2 ? 220px : style == 3 ? 300px : img-w;
+    height: style == 2 ? 56px : style == 3 ? 72px : img-h + 52px;
+
+    if root.style == 3: Rectangle {
+        border-radius: 8px;
+        background: root.focused ? Theme.accent : Theme.card;
+        animate background { duration: 90ms; }
+        VerticalLayout {
+            padding-left: 16px;
+            padding-right: 16px;
+            alignment: center;
+            spacing: 4px;
+            Text {
+                text: root.card.title;
+                color: root.focused ? #ffffffd0 : Theme.muted;
+                font-size: 13px;
+                overflow: elide;
+            }
+            Text {
+                text: root.card.subtitle;
+                color: Theme.text;
+                font-size: 17px;
+                font-weight: 600;
+                overflow: elide;
+            }
+        }
+    }
+
+    if root.style == 2: Rectangle {
+        border-radius: 8px;
+        background: root.focused ? Theme.accent : Theme.card;
+        animate background { duration: 90ms; }
+        Text {
+            width: parent.width - 24px;
+            text: root.card.title;
+            color: Theme.text;
+            font-size: 17px;
+            font-weight: 600;
+            horizontal-alignment: center;
+            overflow: elide;
+        }
+    }
+
+    if root.style < 2: VerticalLayout {
+        spacing: 8px;
+        Rectangle {
+            width: root.img-w;
+            height: root.img-h;
+            border-radius: 8px;
+            clip: true;
+            background: root.focused ? Theme.card-focus : Theme.card;
+
+            if !root.card.has-image: Text {
+                width: parent.width - 24px;
+                text: root.card.title;
+                color: Theme.muted;
+                font-size: 16px;
+                wrap: word-wrap;
+                horizontal-alignment: center;
+            }
+            if root.card.has-image: Image {
+                width: parent.width;
+                height: parent.height;
+                source: root.card.image;
+                image-fit: cover;
+            }
+            if root.card.progress >= 0: Rectangle {
+                y: parent.height - 5px;
+                height: 5px;
+                background: #00000099;
+                Rectangle {
+                    x: 0;
+                    width: parent.width * clamp(root.card.progress, 0, 1);
+                    background: Theme.accent;
+                }
+            }
+            if root.card.played: Rectangle {
+                x: parent.width - 32px;
+                y: 8px;
+                width: 24px;
+                height: 24px;
+                border-radius: 12px;
+                background: Theme.accent;
+                Path {
+                    width: 14px;
+                    height: 14px;
+                    viewbox-width: 14;
+                    viewbox-height: 14;
+                    commands: "M 2 7 L 6 11 L 12 3";
+                    stroke: white;
+                    stroke-width: 2.5px;
+                }
+            }
+            // Focus ring drawn last so it sits above the image.
+            Rectangle {
+                border-radius: 8px;
+                border-width: root.focused ? 3px : 0px;
+                border-color: white;
+            }
+        }
+        VerticalLayout {
+            spacing: 2px;
+            Text {
+                text: root.card.title;
+                color: root.focused ? Theme.text : #d4d4d8;
+                font-size: 15px;
+                font-weight: 600;
+                overflow: elide;
+            }
+            Text {
+                text: root.card.subtitle;
+                color: Theme.muted;
+                font-size: 13px;
+                overflow: elide;
+            }
+        }
+    }
+
+    TouchArea {
+        clicked => { root.clicked(); }
+    }
+}
+
+/// Every browse-type screen: optional header plus rows of cards.
+component BrowseView inherits Rectangle {
+    in property <Header> header;
+    in property <bool> header-visible;
+    in property <[Row]> rows;
+    in property <int> focus-row;
+    in property <int> focus-col;
+    /// Vertical scroll of the rows area, computed in Rust.
+    in property <length> scroll-y;
+    callback card-clicked(int, int);
+
+    if root.header.has-backdrop: Image {
+        width: parent.width;
+        height: parent.height;
+        source: root.header.backdrop;
+        image-fit: cover;
+        opacity: 0.35;
+    }
+    if root.header.has-backdrop: Rectangle {
+        background: @linear-gradient(90deg, Theme.bg 0%, #0e0e12cc 45%, #0e0e1200 100%);
+    }
+
+    VerticalLayout {
+        padding-top: 32px;
+        spacing: 20px;
+
+        if root.header-visible: VerticalLayout {
+            padding-left: Theme.side-pad;
+            padding-right: Theme.side-pad;
+            spacing: 8px;
+            Text {
+                text: root.header.title;
+                color: Theme.text;
+                font-size: 36px;
+                font-weight: 700;
+                overflow: elide;
+            }
+            if root.header.meta != "": Text {
+                text: root.header.meta;
+                color: Theme.muted;
+                font-size: 16px;
+            }
+            if root.header.info != "": Text {
+                text: root.header.info;
+                color: #d4d4d8;
+                font-size: 14px;
+                wrap: word-wrap;
+            }
+            if root.header.overview != "": Text {
+                max-width: 900px;
+                max-height: 66px;
+                text: root.header.overview;
+                color: #d4d4d8;
+                font-size: 15px;
+                wrap: word-wrap;
+                overflow: elide;
+            }
+        }
+
+        Rectangle {
+            vertical-stretch: 1;
+            clip: true;
+            rows-layout := VerticalLayout {
+                y: -root.scroll-y;
+                animate y { duration: 140ms; }
+                height: self.preferred-height;
+                alignment: start;
+                padding-left: Theme.side-pad;
+                padding-bottom: 48px;
+                spacing: 24px;
+                for row[r] in root.rows: VerticalLayout {
+                    spacing: 10px;
+                    if row.title != "": Text {
+                        height: 26px;
+                        text: row.title;
+                        color: Theme.text;
+                        font-size: 20px;
+                        font-weight: 600;
+                    }
+                    Rectangle {
+                        height: row.style == 2 ? 56px : row.style == 3 ? 72px : (row.style == 1 ? 162px : 240px) + 52px;
+                        HorizontalLayout {
+                            x: -row.scroll * ((row.style == 1 ? 288px : row.style == 2 ? 220px : row.style == 3 ? 300px : 160px) + Theme.gap);
+                            animate x { duration: 140ms; }
+                            spacing: Theme.gap;
+                            alignment: start;
+                            for card[c] in row.cards: CardView {
+                                card: card;
+                                style: row.style;
+                                focused: r == root.focus-row && c == root.focus-col;
+                                clicked => { root.card-clicked(r, c); }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+component LoginForm inherits Rectangle {
+    in-out property <string> server-url;
+    in-out property <string> username;
+    in-out property <string> password;
+    in property <string> status;
+    /// 0 = server url, 1 = username, 2 = password.
+    in property <int> first-field;
+    callback login();
+
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            alignment: center;
+            VerticalLayout {
+                width: 440px;
+                spacing: 12px;
+                Text {
+                    text: "redjelly";
+                    font-size: 40px;
+                    font-weight: 700;
+                    color: Theme.accent;
+                    horizontal-alignment: center;
+                }
+                server := LineEdit {
+                    placeholder-text: "Server URL (https://jellyfin.example.com)";
+                    text <=> root.server-url;
+                    accepted => { user.focus(); }
+                }
+                user := LineEdit {
+                    placeholder-text: "Username";
+                    text <=> root.username;
+                    accepted => { pass.focus(); }
+                }
+                pass := LineEdit {
+                    placeholder-text: "Password";
+                    input-type: InputType.password;
+                    text <=> root.password;
+                    accepted => { root.login(); }
+                }
+                Button {
+                    text: "Sign in";
+                    primary: true;
+                    clicked => { root.login(); }
+                }
+                Text {
+                    text: root.status;
+                    color: Theme.muted;
+                    wrap: word-wrap;
+                    horizontal-alignment: center;
+                }
+                Text {
+                    text: "Esc: back to the user list";
+                    color: #71717a;
+                    font-size: 12px;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+    }
+
+    init => {
+        if root.first-field == 2 {
+            pass.focus();
+        } else if root.first-field == 1 {
+            user.focus();
+        } else {
+            server.focus();
+        }
+    }
+}
+
+component PromptView inherits Rectangle {
+    in property <string> title;
+    in property <string> description;
+    in property <bool> secret;
+    in-out property <string> value;
+    callback accepted();
+
+    VerticalLayout {
+        alignment: center;
+        HorizontalLayout {
+            alignment: center;
+            VerticalLayout {
+                width: min(560px, root.width - 64px);
+                spacing: 14px;
+                Text {
+                    text: root.title;
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: Theme.text;
+                }
+                if root.description != "": Text {
+                    text: root.description;
+                    color: Theme.muted;
+                    font-size: 15px;
+                    wrap: word-wrap;
+                }
+                input := LineEdit {
+                    text <=> root.value;
+                    input-type: root.secret ? InputType.password : InputType.text;
+                    accepted => { root.accepted(); }
+                }
+                Text {
+                    text: "Enter to save · Esc to cancel";
+                    color: #71717a;
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+
+    init => { input.focus(); }
+}
+
+component QuickConnectView inherits Rectangle {
+    in property <string> code;
+    VerticalLayout {
+        alignment: center;
+        spacing: 16px;
+        padding: 48px;
+        Text {
+            text: "Quick Connect";
+            font-size: 28px;
+            color: Theme.text;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.code == "" ? "…" : root.code;
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: 12px;
+            color: Theme.accent;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "On a device where you're signed in, open Jellyfin, go to your profile → Quick Connect, and enter this code.";
+            color: Theme.muted;
+            font-size: 16px;
+            wrap: word-wrap;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: "Esc to cancel";
+            color: #71717a;
+            font-size: 13px;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+// Drawn on top of the mpv video. Nothing here may be opaque full-screen,
+// or it would hide the video underlay.
+component PlayerOverlay inherits Rectangle {
+    in property <string> title;
+    in property <string> time-text;
+    in property <float> progress;
+    in property <bool> paused;
+    in property <bool> osd-visible;
+    in property <string> stats;
+    in property <string> skip-label;
+    in property <string> next-label;
+    callback clicked();
+    callback double-clicked();
+    callback pointer-moved();
+
+    TouchArea {
+        // Hide the cursor while watching (projector-friendly).
+        mouse-cursor: root.osd-visible || root.paused ? MouseCursor.default : MouseCursor.none;
+        clicked => { root.clicked(); }
+        double-clicked => { root.double-clicked(); }
+        moved => { root.pointer-moved(); }
+    }
+
+    if root.osd-visible || root.paused: Rectangle {
+        y: parent.height - 96px;
+        height: 96px;
+        background: @linear-gradient(0deg, #000000d0 0%, #00000000 100%);
+        VerticalLayout {
+            padding: 20px;
+            padding-top: 16px;
+            spacing: 10px;
+            HorizontalLayout {
+                spacing: 12px;
+                VerticalLayout {
+                    alignment: center;
+                    PlayIcon {
+                        paused: root.paused;
+                    }
+                }
+                Text {
+                    text: root.title;
+                    color: white;
+                    font-size: 18px;
+                    font-weight: 600;
+                    overflow: elide;
+                    horizontal-stretch: 1;
+                }
+                Text {
+                    text: root.time-text;
+                    color: #d4d4d8;
+                    font-size: 16px;
+                }
+            }
+            Rectangle {
+                height: 4px;
+                border-radius: 2px;
+                background: #ffffff40;
+                Rectangle {
+                    x: 0;
+                    width: parent.width * clamp(root.progress, 0, 1);
+                    height: parent.height;
+                    border-radius: 2px;
+                    background: Theme.accent;
+                }
+            }
+        }
+    }
+
+    if root.next-label != "": Rectangle {
+        x: parent.width - self.width - 32px;
+        y: parent.height - self.height - 120px;
+        width: min(560px, parent.width - 64px);
+        height: next-text.preferred-height + 32px;
+        border-radius: 10px;
+        background: #000000d8;
+        border-width: 2px;
+        border-color: Theme.accent;
+        next-text := Text {
+            x: 20px;
+            width: parent.width - 40px;
+            text: root.next-label;
+            color: white;
+            font-size: 17px;
+            wrap: word-wrap;
+        }
+    }
+
+    if root.skip-label != "": Rectangle {
+        x: parent.width - self.width - 32px;
+        y: parent.height - 160px;
+        width: skip-text.preferred-width + 40px;
+        height: 48px;
+        border-radius: 8px;
+        background: #ffffffe6;
+        skip-text := Text {
+            text: root.skip-label;
+            color: black;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+
+    if root.stats != "": Rectangle {
+        x: 16px;
+        y: 16px;
+        width: stats-text.preferred-width + 24px;
+        height: stats-text.preferred-height + 24px;
+        background: #000000b0;
+        border-radius: 6px;
+        stats-text := Text {
+            x: 12px;
+            y: 12px;
+            text: root.stats;
+            color: white;
+            font-size: 13px;
+            font-family: "Consolas";
+        }
+    }
+}
+
+// Right-hand drawer over the video (S in the player).
+component SubtitlePanel inherits Rectangle {
+    in property <string> title;
+    in property <string> status;
+    in property <[PanelItem]> items;
+    in property <int> current;
+    callback item-clicked(int);
+
+    background: #0b0b0efc;
+
+    TouchArea { }
+
+    VerticalLayout {
+        padding: 28px;
+        spacing: 12px;
+        Text {
+            text: root.title;
+            color: Theme.text;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        Text {
+            text: root.status;
+            color: Theme.muted;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+        list := Rectangle {
+            vertical-stretch: 1;
+            clip: true;
+            property <length> item-h: 60px;
+            VerticalLayout {
+                // Keep the focused line roughly centred.
+                y: -max(0px, min(root.current * list.item-h - list.height / 2 + list.item-h, root.items.length * list.item-h - list.height));
+                animate y { duration: 120ms; }
+                height: root.items.length * list.item-h;
+                for item[i] in root.items: Rectangle {
+                    height: list.item-h;
+                    border-radius: 6px;
+                    background: i == root.current && !item.header ? Theme.accent : transparent;
+                    if item.header: Text {
+                        x: 4px;
+                        y: parent.height - self.height - 6px;
+                        text: item.title;
+                        color: Theme.muted;
+                        font-size: 13px;
+                        font-weight: 700;
+                    }
+                    if !item.header: HorizontalLayout {
+                        padding-left: 12px;
+                        padding-right: 12px;
+                        spacing: 10px;
+                        VerticalLayout {
+                            alignment: center;
+                            horizontal-stretch: 1;
+                            Text {
+                                text: item.title;
+                                color: item.dimmed ? #71717a : Theme.text;
+                                font-size: 15px;
+                                font-weight: 600;
+                                overflow: elide;
+                            }
+                            if item.detail != "": Text {
+                                text: item.detail;
+                                color: i == root.current ? #ffffffd0 : Theme.muted;
+                                font-size: 12px;
+                                overflow: elide;
+                            }
+                        }
+                        if item.badge != "": VerticalLayout {
+                            alignment: center;
+                            Rectangle {
+                                width: badge-text.preferred-width + 14px;
+                                height: 22px;
+                                border-radius: 11px;
+                                background: i == root.current ? #ffffff40 : #ffffff1a;
+                                badge-text := Text {
+                                    text: item.badge;
+                                    color: Theme.text;
+                                    font-size: 11px;
+                                    font-weight: 600;
+                                }
+                            }
+                        }
+                    }
+                    TouchArea {
+                        clicked => { root.item-clicked(i); }
+                    }
+                }
+            }
+        }
+        Text {
+            text: "↑↓ choose · Enter select · Esc close";
+            color: #71717a;
+            font-size: 12px;
+        }
+    }
+}
+
+component KeyHelpOverlay inherits Rectangle {
+    in property <string> title;
+    in property <[KeyHelp]> keys;
+    background: #0b0b0ef8;
+
+    TouchArea { }
+
+    VerticalLayout {
+        padding: 48px;
+        spacing: 20px;
+        Text {
+            text: root.title;
+            color: Theme.text;
+            font-size: 26px;
+            font-weight: 700;
+        }
+        keys-area := Rectangle {
+            vertical-stretch: 1;
+            // Three columns, filled top to bottom.
+            property <int> per-col: max(1, ceil(root.keys.length / 3));
+            property <length> col-w: (self.width - 2 * 24px) / 3;
+            for k[i] in root.keys: Rectangle {
+                x: floor(i / keys-area.per-col) * (keys-area.col-w + 24px);
+                y: mod(i, keys-area.per-col) * 26px;
+                width: keys-area.col-w;
+                height: 26px;
+                Text {
+                    x: 0;
+                    width: 130px;
+                    text: k.key;
+                    color: Theme.accent;
+                    font-size: 14px;
+                    font-weight: 600;
+                    horizontal-alignment: right;
+                }
+                Text {
+                    x: 142px;
+                    width: parent.width - 142px;
+                    text: k.action;
+                    color: #e4e4e7;
+                    font-size: 14px;
+                    overflow: elide;
+                }
+            }
+        }
+        Text {
+            text: "Press any key to close";
+            color: Theme.muted;
+            font-size: 13px;
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    title: "redjelly";
+    preferred-width: 1280px;
+    preferred-height: 720px;
+    min-width: 640px;
+    min-height: 400px;
+    background: Theme.bg;
+
+    /// 1 = browse, 2 = player, 3 = login form, 4 = quick connect, 5 = prompt.
+    in property <int> screen: 1;
+
+    // Browse
+    in property <Header> header;
+    in property <bool> header-visible;
+    in property <[Row]> rows;
+    in property <int> focus-row;
+    in property <int> focus-col;
+    in property <length> scroll-y;
+
+    // Login
+    in-out property <string> server-url;
+    in-out property <string> username;
+    in-out property <string> password;
+    in property <string> status;
+    in property <int> login-first-field;
+    in property <string> quick-connect-code;
+
+    // Player
+    in property <string> player-title;
+    in property <string> player-time;
+    in property <float> player-progress;
+    in property <bool> player-paused;
+    in property <bool> player-osd;
+    in property <string> player-stats;
+    in property <string> player-skip;
+    in property <string> player-next;
+
+    // Prompt (text input for settings)
+    in property <string> prompt-title;
+    in property <string> prompt-description;
+    in property <bool> prompt-secret;
+    in-out property <string> prompt-value;
+
+    // Subtitle panel
+    in property <bool> panel-visible;
+    in property <string> panel-title;
+    in property <string> panel-status;
+    in property <[PanelItem]> panel-items;
+    in property <int> panel-focus;
+
+    // Overlays
+    in property <string> toast;
+    in property <bool> keyhelp-visible;
+    in property <string> keyhelp-title;
+    in property <[KeyHelp]> keyhelp;
+
+    callback login();
+    /// (text, ctrl, alt, shift) -> handled
+    callback key(string, bool, bool, bool) -> bool;
+    callback card-clicked(int, int);
+    callback player-clicked();
+    callback player-double-clicked();
+    callback player-pointer-moved();
+    callback panel-item-clicked(int);
+    callback prompt-accepted();
+
+    forward-focus: keys;
+    keys := FocusScope {
+        key-pressed(event) => {
+            // In the login form the line edits own the keyboard; only Esc
+            // bubbles up to here.
+            if ((root.screen == 3 || root.screen == 5) && event.text != Key.Escape) {
+                return reject;
+            }
+            return root.key(event.text, event.modifiers.control, event.modifiers.alt, event.modifiers.shift) ? accept : reject;
+        }
+
+        if root.screen == 1: BrowseView {
+            header: root.header;
+            header-visible: root.header-visible;
+            rows: root.rows;
+            focus-row: root.focus-row;
+            focus-col: root.focus-col;
+            scroll-y: root.scroll-y;
+            card-clicked(r, c) => { root.card-clicked(r, c); }
+        }
+        if root.screen == 2: PlayerOverlay {
+            title: root.player-title;
+            time-text: root.player-time;
+            progress: root.player-progress;
+            paused: root.player-paused;
+            osd-visible: root.player-osd;
+            stats: root.player-stats;
+            skip-label: root.player-skip;
+            next-label: root.player-next;
+            clicked => { root.player-clicked(); }
+            double-clicked => { root.player-double-clicked(); }
+            pointer-moved => { root.player-pointer-moved(); }
+        }
+        if root.screen == 3: LoginForm {
+            server-url <=> root.server-url;
+            username <=> root.username;
+            password <=> root.password;
+            status: root.status;
+            first-field: root.login-first-field;
+            login => { root.login(); }
+        }
+        if root.screen == 4: QuickConnectView {
+            code: root.quick-connect-code;
+        }
+        if root.screen == 5: PromptView {
+            title: root.prompt-title;
+            description: root.prompt-description;
+            secret: root.prompt-secret;
+            value <=> root.prompt-value;
+            accepted => { root.prompt-accepted(); }
+        }
+    }
+
+    if root.panel-visible: SubtitlePanel {
+        x: parent.width - self.width;
+        width: min(600px, parent.width * 0.5);
+        title: root.panel-title;
+        status: root.panel-status;
+        items: root.panel-items;
+        current: root.panel-focus;
+        item-clicked(i) => { root.panel-item-clicked(i); }
+    }
+
+    if root.keyhelp-visible: KeyHelpOverlay {
+        title: root.keyhelp-title;
+        keys: root.keyhelp;
+    }
+
+    // Top-centre so it never covers the player's bottom bar.
+    if root.toast != "": Rectangle {
+        y: 24px;
+        width: min(parent.width - 48px, toast-text.preferred-width + 32px);
+        height: toast-text.preferred-height + 20px;
+        border-radius: 8px;
+        background: #000000c8;
+        toast-text := Text {
+            width: parent.width - 32px;
+            text: root.toast;
+            color: white;
+            font-size: 15px;
+            wrap: word-wrap;
+            horizontal-alignment: center;
+        }
+    }
+
+    public function focus-keys() {
+        keys.focus();
+    }
+}

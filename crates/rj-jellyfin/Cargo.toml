@@ -1,0 +1,18 @@
+[package]
+name = "rj-jellyfin"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+reqwest.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+base64.workspace = true
+url = "2"
+
+[dev-dependencies]
+tokio.workspace = true
+wiremock = "0.6"

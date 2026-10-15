@@ -45,7 +45,11 @@ Subtitles (S in the player)
   Enter downloads: it is auto-synced against another subtitle track of the
   video, loaded right away, and uploaded to Jellyfin for every device.
   When your first language is missing, the search runs by itself at start.
-  Z/X delay is remembered per subtitle. Ctrl+Z auto-syncs the current one.
+  Z/X delay is remembered per subtitle. Ctrl+Z auto-syncs the current one:
+  against another subtitle track if the video has one, otherwise against
+  the speech in the audio (takes a minute the first time per video; needs a
+  ~10 MB download once). Downloads without another track to align to are
+  re-synced to the audio in the background and swapped in automatically.
 
 AI subtitles
   Movie/episode page: "AI Dutch subtitles" button (when Dutch is missing).
@@ -54,8 +58,10 @@ AI subtitles
   "Translate English subtitle to Dutch". Ctrl+J shows the job list (Enter on
   a running job cancels it). Results are uploaded to Jellyfin and load
   automatically if you're watching that item.
-  If an English subtitle exists it is translated (fast, keeps timing);
-  otherwise Whisper transcribes the audio on your NVIDIA GPU.
+  If an English/Spanish/German subtitle exists it is translated (fast, keeps
+  timing); otherwise Whisper transcribes the audio on your NVIDIA GPU.
+  Films that mix languages work: every line is translated from its own
+  language (English, Spanish, German directly; others via English).
   FIRST USE downloads ~1.5 GB into %LOCALAPPDATA%\redjelly\data\models:
     whisper.cpp CUDA 12 package (~675 MB), Whisper large-v3-turbo (~575 MB),
     English->Dutch translation model (~320 MB).

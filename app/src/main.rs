@@ -8,6 +8,7 @@
 #![cfg_attr(windows, windows_subsystem = "windows")]
 
 mod ai;
+mod audio;
 mod gl_state;
 mod images;
 mod layout;

@@ -23,9 +23,39 @@ pub fn wrap(text: &str) -> String {
     }
 }
 
-/// Drops empty and repeated hallucination lines, enforces min/max duration
-/// without overlapping the next cue, and wraps text.
+/// Splits a cue that's on screen too long into parts at a natural break
+/// (sentence end, else comma, else a space near the middle), sharing the
+/// time by text length, so text stays up while it is spoken.
+fn split_long(c: Cue) -> Vec<Cue> {
+    let dur = c.end_ms.saturating_sub(c.start_ms);
+    let text = c.text.split_whitespace().collect::<Vec<_>>().join(" ");
+    if dur <= MAX_MS || text.chars().count() < 20 {
+        return vec![Cue { text, ..c }];
+    }
+    let mid = text.len() / 2;
+    let best = |pred: &dyn Fn(char) -> bool| {
+        text.char_indices()
+            .filter(|&(i, ch)| pred(ch) && i > text.len() / 5 && i < text.len() * 4 / 5)
+            .map(|(i, ch)| i + ch.len_utf8())
+            .min_by_key(|i| i.abs_diff(mid))
+    };
+    let Some(cut) = best(&|ch| matches!(ch, '.' | '?' | '!'))
+        .or_else(|| best(&|ch| matches!(ch, ',' | ';' | ':')))
+        .or_else(|| best(&|ch| ch == ' '))
+    else {
+        return vec![Cue { text, ..c }];
+    };
+    let (a, b) = (text[..cut].trim().to_owned(), text[cut..].trim().to_owned());
+    let split_at = c.start_ms + dur * a.len() as u64 / (a.len() + b.len()).max(1) as u64;
+    let mut out = split_long(Cue { start_ms: c.start_ms, end_ms: split_at, text: a });
+    out.extend(split_long(Cue { start_ms: split_at, end_ms: c.end_ms, text: b }));
+    out
+}
+
+/// Drops empty and repeated hallucination lines, splits over-long cues,
+/// enforces min/max duration without overlapping the next cue, and wraps text.
 pub fn clean(cues: Vec<Cue>) -> Vec<Cue> {
+    let cues: Vec<Cue> = cues.into_iter().flat_map(split_long).collect();
     let mut out: Vec<Cue> = Vec::with_capacity(cues.len());
     for c in cues {
         let text = c.text.trim();
@@ -112,6 +142,20 @@ mod tests {
         let lines: Vec<_> = w.lines().collect();
         assert_eq!(lines.len(), 2);
         assert!(lines.iter().all(|l| l.len() <= MAX_LINE));
+    }
+
+    #[test]
+    fn splits_long_cues_instead_of_cutting_them() {
+        let out = clean(vec![cue(
+            290,
+            10_410,
+            "And so, my fellow Americans, ask not what your country can do for you, ask what you can do for your country.",
+        )]);
+        assert_eq!(out.len(), 2, "{out:?}");
+        assert_eq!(out[0].start_ms, 290);
+        assert_eq!(out[1].end_ms, 7_000.min(10_410 - out[1].start_ms) + out[1].start_ms);
+        assert!(out[0].text.ends_with("for you,"), "{out:?}");
+        assert!(out.iter().all(|c| c.end_ms - c.start_ms <= MAX_MS));
     }
 
     #[test]

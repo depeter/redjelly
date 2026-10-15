@@ -247,9 +247,13 @@ group, resolution, edition). 3. Not hearing-impaired (unless `prefer_sdh`).
 - Manual: Z/X ±100 ms, Shift for ±1 s. Stored per item+subtitle in the state DB and
   reapplied; option "apply permanently" rewrites timings and re-uploads.
 - Auto: `alass-core` aligns subtitle timespans to a reference — (a) another text sub
-  track in the same file, else (b) voice activity from the audio (16 kHz mono, VAD
-  over extracted audio — shares extraction with §7). Result is rewritten and
-  re-uploaded (replacing the old file).
+  track in the same file (instant), else (b) speech detected in the audio: the audio
+  track in the subtitle's language (else the default track) is extracted (server
+  audio-only transcode, §7) and run through whisper.cpp's
+  `whisper-vad-speech-segments` (Silero VAD, CPU package ~10 MB). Speech spans are
+  cached per item+track. Downloads load immediately, re-sync to the audio in the
+  background, swap the synced version in and upload that one. Ctrl+Z applies the
+  result as a remembered subtitle delay.
 
 ### 6.5 Style overrides
 Font, size, colour, outline/shadow, bottom margin, background box. Mapped to mpv
@@ -272,12 +276,16 @@ Pipeline, run as a cancellable background job with progress:
    CUDA 12 package on Windows (`ai.whisper_runtime = "cuda11"` / `"cpu"` alternatives),
    JSON output parsed for cue times. Default model `large-v3-turbo` (q5_0). Language =
    audio track language (auto-detect if unknown). Silero VAD on.
-3. **Translation** (if target ≠ spoken language) — Opus-MT (MarianMT) via `candle` on
-   CPU, safetensors weights + a pure-Rust SentencePiece reader: direct pair
-   (`opus-mt-en-nl`, the only pair for now), otherwise Whisper's `translate` to English,
-   then en→target (pivot). Line by line (fast enough: ~0.3 s/line).
-4. **Post-process** — max 42 chars/line, 2 lines, min 1 s / max 7 s per cue, merge
-   tiny cues, strip repeated hallucination lines.
+3. **Translation, per line** — films mix languages, so Whisper always transcribes
+   (never its translate mode, which large-v3-turbo can't do), each line is
+   language-detected (`whatlang`, restricted to common languages, uncertain lines
+   follow their neighbours or the audio track's language), and translated with
+   Opus-MT (MarianMT) via `candle` on CPU: direct en/es/de→nl, anything else via
+   `opus-mt-mul-en` then en→nl. Models are fetched only for languages found.
+   Safetensors weights from the official conversion-bot PRs, pure-Rust SentencePiece.
+4. **Post-process** — max 42 chars/line, 2 lines, min 1 s / max 7 s per cue (longer
+   cues are split at a sentence/clause break with time shared by length, not cut
+   short), strip repeated hallucination lines.
 5. **Save** — upload as `nl` subtitle; record in the state DB as AI-generated (shown with
    an "AI" badge in the track menu, since the server has no field for it).
 

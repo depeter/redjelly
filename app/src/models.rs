@@ -14,16 +14,50 @@ use rj_core::lang::Lang;
 const WHISPER_RELEASE: &str = "b5130";
 const VAD_MODEL: &str = "ggml-silero-v5.1.2.bin";
 
-/// Opus-MT pairs we know how to fetch: (from, to, repo, files revision,
-/// safetensors revision). The original repos only ship legacy torch
-/// weights; the safetensors file comes from the conversion PR.
-const OPUS_PAIRS: &[(&str, &str, &str, &str, &str)] = &[(
-    "en",
-    "nl",
-    "Helsinki-NLP/opus-mt-en-nl",
-    "8aad73b34ff36c090e7fc8a2eb7e2e7cca235d31",
-    "cb106147f56946f00045d2f9768539949e660489",
-)];
+/// An Opus-MT model we know how to fetch. The original repos only ship
+/// legacy torch weights; `model.safetensors` comes from the official
+/// conversion bot's pull request (`st_rev`).
+#[derive(Debug, PartialEq)]
+pub struct OpusModel {
+    /// `None`: multilingual source (any language → `to`).
+    pub from: Option<&'static str>,
+    pub to: &'static str,
+    repo: &'static str,
+    rev: &'static str,
+    st_rev: &'static str,
+}
+
+const OPUS: &[OpusModel] = &[
+    OpusModel {
+        from: Some("en"),
+        to: "nl",
+        repo: "Helsinki-NLP/opus-mt-en-nl",
+        rev: "8aad73b34ff36c090e7fc8a2eb7e2e7cca235d31",
+        st_rev: "cb106147f56946f00045d2f9768539949e660489",
+    },
+    OpusModel {
+        from: Some("es"),
+        to: "nl",
+        repo: "Helsinki-NLP/opus-mt-es-nl",
+        rev: "f04335f1ef73b36571b410a68112dcf61d26994a",
+        st_rev: "a58e172a49dbedcb0893bb22ec01fe5e70d3a0bb",
+    },
+    OpusModel {
+        from: Some("de"),
+        to: "nl",
+        repo: "Helsinki-NLP/opus-mt-de-nl",
+        rev: "cff6d195ed0708e0ca965c4401372af990462e82",
+        st_rev: "5730380ccd37c893eae517cb17f997951926cc68",
+    },
+    // Everything else reaches Dutch via English.
+    OpusModel {
+        from: None,
+        to: "en",
+        repo: "Helsinki-NLP/opus-mt-mul-en",
+        rev: "848eae0c1676cfce9bb791c200e8228e5a6396ff",
+        st_rev: "f5c88837d58e937af4fa5a77015027305e4226f5",
+    },
+];
 
 #[derive(Debug, Clone)]
 pub struct Models {
@@ -55,7 +89,43 @@ impl Models {
     }
 
     fn runtime_dir(&self) -> PathBuf {
-        self.root.join(format!("whisper-{WHISPER_RELEASE}-{}", self.runtime))
+        self.runtime_dir_for(&self.runtime)
+    }
+
+    fn runtime_dir_for(&self, runtime: &str) -> PathBuf {
+        self.root.join(format!("whisper-{WHISPER_RELEASE}-{runtime}"))
+    }
+
+    /// whisper.cpp's voice-detection tool: from the installed package, or
+    /// the small CPU package (VAD doesn't need the GPU).
+    pub fn vad_tool(&self) -> Option<PathBuf> {
+        let name = if cfg!(windows) { "whisper-vad-speech-segments.exe" } else { "whisper-vad-speech-segments" };
+        find_file(&self.runtime_dir(), name, 3).or_else(|| find_file(&self.runtime_dir_for("cpu"), name, 3))
+    }
+
+    /// Downloads what audio sync needs (~10 MB): the CPU package and the VAD model.
+    pub async fn ensure_vad(
+        &self,
+        http: &reqwest::Client,
+        status: &(dyn Fn(String, f32) + Send + Sync),
+        cancel: &AtomicBool,
+    ) -> anyhow::Result<()> {
+        if self.vad_tool().is_none() {
+            fetch(http, &self.package_download("cpu"), status, cancel).await?;
+        }
+        if !self.vad_model().exists() {
+            fetch(http, &self.vad_download(), status, cancel).await?;
+        }
+        Ok(())
+    }
+
+    fn vad_download(&self) -> Download {
+        Download {
+            label: "voice detection model".into(),
+            url: format!("https://huggingface.co/ggml-org/whisper-vad/resolve/main/{VAD_MODEL}"),
+            dest: self.vad_model(),
+            archive: None,
+        }
     }
 
     /// whisper-cli inside the unpacked package (its folder layout varies
@@ -73,19 +143,65 @@ impl Models {
         self.root.join(VAD_MODEL)
     }
 
-    pub fn opus_dir(&self, from: &Lang, to: &Lang) -> PathBuf {
-        self.root.join(format!("opus-mt-{from}-{to}"))
+    pub fn opus_dir(&self, m: &OpusModel) -> PathBuf {
+        self.root.join(format!("opus-mt-{}-{}", m.from.unwrap_or("mul"), m.to))
     }
 
-    /// Language pairs we can translate (downloaded or downloadable).
+    /// Direct language pairs (for choosing to translate an existing
+    /// subtitle instead of running Whisper).
     pub fn opus_pairs() -> Vec<(Lang, Lang)> {
-        OPUS_PAIRS.iter().filter_map(|(f, t, ..)| Some((Lang::parse(f)?, Lang::parse(t)?))).collect()
+        OPUS.iter().filter_map(|m| Some((Lang::parse(m.from?)?, Lang::parse(m.to)?))).collect()
+    }
+
+    /// Models needed to bring each of `langs` to `target`: a direct model,
+    /// else via English (mul-en + en→target).
+    pub fn models_for(langs: &[Lang], target: &Lang) -> Vec<&'static OpusModel> {
+        let en = Lang::parse("en").expect("valid");
+        let exact = |f: &Lang, t: &Lang| OPUS.iter().find(|m| m.from == Some(f.as_str()) && m.to == t.as_str());
+        let to_en = || OPUS.iter().find(|m| m.from.is_none() && m.to == "en");
+        let mut out: Vec<&'static OpusModel> = Vec::new();
+        for lang in langs.iter().filter(|l| *l != target) {
+            let chain: Vec<&'static OpusModel> = match exact(lang, target) {
+                Some(m) => vec![m],
+                None if *lang == en => vec![],
+                None => {
+                    let first = exact(lang, &en).or_else(to_en);
+                    match (first, *target == en) {
+                        (Some(a), true) => vec![a],
+                        (Some(a), false) => exact(&en, target).map(|b| vec![a, b]).unwrap_or_default(),
+                        (None, _) => vec![],
+                    }
+                }
+            };
+            for m in chain {
+                if !out.contains(&m) {
+                    out.push(m);
+                }
+            }
+        }
+        out
+    }
+
+    /// Loads the given models into one translator (blocking; ~1 s each).
+    pub fn load_translator(&self, models: &[&OpusModel]) -> anyhow::Result<rj_ai::translate::OpusMt> {
+        let pairs = models
+            .iter()
+            .map(|m| {
+                let to = Lang::parse(m.to).ok_or_else(|| anyhow::anyhow!("bad language {}", m.to))?;
+                Ok(rj_ai::translate::MarianPair::load(&self.opus_dir(m), m.from.and_then(Lang::parse), to)?)
+            })
+            .collect::<anyhow::Result<Vec<_>>>()?;
+        Ok(rj_ai::translate::OpusMt::new(pairs))
     }
 
     fn runtime_download(&self) -> Download {
+        self.package_download(&self.runtime.clone())
+    }
+
+    fn package_download(&self, runtime: &str) -> Download {
         let base = format!("https://github.com/ggml-org/whisper.cpp/releases/download/{WHISPER_RELEASE}");
         let (file, archive, label) = if cfg!(windows) {
-            match self.runtime.as_str() {
+            match runtime {
                 "cuda11" => ("whisper-cublas-11.8.0-bin-x64.zip", Archive::Zip, "Whisper (CUDA 11, ~270 MB)"),
                 "cpu" => ("whisper-bin-x64.zip", Archive::Zip, "Whisper (CPU, ~9 MB)"),
                 _ => ("whisper-cublas-12.4.0-bin-x64.zip", Archive::Zip, "Whisper (CUDA 12, ~675 MB)"),
@@ -93,12 +209,13 @@ impl Models {
         } else {
             ("whisper-bin-ubuntu-x64.tar.gz", Archive::TarGz, "Whisper (CPU, ~10 MB)")
         };
-        Download { label: label.into(), url: format!("{base}/{file}"), dest: self.runtime_dir(), archive: Some(archive) }
+        let runtime = if cfg!(windows) { runtime } else { "cpu" };
+        Download { label: label.into(), url: format!("{base}/{file}"), dest: self.runtime_dir_for(runtime), archive: Some(archive) }
     }
 
-    /// Files missing for a job: whisper (if `need_whisper`) and the
-    /// translation pair (if any).
-    fn missing(&self, need_whisper: bool, pair: Option<(&Lang, &Lang)>) -> Vec<Download> {
+    /// Files missing for a job: whisper (if `need_whisper`) and the given
+    /// translation models.
+    fn missing(&self, need_whisper: bool, opus: &[&OpusModel]) -> Vec<Download> {
         let mut out = Vec::new();
         if need_whisper {
             if self.whisper_cli().is_none() {
@@ -113,32 +230,25 @@ impl Models {
                 });
             }
             if !self.vad_model().exists() {
-                out.push(Download {
-                    label: "voice detection model".into(),
-                    url: format!("https://huggingface.co/ggml-org/whisper-vad/resolve/main/{VAD_MODEL}"),
-                    dest: self.vad_model(),
-                    archive: None,
-                });
+                out.push(self.vad_download());
             }
         }
-        if let Some((from, to)) = pair
-            && let Some((_, _, repo, rev, st_rev)) =
-                OPUS_PAIRS.iter().find(|(f, t, ..)| *f == from.as_str() && *t == to.as_str())
+        for m in opus {
+            let dir = self.opus_dir(m);
+            let name = format!("{}→{}", m.from.unwrap_or("any"), m.to);
+            for (file, revision) in
+                [("config.json", m.rev), ("source.spm", m.rev), ("vocab.json", m.rev), ("model.safetensors", m.st_rev)]
             {
-                let dir = self.opus_dir(from, to);
-                for (file, revision) in
-                    [("config.json", rev), ("source.spm", rev), ("vocab.json", rev), ("model.safetensors", st_rev)]
-                {
-                    if !dir.join(file).exists() {
-                        out.push(Download {
-                            label: format!("translation model {from}→{to} ({file})"),
-                            url: format!("https://huggingface.co/{repo}/resolve/{revision}/{file}"),
-                            dest: dir.join(file),
-                            archive: None,
-                        });
-                    }
+                if !dir.join(file).exists() {
+                    out.push(Download {
+                        label: format!("translation model {name} ({file})"),
+                        url: format!("https://huggingface.co/{}/resolve/{revision}/{file}", m.repo),
+                        dest: dir.join(file),
+                        archive: None,
+                    });
                 }
             }
+        }
         out
     }
 
@@ -147,11 +257,11 @@ impl Models {
         &self,
         http: &reqwest::Client,
         need_whisper: bool,
-        pair: Option<(&Lang, &Lang)>,
+        opus: &[&OpusModel],
         status: &(dyn Fn(String, f32) + Send + Sync),
         cancel: &AtomicBool,
     ) -> anyhow::Result<()> {
-        for d in self.missing(need_whisper, pair) {
+        for d in self.missing(need_whisper, opus) {
             fetch(http, &d, status, cancel).await?;
         }
         Ok(())
@@ -260,15 +370,16 @@ mod tests {
     #[tokio::test(flavor = "multi_thread")]
     #[ignore]
     async fn downloads_and_runs_the_whole_pipeline() {
-        use rj_ai::pipeline::{self, Translator};
+        use rj_ai::pipeline::{self, Transcriber};
         let input = std::env::var("RJ_TEST_AUDIO").expect("set RJ_TEST_AUDIO");
         let root = std::env::temp_dir().join("rj-models-e2e");
-        let cfg = AiConfig { whisper_model: "base".into(), ..AiConfig::default() };
+        let model = std::env::var("RJ_TEST_MODEL").unwrap_or_else(|_| "base".into());
+        let cfg = AiConfig { whisper_model: model, ..AiConfig::default() };
         let m = Models::new(root.clone(), &cfg);
         let (en, nl) = (Lang::parse("en").unwrap(), Lang::parse("nl").unwrap());
         let cancel = AtomicBool::new(false);
         let http = reqwest::Client::new();
-        m.ensure(&http, true, Some((&en, &nl)), &|s, p| println!("{s} {:.0}%", p * 100.0), &cancel).await.unwrap();
+        m.ensure(&http, true, &[], &|s, p| println!("{s} {:.0}%", p * 100.0), &cancel).await.unwrap();
         assert!(m.whisper_cli().is_some(), "whisper-cli unpacked");
 
         let wav = root.join("audio.wav");
@@ -281,12 +392,18 @@ mod tests {
             threads: 4,
             work_dir: root.join("work"),
         };
-        let mut t: Box<dyn Translator> = Box::new(rj_ai::translate::OpusMt::new(vec![
-            rj_ai::translate::MarianPair::load(&m.opus_dir(&en, &nl), en.clone(), nl.clone()).unwrap(),
-        ]));
-        let cues = pipeline::generate(&wav, Some(&en), &nl, &mut whisper, t.as_mut(), &mut |_| {}, &cancel).unwrap();
-        let srt = rj_ai::srt::to_srt(&cues);
-        println!("{srt}");
+        let cues = whisper.transcribe(&wav, Some(&en), false, &mut |_| {}, &cancel).unwrap();
+        let texts: Vec<String> = cues.iter().map(|c| c.text.clone()).collect();
+        let langs = rj_ai::langid::detect_lines(&texts, Some(&en));
+        let mut found: Vec<Lang> = langs.iter().flatten().cloned().collect();
+        found.sort();
+        found.dedup();
+        let needed = Models::models_for(&found, &nl);
+        m.ensure(&http, false, &needed, &|s, p| println!("{s} {:.0}%", p * 100.0), &cancel).await.unwrap();
+        let mut t = m.load_translator(&needed).unwrap();
+        let out = pipeline::translate_mixed(cues, &langs, &en, &nl, &mut t, &mut |_| {}, &cancel).unwrap();
+        let srt = rj_ai::srt::to_srt(&out.cues);
+        println!("languages: {found:?}\n{srt}");
         assert!(srt.contains("land"), "expected Dutch output");
     }
 
@@ -295,13 +412,24 @@ mod tests {
         let root = std::env::temp_dir().join(format!("rj-models-{}", std::process::id()));
         let m = Models::new(root.clone(), &AiConfig::default());
         let (en, nl) = (Lang::parse("en").unwrap(), Lang::parse("nl").unwrap());
-        let plan = m.missing(true, Some((&en, &nl)));
+        let en_nl = Models::models_for(std::slice::from_ref(&en), &nl);
+        let plan = m.missing(true, &en_nl);
         let labels: Vec<_> = plan.iter().map(|d| d.label.as_str()).collect();
         assert!(labels[0].starts_with("Whisper ("), "{labels:?}");
         assert!(plan.iter().any(|d| d.url.ends_with("ggml-large-v3-turbo-q5_0.bin")));
         assert!(plan.iter().any(|d| d.url.contains("cb106147") && d.url.ends_with("model.safetensors")));
         assert_eq!(plan.len(), 3 + 4);
         // Translation only (existing English subtitle): no whisper downloads.
-        assert_eq!(m.missing(false, Some((&en, &nl))).len(), 4);
+        assert_eq!(m.missing(false, &en_nl).len(), 4);
+    }
+
+    #[test]
+    fn picks_models_per_language() {
+        let l = |s| Lang::parse(s).unwrap();
+        let names = |ms: Vec<&OpusModel>| ms.iter().map(|m| format!("{}-{}", m.from.unwrap_or("mul"), m.to)).collect::<Vec<_>>();
+        assert_eq!(names(Models::models_for(&[l("en"), l("es")], &l("nl"))), ["en-nl", "es-nl"]);
+        assert_eq!(names(Models::models_for(&[l("fr"), l("nl")], &l("nl"))), ["mul-en", "en-nl"]);
+        assert_eq!(names(Models::models_for(&[l("ja")], &l("en"))), ["mul-en"]);
+        assert!(Models::models_for(&[l("nl")], &l("nl")).is_empty());
     }
 }

@@ -16,6 +16,7 @@ tracing.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 unicode-normalization = "0.1"
+whatlang = "0.18"
 candle-core = { version = "0.11", optional = true }
 candle-nn = { version = "0.11", optional = true }
 candle-transformers = { version = "0.11", optional = true }

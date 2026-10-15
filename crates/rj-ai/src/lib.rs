@@ -4,11 +4,13 @@
 //! Each stage is a trait so the pipeline and job queue work (and are tested)
 //! without real models.
 
+pub mod langid;
 pub mod pipeline;
 pub mod spm;
 pub mod srt;
 #[cfg(feature = "translate")]
 pub mod translate;
+pub mod vad;
 pub mod whisper_cli;
 
 /// One timed line of text. Times in milliseconds.

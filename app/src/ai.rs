@@ -8,8 +8,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use rj_ai::pipeline::{self, NoTranslator, Translator};
-use rj_ai::translate::{MarianPair, OpusMt};
+use rj_ai::pipeline::{self, Transcriber};
 use rj_ai::whisper_cli::WhisperCli;
 use rj_core::lang::Lang;
 use rj_jellyfin::Client;
@@ -153,69 +152,28 @@ async fn run(input: JobInput, rep: Reporter) -> anyhow::Result<PathBuf> {
     tokio::fs::create_dir_all(&out_dir).await?;
     let en = Lang::parse("en").expect("valid");
 
-    let cues = match kind {
+    let (cues, spoken) = match kind {
         JobKind::TranslateSub { sub_index, from } => {
-            models.ensure(&http, false, Some((&from, &target)), &status, &cancel).await?;
-            check_cancel(&cancel)?;
             status("Fetching subtitle".into(), 0.0);
             let url = client.subtitle_url(&item_id, &ms.id, sub_index, "srt")?;
             let bytes =
                 http.get(url).header("Authorization", client.auth_header()).send().await?.error_for_status()?.bytes().await?;
             let source = rj_ai::srt::parse_srt(&rj_subs::encoding::to_utf8(&bytes));
             anyhow::ensure!(!source.is_empty(), "the source subtitle is empty");
-            let dir = models.opus_dir(&from, &target);
-            let (cancel2, target2, rep2) = (cancel.clone(), target.clone(), rep.clone());
-            tokio::task::spawn_blocking(move || {
-                let mut t = OpusMt::new(vec![MarianPair::load(&dir, from.clone(), target2.clone())?]);
-                pipeline::translate_cues(source, &from, &target2, &mut t, &mut |p| rep2.report("Translating".into(), p), &cancel2)
-            })
-            .await??
+            (source, Some(from))
         }
         JobKind::Transcribe { audio_index, spoken } => {
-            let translate = spoken.as_ref() != Some(&target) && target != en;
-            let pair_available = Models::opus_pairs().iter().any(|(f, t)| *f == en && *t == target);
-            anyhow::ensure!(
-                !translate || pair_available,
-                "no translation model to {} yet (only English → Dutch)",
-                target.name()
-            );
-            models.ensure(&http, true, translate.then_some((&en, &target)), &status, &cancel).await?;
+            models.ensure(&http, true, &[], &status, &cancel).await?;
             check_cancel(&cancel)?;
 
-            // 1. Audio: server-side audio-only transcode, else decode the
-            //    full stream locally.
+            // 1. Audio: server-side audio-only transcode, else the full stream.
             let wav = work_dir.join(format!("{item_id}.wav"));
-            let auth = client.auth_header();
-            let server_url = client.audio_only_url(&item_id, &ms.id, audio_index)?.to_string();
-            let mpv_aid = audio_index.and_then(|idx| {
-                let mut audio: Vec<u32> = ms
-                    .media_streams
-                    .iter()
-                    .filter(|s| s.kind == StreamType::Audio && !s.is_external)
-                    .map(|s| s.index)
-                    .collect();
-                audio.sort_unstable();
-                audio.iter().position(|i| *i == idx).map(|p| p as i64 + 1)
-            });
-            let direct_url = client.direct_stream_url(&item_id, &ms.id)?.to_string();
-            let (wav2, cancel2, rep2) = (wav.clone(), cancel.clone(), rep.clone());
-            tokio::task::spawn_blocking(move || {
-                let mut progress = |p: f32| rep2.report("Extracting audio".into(), p);
-                match rj_player::extract::extract_audio(&server_url, Some(&auth), None, &wav2, &mut progress, &cancel2) {
-                    Ok(()) => Ok(()),
-                    Err(e) if e == "cancelled" => Err(e),
-                    Err(e) => {
-                        tracing::warn!("server audio transcode failed ({e}); decoding the full stream locally");
-                        rep2.report("Extracting audio (full download)".into(), 0.0);
-                        rj_player::extract::extract_audio(&direct_url, Some(&auth), mpv_aid, &wav2, &mut progress, &cancel2)
-                    }
-                }
-            })
-            .await?
-            .map_err(|e| anyhow::anyhow!("audio extraction: {e}"))?;
+            let rep2 = rep.clone();
+            crate::audio::extract_wav(&client, &item_id, &ms, audio_index, &wav, move |what, p| rep2.report(what.into(), p), cancel.clone())
+                .await?;
             check_cancel(&cancel)?;
 
-            // 2. Whisper (+ translation).
+            // 2. Whisper writes down what is said, in whatever language.
             let exe = models.whisper_cli().ok_or_else(|| anyhow::anyhow!("whisper-cli not found after download"))?;
             let mut whisper = WhisperCli {
                 exe,
@@ -225,27 +183,47 @@ async fn run(input: JobInput, rep: Reporter) -> anyhow::Result<PathBuf> {
                 threads: if threads == 0 { std::thread::available_parallelism().map_or(4, |n| n.get()) } else { threads },
                 work_dir: work_dir.clone(),
             };
-            let opus_dir = models.opus_dir(&en, &target);
-            let (cancel2, target2, rep2, wav2) = (cancel.clone(), target.clone(), rep.clone(), wav.clone());
+            let (cancel2, rep2, wav2, spoken2) = (cancel.clone(), rep.clone(), wav.clone(), spoken.clone());
             let result = tokio::task::spawn_blocking(move || {
-                let mut translator: Box<dyn Translator> = if translate {
-                    Box::new(OpusMt::new(vec![MarianPair::load(&opus_dir, en.clone(), target2.clone())?]))
-                } else {
-                    Box::new(NoTranslator)
-                };
-                let mut progress = |p: f32| {
-                    let what = if p < 0.8 { "Transcribing" } else { "Translating" };
-                    rep2.report(what.into(), p);
-                };
-                pipeline::generate(&wav2, spoken.as_ref(), &target2, &mut whisper, translator.as_mut(), &mut progress, &cancel2)
+                whisper.transcribe(&wav2, spoken2.as_ref(), false, &mut |p| rep2.report("Transcribing".into(), p * 0.8), &cancel2)
             })
             .await?;
             let _ = tokio::fs::remove_file(&wav).await;
-            result?
+            (result?, spoken)
         }
     };
-
     anyhow::ensure!(!cues.is_empty(), "no speech found");
+
+    // 3. Translate each line from its own language (films mix languages).
+    let texts: Vec<String> = cues.iter().map(|c| c.text.clone()).collect();
+    let langs = rj_ai::langid::detect_lines(&texts, spoken.as_ref());
+    let default = spoken.clone().unwrap_or_else(|| en.clone());
+    let mut found: Vec<Lang> = langs.iter().map(|l| l.clone().unwrap_or_else(|| default.clone())).collect();
+    found.sort();
+    found.dedup();
+    tracing::info!(?found, "languages in the subtitles");
+    let needed = Models::models_for(&found, &target);
+    models.ensure(&http, false, &needed, &status, &cancel).await?;
+    check_cancel(&cancel)?;
+    let (cancel2, rep2, target2, models2) = (cancel.clone(), rep.clone(), target.clone(), models.clone());
+    let translated = tokio::task::spawn_blocking(move || -> anyhow::Result<pipeline::Translated> {
+        let mut t = models2.load_translator(&needed)?;
+        Ok(pipeline::translate_mixed(
+            cues,
+            &langs,
+            &default,
+            &target2,
+            &mut t,
+            &mut |p| rep2.report("Translating".into(), 0.8 + p * 0.2),
+            &cancel2,
+        )?)
+    })
+    .await??;
+    for (lang, n) in &translated.untranslated {
+        tracing::warn!("{n} lines in {lang} left untranslated (no model)");
+    }
+    let cues = translated.cues;
+
     let srt = rj_ai::srt::to_srt(&cues);
     let path = out_dir.join(format!("{item_id}.{}.ai.srt", target));
     tokio::fs::write(&path, &srt).await?;

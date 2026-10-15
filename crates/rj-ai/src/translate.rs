@@ -20,7 +20,8 @@ use crate::spm::{self, SentencePiece};
 const MAX_OUTPUT: usize = 128;
 
 pub struct MarianPair {
-    from: Lang,
+    /// `None`: a multilingual-source model (opus-mt-mul-en).
+    from: Option<Lang>,
     to: Lang,
     model: marian::MTModel,
     config: marian::Config,
@@ -36,8 +37,9 @@ fn err(e: impl std::fmt::Display) -> Error {
 }
 
 impl MarianPair {
-    /// Loads a model directory for the `from`→`to` pair.
-    pub fn load(dir: &Path, from: Lang, to: Lang) -> Result<Self, Error> {
+    /// Loads a model directory for the `from`→`to` pair (`from: None` for
+    /// multilingual-source models).
+    pub fn load(dir: &Path, from: Option<Lang>, to: Lang) -> Result<Self, Error> {
         let read = |name: &str| std::fs::read(dir.join(name)).map_err(|e| Error::ModelMissing(format!("{name} in {}: {e}", dir.display())));
         let config: marian::Config = serde_json::from_slice(&read("config.json")?).map_err(err)?;
         let vocab: HashMap<String, u32> = serde_json::from_slice(&read("vocab.json")?).map_err(err)?;
@@ -111,9 +113,19 @@ impl OpusMt {
     }
 }
 
+impl OpusMt {
+    /// Exact pair first, then a multilingual-source model.
+    fn find(&mut self, from: &Lang, to: &Lang) -> Option<&mut MarianPair> {
+        let exact = self.pairs.iter().position(|p| p.from.as_ref() == Some(from) && &p.to == to);
+        let any = || self.pairs.iter().position(|p| p.from.is_none() && &p.to == to);
+        let i = exact.or_else(any)?;
+        self.pairs.get_mut(i)
+    }
+}
+
 impl Translator for OpusMt {
     fn supports(&self, from: &Lang, to: &Lang) -> bool {
-        self.pairs.iter().any(|p| &p.from == from && &p.to == to)
+        self.pairs.iter().any(|p| &p.to == to && p.from.as_ref().is_none_or(|f| f == from))
     }
 
     fn translate(
@@ -124,11 +136,7 @@ impl Translator for OpusMt {
         progress: &mut dyn FnMut(f32),
         cancel: &AtomicBool,
     ) -> Result<Vec<String>, Error> {
-        let pair = self
-            .pairs
-            .iter_mut()
-            .find(|p| &p.from == from && &p.to == to)
-            .ok_or_else(|| Error::Translate(format!("no {from}→{to} model installed")))?;
+        let pair = self.find(from, to).ok_or_else(|| Error::Translate(format!("no {from}→{to} model installed")))?;
         let mut out = Vec::with_capacity(lines.len());
         for (i, line) in lines.iter().enumerate() {
             if cancel.load(Ordering::Relaxed) {
@@ -154,7 +162,7 @@ mod tests {
     fn translates_english_to_dutch() {
         let dir = std::env::var("RJ_OPUS_EN_NL").expect("set RJ_OPUS_EN_NL");
         let (en, nl) = (Lang::parse("en").unwrap(), Lang::parse("nl").unwrap());
-        let mut t = OpusMt::new(vec![MarianPair::load(Path::new(&dir), en.clone(), nl.clone()).unwrap()]);
+        let mut t = OpusMt::new(vec![MarianPair::load(Path::new(&dir), Some(en.clone()), nl.clone()).unwrap()]);
         let lines = vec![
             "And so, my fellow Americans, ask not what your country can do for you,".to_owned(),
             "ask what you can do for your country.".to_owned(),

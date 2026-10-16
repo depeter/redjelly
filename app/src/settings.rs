@@ -44,7 +44,6 @@ pub enum Setting {
     EditKeys,
     ResetKeys,
     UiScale,
-    Install,
     SwitchUser,
     SignOut,
     ChangeServer,
@@ -196,9 +195,8 @@ impl App {
                 ],
             ),
             row(
-                "This PC & account",
+                "Account",
                 vec![
-                    card("Install", "Add to Start menu".into(), Setting::Install),
                     card("Switch user", "Ctrl+U".into(), Setting::SwitchUser),
                     card("Sign out", "Forget saved login".into(), Setting::SignOut),
                     card("Server", cfg.server.url.clone().unwrap_or_default(), Setting::ChangeServer),
@@ -276,7 +274,6 @@ impl App {
                 self.save_keymap();
                 return self.toast("All keys reset to defaults");
             }
-            Install => return self.install_for_user(),
             SwitchUser => return self.switch_user(),
             SignOut => {
                 let (url, user) = {
@@ -504,54 +501,4 @@ impl App {
             self.toast(format!("Couldn't save keys: {e}"));
         }
     }
-
-    // ---- Install -------------------------------------------------------------------
-
-    /// Copies the app to %LOCALAPPDATA%\Programs\redjelly and adds a Start
-    /// menu shortcut (no admin rights needed).
-    fn install_for_user(&self) {
-        #[cfg(not(windows))]
-        self.toast("Installing is only for Windows");
-        #[cfg(windows)]
-        {
-            self.toast("Installing…");
-            self.spawn_ui(async { tokio::task::spawn_blocking(install_windows).await? }, |app, r| match r {
-                Ok(dir) => app.toast(format!("Installed to {} · start it from the Start menu", dir.display())),
-                Err(e) => app.toast(format!("Install failed: {e:#}")),
-            });
-        }
-    }
-}
-
-#[cfg(windows)]
-fn install_windows() -> anyhow::Result<std::path::PathBuf> {
-    use std::os::windows::process::CommandExt;
-    let exe = std::env::current_exe()?;
-    let src = exe.parent().ok_or_else(|| anyhow::anyhow!("no exe dir"))?.to_path_buf();
-    let local = std::env::var("LOCALAPPDATA")?;
-    let dest = std::path::PathBuf::from(local).join("Programs").join("redjelly");
-    if src != dest {
-        std::fs::create_dir_all(&dest)?;
-        for entry in std::fs::read_dir(&src)? {
-            let p = entry?.path();
-            if p.is_file() {
-                std::fs::copy(&p, dest.join(p.file_name().expect("file has a name")))?;
-            }
-        }
-    }
-    let target = dest.join("redjelly.exe");
-    let quote = |p: &std::path::Path| p.to_string_lossy().replace('\'', "''");
-    let script = format!(
-        "$s=(New-Object -ComObject WScript.Shell).CreateShortcut([Environment]::GetFolderPath('Programs')+'\\redjelly.lnk');\
-         $s.TargetPath='{}';$s.WorkingDirectory='{}';$s.Description='redjelly Jellyfin client';$s.Save()",
-        quote(&target),
-        quote(&dest)
-    );
-    const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-    let status = std::process::Command::new("powershell")
-        .args(["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", &script])
-        .creation_flags(CREATE_NO_WINDOW)
-        .status()?;
-    anyhow::ensure!(status.success(), "creating the Start menu shortcut failed");
-    Ok(dest)
 }

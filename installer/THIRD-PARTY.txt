@@ -1,0 +1,27 @@
+redjelly - third-party components
+=================================
+
+redjelly is free software under the GNU General Public License v3 or later
+(see LICENSE.txt). It includes or downloads the following components:
+
+Included in this installer
+  mpv / libmpv (libmpv-2.dll)       GPL-2.0-or-later  https://mpv.io
+    built by zhongfly/mpv-winbuild, includes FFmpeg (GPL build) and
+    other libraries under their own licences
+  Slint UI toolkit                  GPL-3.0           https://slint.dev
+  LLVM libc++ / libunwind           Apache-2.0 WITH LLVM-exception
+  alass-core (subtitle sync)        GPL-3.0           https://github.com/kaegi/alass
+  candle (translation runtime)      MIT / Apache-2.0  https://github.com/huggingface/candle
+  whatlang (language detection)     MIT               https://github.com/greyblake/whatlang-rs
+  and many Rust crates under MIT / Apache-2.0 / BSD / ISC / Zlib licences
+  (full list: Cargo.lock in the source repository).
+
+Downloaded on first use (not included here)
+  whisper.cpp (whisper-cli)         MIT               https://github.com/ggml-org/whisper.cpp
+    CUDA builds include NVIDIA CUDA runtime libraries under the NVIDIA
+    CUDA EULA
+  Whisper models (ggml)             MIT               https://huggingface.co/ggerganov/whisper.cpp
+  Silero VAD model                  MIT               https://github.com/snakers4/silero-vad
+  Opus-MT translation models        CC-BY-4.0         https://huggingface.co/Helsinki-NLP
+  Anime4K shaders                   MIT               https://github.com/bloc97/Anime4K
+  AMD FidelityFX FSR shader (mpv)   MIT               https://gist.github.com/agyild

@@ -1,10 +1,10 @@
 redjelly test build
 ===================
 
-Unzip anywhere and run redjelly.exe. Settings → "Install" (or Ctrl+S) copies
-it to your user folder and adds a Start menu entry - no admin rights needed.
-There is no console window any more; logs are in
-%LOCALAPPDATA%\redjelly\data\logs\redjelly.log (and mpv.log).
+Install with redjelly-setup-<version>.exe (per-user, no admin rights;
+Start menu entry, optional desktop shortcut, uninstall via Apps & features).
+The zip is the same app as a portable folder.
+Logs are in %LOCALAPPDATA%\redjelly\data\logs\redjelly.log (and mpv.log).
 
 Signing in
   First run asks for the server URL. After that you get a "Who's watching?"
@@ -72,7 +72,7 @@ Settings (Ctrl+S, or Home → More)
   Languages, skip intro/recap/credits (button / automatic / off), next-episode
   autoplay, subtitle sources and keys, AI engine/model, UI size (for the
   projector; applies after restart), key bindings editor (press any key or
-  controller button to assign; Backspace removes), install, sign out.
+  controller button to assign; Backspace removes), sign out.
 
 While watching
   Enter    skip intro/recap/credits when the button shows; play next episode

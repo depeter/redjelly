@@ -59,24 +59,6 @@ export struct KeyHelp {
     action: string,
 }
 
-component PlayIcon inherits Rectangle {
-    in property <bool> paused;
-    width: 18px;
-    height: 18px;
-    // Drawn as shapes: symbol glyphs are missing from many fonts.
-    if root.paused: HorizontalLayout {
-        spacing: 5px;
-        Rectangle { width: 5px; background: white; }
-        Rectangle { width: 5px; background: white; }
-    }
-    if !root.paused: Path {
-        width: 16px;
-        height: 18px;
-        commands: "M 0 0 L 16 9 L 0 18 Z";
-        fill: white;
-    }
-}
-
 component CardView inherits Rectangle {
     in property <Card> card;
     in property <int> style;
@@ -458,69 +440,323 @@ component QuickConnectView inherits Rectangle {
     }
 }
 
+// Icons for the player controls, as SVG paths in a 24×24 box. Drawn as
+// shapes: symbol glyphs are missing from many fonts.
+global Icons {
+    out property <string> play: "M 6 3 L 21 12 L 6 21 Z";
+    out property <string> pause: "M 5 3 H 10 V 21 H 5 Z M 14 3 H 19 V 21 H 14 Z";
+    out property <string> stop: "M 5 5 H 19 V 19 H 5 Z";
+    out property <string> rewind: "M 11 5 L 2 12 L 11 19 Z M 21 5 L 12 12 L 21 19 Z";
+    out property <string> forward: "M 3 5 L 12 12 L 3 19 Z M 13 5 L 22 12 L 13 19 Z";
+    out property <string> previous: "M 4 5 H 7 V 19 H 4 Z M 20 5 L 8 12 L 20 19 Z";
+    out property <string> next: "M 17 5 H 20 V 19 H 17 Z M 4 5 L 16 12 L 4 19 Z";
+    out property <string> subtitles: "M 2 4 H 22 V 20 H 2 Z M 4 6 V 18 H 20 V 6 Z M 6 13 H 11 V 15 H 6 Z M 13 13 H 18 V 15 H 13 Z M 6 9 H 15 V 11 H 6 Z";
+    out property <string> audio: "M 9 5 L 20 3 V 16.5 A 3 3 0 1 1 18 13.7 V 7 L 11 8.3 V 18.5 A 3 3 0 1 1 9 15.7 Z";
+    out property <string> speaker: "M 2 9 H 7 L 13 3 V 21 L 7 15 H 2 Z M 16 8 L 17.4 6.6 A 7.5 7.5 0 0 1 17.4 17.4 L 16 16 A 5.5 5.5 0 0 0 16 8 Z";
+    out property <string> muted: "M 2 9 H 7 L 13 3 V 21 L 7 15 H 2 Z M 15 9.4 L 16.4 8 L 19 10.6 L 21.6 8 L 23 9.4 L 20.4 12 L 23 14.6 L 21.6 16 L 19 13.4 L 16.4 16 L 15 14.6 L 17.6 12 Z";
+    out property <string> fullscreen: "M 3 3 H 10 V 6 H 6 V 10 H 3 Z M 14 3 H 21 V 10 H 18 V 6 H 14 Z M 21 14 V 21 H 14 V 18 H 18 V 14 Z M 10 21 H 3 V 14 H 6 V 18 H 10 Z";
+}
+
+/// Focus ids of the player controls; must match src/controls.rs.
+global Controls {
+    out property <int> stop: 0;
+    out property <int> previous: 1;
+    out property <int> rewind: 2;
+    out property <int> play: 3;
+    out property <int> forward: 4;
+    out property <int> next: 5;
+    out property <int> subtitles: 6;
+    out property <int> audio: 7;
+    out property <int> volume: 8;
+    out property <int> fullscreen: 9;
+    out property <int> seek-bar: 10;
+}
+
+// One labelled button in the player bar: icon on top, word underneath, so
+// nobody has to guess what it does.
+component ControlButton inherits Rectangle {
+    in property <string> icon;
+    in property <string> label;
+    in property <bool> focused;
+    in property <length> icon-size: 26px;
+    callback clicked();
+    callback hovered();
+
+    width: 76px;
+    height: 64px;
+    border-radius: 10px;
+    background: root.focused ? Theme.accent : touch.pressed ? #ffffff40 : touch.has-hover ? #ffffff22 : transparent;
+    animate background { duration: 100ms; }
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 4px;
+        // Same slot for every icon so the labels line up.
+        Rectangle {
+            height: 32px;
+            Path {
+                width: root.icon-size;
+                height: root.icon-size;
+                viewbox-width: 24;
+                viewbox-height: 24;
+                commands: root.icon;
+                fill: white;
+                fill-rule: evenodd;
+            }
+        }
+        Text {
+            text: root.label;
+            color: white;
+            font-size: 12px;
+            font-weight: root.focused ? 700 : 500;
+            horizontal-alignment: center;
+        }
+    }
+
+    touch := TouchArea {
+        clicked => { root.clicked(); }
+        changed mouse-x => { root.hovered(); }
+        changed mouse-y => { root.hovered(); }
+    }
+}
+
 // Drawn on top of the mpv video. Nothing here may be opaque full-screen,
 // or it would hide the video underlay.
 component PlayerOverlay inherits Rectangle {
     in property <string> title;
     in property <string> time-text;
+    in property <string> total-text;
     in property <float> progress;
     in property <bool> paused;
     in property <bool> osd-visible;
     in property <string> stats;
     in property <string> skip-label;
     in property <string> next-label;
+    /// 0..1 of 100 %.
+    in property <float> volume;
+    in property <bool> muted;
+    in property <bool> has-previous;
+    in property <bool> has-next;
+    /// Keyboard/controller focus (see `Controls`), -1 = none.
+    in property <int> focused-control: -1;
     callback clicked();
     callback double-clicked();
     callback pointer-moved();
+    callback button(int);
+    /// 0..1 of the duration.
+    callback seek(float);
+    /// 0..1 of 100 %.
+    callback set-volume(float);
+    callback skip();
+
+    property <bool> bar-visible: root.osd-visible || root.paused;
 
     TouchArea {
         // Hide the cursor while watching (projector-friendly).
-        mouse-cursor: root.osd-visible || root.paused ? MouseCursor.default : MouseCursor.none;
+        mouse-cursor: root.bar-visible ? MouseCursor.default : MouseCursor.none;
         clicked => { root.clicked(); }
         double-clicked => { root.double-clicked(); }
-        moved => { root.pointer-moved(); }
+        changed mouse-x => { root.pointer-moved(); }
+        changed mouse-y => { root.pointer-moved(); }
     }
 
-    if root.osd-visible || root.paused: Rectangle {
-        y: parent.height - 96px;
-        height: 96px;
-        background: @linear-gradient(0deg, #000000d0 0%, #00000000 100%);
+    if root.bar-visible: Rectangle {
+        y: 0;
+        height: 90px;
+        background: @linear-gradient(180deg, #000000b0 0%, #00000000 100%);
+        Text {
+            x: 28px;
+            y: 22px;
+            width: parent.width - 56px;
+            text: root.title;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
+            overflow: elide;
+        }
+    }
+
+    // Height must match BAR_HEIGHT in src/player_ui.rs.
+    if root.bar-visible: Rectangle {
+        y: parent.height - 150px;
+        height: 150px;
+        background: @linear-gradient(0deg, #000000e0 0%, #000000a0 65%, #00000000 100%);
+
+        // Clicks that miss a button must not pause the video.
+        TouchArea {
+            changed mouse-x => { root.pointer-moved(); }
+            changed mouse-y => { root.pointer-moved(); }
+        }
+
         VerticalLayout {
-            padding: 20px;
-            padding-top: 16px;
-            spacing: 10px;
+            padding-left: 24px;
+            padding-right: 24px;
+            padding-bottom: 12px;
+            padding-top: 18px;
+            spacing: 8px;
+
             HorizontalLayout {
-                spacing: 12px;
-                VerticalLayout {
-                    alignment: center;
-                    PlayIcon {
-                        paused: root.paused;
+                spacing: 14px;
+                Text {
+                    text: root.time-text;
+                    color: white;
+                    font-size: 15px;
+                    vertical-alignment: center;
+                }
+                seek-bar := Rectangle {
+                    horizontal-stretch: 1;
+                    height: 28px;
+                    property <bool> active: seek-touch.has-hover || seek-touch.pressed || root.focused-control == Controls.seek-bar;
+                    Rectangle {
+                        y: (parent.height - self.height) / 2;
+                        height: seek-bar.active ? 8px : 5px;
+                        border-radius: self.height / 2;
+                        background: #ffffff40;
+                        Rectangle {
+                            x: 0;
+                            width: parent.width * clamp(root.progress, 0, 1);
+                            border-radius: parent.border-radius;
+                            background: Theme.accent;
+                        }
+                    }
+                    // Where a click would jump to.
+                    if seek-touch.has-hover: Rectangle {
+                        x: clamp(seek-touch.mouse-x, 0, parent.width) - 1px;
+                        y: (parent.height - self.height) / 2;
+                        width: 2px;
+                        height: 14px;
+                        background: #ffffffa0;
+                    }
+                    Rectangle {
+                        property <length> size: root.focused-control == Controls.seek-bar ? 22px : seek-bar.active ? 16px : 12px;
+                        x: parent.width * clamp(root.progress, 0, 1) - self.size / 2;
+                        y: (parent.height - self.size) / 2;
+                        width: self.size;
+                        height: self.size;
+                        border-radius: self.size / 2;
+                        background: white;
+                        border-width: root.focused-control == Controls.seek-bar ? 4px : 0px;
+                        border-color: Theme.accent;
+                    }
+                    seek-touch := TouchArea {
+                        clicked => { root.seek(clamp(self.mouse-x / self.width, 0, 1)); }
+                        moved => {
+                            if (self.pressed) {
+                                root.seek(clamp(self.mouse-x / self.width, 0, 1));
+                            }
+                        }
+                        changed mouse-x => { root.pointer-moved(); }
                     }
                 }
                 Text {
-                    text: root.title;
-                    color: white;
-                    font-size: 18px;
-                    font-weight: 600;
-                    overflow: elide;
-                    horizontal-stretch: 1;
-                }
-                Text {
-                    text: root.time-text;
+                    text: root.total-text;
                     color: #d4d4d8;
-                    font-size: 16px;
+                    font-size: 15px;
+                    vertical-alignment: center;
                 }
             }
-            Rectangle {
-                height: 4px;
-                border-radius: 2px;
-                background: #ffffff40;
-                Rectangle {
-                    x: 0;
-                    width: parent.width * clamp(root.progress, 0, 1);
-                    height: parent.height;
-                    border-radius: 2px;
-                    background: Theme.accent;
+
+            HorizontalLayout {
+                spacing: 4px;
+                ControlButton {
+                    icon: Icons.stop;
+                    label: "Stop";
+                    focused: root.focused-control == Controls.stop;
+                    icon-size: 22px;
+                    clicked => { root.button(Controls.stop); }
+                    hovered => { root.pointer-moved(); }
+                }
+                Rectangle { horizontal-stretch: 1; }
+                if root.has-previous: ControlButton {
+                    icon: Icons.previous;
+                    label: "Previous";
+                    focused: root.focused-control == Controls.previous;
+                    clicked => { root.button(Controls.previous); }
+                    hovered => { root.pointer-moved(); }
+                }
+                ControlButton {
+                    icon: Icons.rewind;
+                    label: "Back 10s";
+                    focused: root.focused-control == Controls.rewind;
+                    clicked => { root.button(Controls.rewind); }
+                    hovered => { root.pointer-moved(); }
+                }
+                ControlButton {
+                    icon: root.paused ? Icons.play : Icons.pause;
+                    label: root.paused ? "Play" : "Pause";
+                    focused: root.focused-control == Controls.play;
+                    icon-size: 32px;
+                    clicked => { root.button(Controls.play); }
+                    hovered => { root.pointer-moved(); }
+                }
+                ControlButton {
+                    icon: Icons.forward;
+                    label: "Ahead 30s";
+                    focused: root.focused-control == Controls.forward;
+                    clicked => { root.button(Controls.forward); }
+                    hovered => { root.pointer-moved(); }
+                }
+                if root.has-next: ControlButton {
+                    icon: Icons.next;
+                    label: "Next";
+                    focused: root.focused-control == Controls.next;
+                    clicked => { root.button(Controls.next); }
+                    hovered => { root.pointer-moved(); }
+                }
+                Rectangle { horizontal-stretch: 1; }
+                ControlButton {
+                    icon: Icons.subtitles;
+                    label: "Subtitles";
+                    focused: root.focused-control == Controls.subtitles;
+                    clicked => { root.button(Controls.subtitles); }
+                    hovered => { root.pointer-moved(); }
+                }
+                ControlButton {
+                    icon: Icons.audio;
+                    label: "Audio";
+                    focused: root.focused-control == Controls.audio;
+                    clicked => { root.button(Controls.audio); }
+                    hovered => { root.pointer-moved(); }
+                }
+                ControlButton {
+                    icon: root.muted ? Icons.muted : Icons.speaker;
+                    label: root.muted ? "Muted" : "Volume";
+                    focused: root.focused-control == Controls.volume;
+                    clicked => { root.button(Controls.volume); }
+                    hovered => { root.pointer-moved(); }
+                }
+                // Mouse/touch only; keys use Up/Down while the bar is hidden.
+                if root.width >= 900px: Rectangle {
+                    width: 96px;
+                    Rectangle {
+                        y: (parent.height - self.height) / 2;
+                        height: 5px;
+                        border-radius: 2.5px;
+                        background: #ffffff40;
+                        Rectangle {
+                            x: 0;
+                            width: parent.width * (root.muted ? 0 : clamp(root.volume, 0, 1));
+                            border-radius: parent.border-radius;
+                            background: white;
+                        }
+                    }
+                    TouchArea {
+                        clicked => { root.set-volume(clamp(self.mouse-x / self.width, 0, 1)); }
+                        moved => {
+                            if (self.pressed) {
+                                root.set-volume(clamp(self.mouse-x / self.width, 0, 1));
+                            }
+                        }
+                        changed mouse-x => { root.pointer-moved(); }
+                    }
+                }
+                ControlButton {
+                    icon: Icons.fullscreen;
+                    label: "Full screen";
+                    focused: root.focused-control == Controls.fullscreen;
+                    icon-size: 22px;
+                    clicked => { root.button(Controls.fullscreen); }
+                    hovered => { root.pointer-moved(); }
                 }
             }
         }
@@ -528,7 +764,7 @@ component PlayerOverlay inherits Rectangle {
 
     if root.next-label != "": Rectangle {
         x: parent.width - self.width - 32px;
-        y: parent.height - self.height - 120px;
+        y: parent.height - self.height - 170px;
         width: min(560px, parent.width - 64px);
         height: next-text.preferred-height + 32px;
         border-radius: 10px;
@@ -543,26 +779,34 @@ component PlayerOverlay inherits Rectangle {
             font-size: 17px;
             wrap: word-wrap;
         }
+        TouchArea {
+            mouse-cursor: MouseCursor.pointer;
+            clicked => { root.skip(); }
+        }
     }
 
     if root.skip-label != "": Rectangle {
         x: parent.width - self.width - 32px;
-        y: parent.height - 160px;
+        y: parent.height - 170px - self.height;
         width: skip-text.preferred-width + 40px;
         height: 48px;
         border-radius: 8px;
-        background: #ffffffe6;
+        background: skip-touch.has-hover ? white : #ffffffe6;
         skip-text := Text {
             text: root.skip-label;
             color: black;
             font-size: 16px;
             font-weight: 600;
         }
+        skip-touch := TouchArea {
+            mouse-cursor: MouseCursor.pointer;
+            clicked => { root.skip(); }
+        }
     }
 
     if root.stats != "": Rectangle {
         x: 16px;
-        y: 16px;
+        y: 80px;
         width: stats-text.preferred-width + 24px;
         height: stats-text.preferred-height + 24px;
         background: #000000b0;
@@ -578,13 +822,14 @@ component PlayerOverlay inherits Rectangle {
     }
 }
 
-// Right-hand drawer over the video (S in the player).
+// Right-hand drawer over the video (Subtitles / Audio buttons, or S).
 component SubtitlePanel inherits Rectangle {
     in property <string> title;
     in property <string> status;
     in property <[PanelItem]> items;
     in property <int> current;
     callback item-clicked(int);
+    callback close();
 
     background: #0b0b0efc;
 
@@ -593,11 +838,30 @@ component SubtitlePanel inherits Rectangle {
     VerticalLayout {
         padding: 28px;
         spacing: 12px;
-        Text {
-            text: root.title;
-            color: Theme.text;
-            font-size: 24px;
-            font-weight: 700;
+        HorizontalLayout {
+            Text {
+                text: root.title;
+                color: Theme.text;
+                font-size: 24px;
+                font-weight: 700;
+                horizontal-stretch: 1;
+            }
+            Rectangle {
+                width: close-text.preferred-width + 28px;
+                height: 36px;
+                border-radius: 18px;
+                background: close-touch.has-hover ? #ffffff30 : #ffffff1a;
+                close-text := Text {
+                    text: "Close";
+                    color: Theme.text;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+                close-touch := TouchArea {
+                    mouse-cursor: MouseCursor.pointer;
+                    clicked => { root.close(); }
+                }
+            }
         }
         Text {
             text: root.status;
@@ -761,12 +1025,18 @@ export component AppWindow inherits Window {
     // Player
     in property <string> player-title;
     in property <string> player-time;
+    in property <string> player-total;
     in property <float> player-progress;
     in property <bool> player-paused;
     in property <bool> player-osd;
     in property <string> player-stats;
     in property <string> player-skip;
     in property <string> player-next;
+    in property <float> player-volume;
+    in property <bool> player-muted;
+    in property <bool> player-has-previous;
+    in property <bool> player-has-next;
+    in property <int> player-focus: -1;
 
     // Prompt (text input for settings)
     in property <string> prompt-title;
@@ -794,7 +1064,12 @@ export component AppWindow inherits Window {
     callback player-clicked();
     callback player-double-clicked();
     callback player-pointer-moved();
+    callback player-button(int);
+    callback player-seek(float);
+    callback player-set-volume(float);
+    callback player-skip-clicked();
     callback panel-item-clicked(int);
+    callback panel-close();
     callback prompt-accepted();
 
     forward-focus: keys;
@@ -820,15 +1095,25 @@ export component AppWindow inherits Window {
         if root.screen == 2: PlayerOverlay {
             title: root.player-title;
             time-text: root.player-time;
+            total-text: root.player-total;
             progress: root.player-progress;
             paused: root.player-paused;
             osd-visible: root.player-osd;
             stats: root.player-stats;
             skip-label: root.player-skip;
             next-label: root.player-next;
+            volume: root.player-volume;
+            muted: root.player-muted;
+            has-previous: root.player-has-previous;
+            has-next: root.player-has-next;
+            focused-control: root.player-focus;
             clicked => { root.player-clicked(); }
             double-clicked => { root.player-double-clicked(); }
             pointer-moved => { root.player-pointer-moved(); }
+            button(b) => { root.player-button(b); }
+            seek(f) => { root.player-seek(f); }
+            set-volume(f) => { root.player-set-volume(f); }
+            skip => { root.player-skip-clicked(); }
         }
         if root.screen == 3: LoginForm {
             server-url <=> root.server-url;
@@ -858,6 +1143,7 @@ export component AppWindow inherits Window {
         items: root.panel-items;
         current: root.panel-focus;
         item-clicked(i) => { root.panel-item-clicked(i); }
+        close => { root.panel-close(); }
     }
 
     if root.keyhelp-visible: KeyHelpOverlay {

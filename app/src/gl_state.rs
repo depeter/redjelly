@@ -1,5 +1,6 @@
 //! Saves and restores the GL state mpv's renderer touches, so Slint's
-//! femtovg renderer finds the context exactly as it left it.
+//! femtovg renderer finds the context exactly as it left it. Saving also
+//! switches off sRGB conversion for mpv's pass.
 
 use glow::HasContext;
 
@@ -15,6 +16,7 @@ pub struct GlState {
     blend: bool,
     scissor: bool,
     blend_func: [i32; 4],
+    srgb: bool,
 }
 
 fn nz(v: i32) -> Option<std::num::NonZeroU32> {
@@ -30,7 +32,7 @@ impl GlState {
             gl.get_parameter_i32_slice(glow::VIEWPORT, &mut viewport);
             let mut scissor_box = [0; 4];
             gl.get_parameter_i32_slice(glow::SCISSOR_BOX, &mut scissor_box);
-            Self {
+            let state = Self {
                 program: gl.get_parameter_i32(glow::CURRENT_PROGRAM),
                 vao: gl.get_parameter_i32(glow::VERTEX_ARRAY_BINDING),
                 array_buffer: gl.get_parameter_i32(glow::ARRAY_BUFFER_BINDING),
@@ -47,7 +49,16 @@ impl GlState {
                     gl.get_parameter_i32(glow::BLEND_SRC_ALPHA),
                     gl.get_parameter_i32(glow::BLEND_DST_ALPHA),
                 ],
+                srgb: gl.is_enabled(glow::FRAMEBUFFER_SRGB),
+            };
+            // mpv writes gamma-encoded pixels; sRGB conversion on top would
+            // encode them twice and wash the picture out.
+            if state.srgb {
+                gl.disable(glow::FRAMEBUFFER_SRGB);
             }
+            // GLES has no FRAMEBUFFER_SRGB: drop the INVALID_ENUM it raised.
+            gl.get_error();
+            state
         }
     }
 
@@ -70,6 +81,9 @@ impl GlState {
             set(glow::SCISSOR_TEST, self.scissor);
             let [a, b, c, d] = self.blend_func.map(|v| v as u32);
             gl.blend_func_separate(a, b, c, d);
+            if self.srgb {
+                gl.enable(glow::FRAMEBUFFER_SRGB);
+            }
         }
     }
 }

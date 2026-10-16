@@ -9,6 +9,7 @@
 
 mod ai;
 mod audio;
+mod controls;
 mod gl_state;
 mod images;
 mod layout;
@@ -107,6 +108,8 @@ pub struct App {
     models_dir: PathBuf,
     prompt: RefCell<Option<settings::PromptKind>>,
     gamepads: RefCell<Option<rj_input::gamepad::Gamepads>>,
+    /// Player button with key/controller focus; None = keys control playback.
+    controls_focus: Cell<Option<i32>>,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -257,6 +260,18 @@ impl App {
             }
             if let Some(c) = typed {
                 self.search_edit(Some(c));
+                return true;
+            }
+        }
+
+        // Player bar has focus: the arrows move between its buttons.
+        if screen == SCREEN_PLAYER && self.controls_engaged() {
+            let nav = self.keymap.borrow().lookup(Context::Dialog, &chord);
+            if let Some(
+                a @ (Action::NavUp | Action::NavDown | Action::NavLeft | Action::NavRight | Action::Activate | Action::Back),
+            ) = nav
+            {
+                self.controls_nav(a);
                 return true;
             }
         }
@@ -476,6 +491,7 @@ fn main() -> anyhow::Result<()> {
                 None
             }
         }),
+        controls_focus: Cell::new(None),
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));
@@ -492,7 +508,7 @@ fn main() -> anyhow::Result<()> {
             app.activate_focused();
         })
     });
-    ui.on_player_clicked(|| with_app(|app| app.handle_player(Action::PlayPause)));
+    ui.on_player_clicked(|| with_app(|app| app.video_clicked()));
     ui.on_player_double_clicked(|| {
         with_app(|app| {
             let ui = app.ui();
@@ -500,7 +516,16 @@ fn main() -> anyhow::Result<()> {
         })
     });
     ui.on_player_pointer_moved(|| with_app(|app| app.show_osd()));
+    ui.on_player_button(|b| with_app(|app| app.press_control(b)));
+    ui.on_player_seek(|f| with_app(|app| app.seek_to_fraction(f)));
+    ui.on_player_set_volume(|f| with_app(|app| app.set_volume_fraction(f)));
+    ui.on_player_skip_clicked(|| {
+        with_app(|app| {
+            app.skip_segment_or_play_next();
+        })
+    });
     ui.on_panel_item_clicked(|i| with_app(|app| app.panel_click(i as usize)));
+    ui.on_panel_close(|| with_app(|app| app.close_panel()));
     ui.on_prompt_accepted(|| with_app(|app| app.prompt_accepted()));
 
     // ---- mpv video underlay ------------------------------------------------

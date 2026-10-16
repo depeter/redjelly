@@ -192,7 +192,8 @@ impl Default for AiConfig {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ToneMappingPreset {
     pub name: String,
-    /// mpv `tone-mapping`: auto, bt.2390, spline, mobius, hable, …
+    /// mpv `tone-mapping`: auto, bt.2390, hable, mobius, reinhard, …
+    /// (the embedded player is vo_gpu: gpu-next-only curves like spline fail).
     pub tone_mapping: String,
     /// mpv `target-peak` in nits, or "auto".
     pub target_peak: String,
@@ -215,6 +216,19 @@ pub struct VideoConfig {
     pub tone_mapping: usize,
 }
 
+impl VideoConfig {
+    /// Defaults written to config files before the presets were reworked;
+    /// a file still holding exactly these gets the current ones.
+    fn old_default_presets() -> Vec<ToneMappingPreset> {
+        vec![
+            ToneMappingPreset::new("Automatic", "auto", "auto", "auto"),
+            ToneMappingPreset::new("Projector · bright (200 nits)", "bt.2390", "200", "yes"),
+            ToneMappingPreset::new("Projector · dim room (100 nits)", "bt.2390", "100", "yes"),
+            ToneMappingPreset::new("Spline · more contrast", "spline", "auto", "yes"),
+        ]
+    }
+}
+
 impl Default for VideoConfig {
     fn default() -> Self {
         Self {
@@ -222,7 +236,11 @@ impl Default for VideoConfig {
                 ToneMappingPreset::new("Automatic", "auto", "auto", "auto"),
                 ToneMappingPreset::new("Projector · bright (200 nits)", "bt.2390", "200", "yes"),
                 ToneMappingPreset::new("Projector · dim room (100 nits)", "bt.2390", "100", "yes"),
-                ToneMappingPreset::new("Spline · more contrast", "spline", "auto", "yes"),
+                // Filmic curve: more contrast and colour, less grey.
+                ToneMappingPreset::new("Punchy · more contrast", "hable", "auto", "yes"),
+                ToneMappingPreset::new("Punchy · projector (150 nits)", "hable", "150", "yes"),
+                // Keeps mid-tones as mastered, only rolls off highlights.
+                ToneMappingPreset::new("Natural · keeps colours", "mobius", "auto", "yes"),
             ],
             tone_mapping: 0,
         }
@@ -254,8 +272,14 @@ impl Config {
     /// Loads the file, or returns defaults if it doesn't exist yet.
     pub fn load(path: &Path) -> Result<Self, ConfigError> {
         match std::fs::read_to_string(path) {
-            Ok(text) => toml::from_str(&text)
-                .map_err(|source| ConfigError::Parse { path: path.into(), source }),
+            Ok(text) => {
+                let mut cfg: Self =
+                    toml::from_str(&text).map_err(|source| ConfigError::Parse { path: path.into(), source })?;
+                if cfg.video.tone_mapping_presets == VideoConfig::old_default_presets() {
+                    cfg.video.tone_mapping_presets = VideoConfig::default().tone_mapping_presets;
+                }
+                Ok(cfg)
+            }
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(Self::default()),
             Err(source) => Err(ConfigError::Io { path: path.into(), source }),
         }
@@ -288,6 +312,20 @@ mod tests {
         assert_eq!(cfg.playback.intro, SegmentAction::Ask);
         assert!(!cfg.providers.opensubtitles);
         assert!(cfg.providers.subdl);
+    }
+
+    #[test]
+    fn old_default_presets_are_upgraded() {
+        let mut old = Config::default();
+        old.video.tone_mapping_presets = VideoConfig::old_default_presets();
+        old.video.tone_mapping = 2;
+        let path = std::env::temp_dir().join(format!("rj-config-{}.toml", std::process::id()));
+        old.save(&path).unwrap();
+        let cfg = Config::load(&path).unwrap();
+        std::fs::remove_file(&path).unwrap();
+        assert_eq!(cfg.video.tone_mapping_presets, VideoConfig::default().tone_mapping_presets);
+        assert_eq!(cfg.video.tone_mapping, 2);
+        assert!(cfg.video.tone_mapping_presets.iter().all(|p| p.tone_mapping != "spline"));
     }
 
     #[test]

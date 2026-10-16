@@ -124,12 +124,25 @@ fn main() {
     // Player overlay (video area is just the window background here)
     ui.set_screen(2);
     ui.set_player_title("Billy the Kid · S01E06 · Fate".into());
-    ui.set_player_time("10:22 / 45:24".into());
+    ui.set_player_time("10:22".into());
+    ui.set_player_total("45:24".into());
+    ui.set_player_volume(0.7);
+    ui.set_player_has_previous(true);
+    ui.set_player_has_next(true);
     ui.set_player_progress(0.23);
     ui.set_player_paused(true);
     ui.set_player_skip("Skip intro".into());
     ui.set_player_stats("video   H.264 1920x1080\nhwdec   nvdec".into());
     save(&window, &format!("{out}/player.png"));
+    ui.set_player_skip("".into());
+    ui.set_player_stats("".into());
+    ui.set_player_focus(6);
+    ui.set_player_paused(false);
+    ui.set_player_osd(true);
+    save(&window, &format!("{out}/player-focus.png"));
+    ui.set_player_focus(10);
+    save(&window, &format!("{out}/player-seekbar.png"));
+    ui.set_player_focus(-1);
 
     // Subtitle panel
     ui.set_player_stats("".into());
@@ -138,9 +151,12 @@ fn main() {
         title: t.into(), detail: d.into(), badge: b.into(), header, dimmed,
     };
     let items = vec![
-        item("CURRENT", "", "", true, false),
-        item("English · subrip", "Embedded · delay 0.0 s", "", false, false),
-        item("Auto-sync current subtitle", "Align to another subtitle track", "", false, false),
+        item("ON THIS VIDEO", "", "", true, false),
+        item("Off", "No subtitles", "", false, false),
+        item("English", "built in", "ON", false, false),
+        item("English · SDH", "downloaded", "", false, false),
+        item("FIX OR GET SUBTITLES", "", "", true, false),
+        item("Auto-sync current subtitle", "If it's early or late · Z / X shift it by hand", "", false, false),
         item("Generate Dutch subtitles with AI", "Coming in M3", "", false, true),
         item("DUTCH — 3 FOUND", "", "", true, false),
         item("Billy.the.Kid.S01E06.1080p.WEB.H264-SuccessfulCrab", "Subdl", "", false, false),
@@ -152,7 +168,7 @@ fn main() {
     ui.set_panel_items(ModelRc::new(VecModel::from(items)));
     ui.set_panel_title("Subtitles".into());
     ui.set_panel_status("Searched Jellyfin, Subdl, OpenSubtitles · 15 results".into());
-    ui.set_panel_focus(5);
+    ui.set_panel_focus(2);
     ui.set_panel_visible(true);
     save(&window, &format!("{out}/panel.png"));
     ui.set_panel_visible(false);

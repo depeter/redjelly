@@ -17,6 +17,10 @@ use crate::playback::{self, PlayRequest, Session, format_time};
 use crate::{App, SCREEN_PLAYER};
 
 const OSD_DURATION: Duration = Duration::from_secs(3);
+/// Longer while someone is moving through the buttons with keys.
+const OSD_FOCUSED_DURATION: Duration = Duration::from_secs(8);
+/// Height of the bottom bar in ui/app.slint.
+const BAR_HEIGHT: f32 = 150.0;
 
 type ReportFn = fn(
     rj_jellyfin::Client,
@@ -58,6 +62,9 @@ impl App {
         let ui = self.ui();
         ui.set_player_title(req.title.as_str().into());
         ui.set_player_time(SharedString::new());
+        ui.set_player_total(SharedString::new());
+        ui.set_player_has_previous(false);
+        ui.set_player_has_next(false);
         ui.set_player_progress(0.0);
         ui.set_screen(SCREEN_PLAYER);
         ui.invoke_focus_keys();
@@ -114,6 +121,9 @@ impl App {
                     s.prev = pos.checked_sub(1).and_then(|p| adjacent.get(p).cloned());
                     s.next = adjacent.get(pos + 1).cloned();
                 }
+                let ui = app.ui();
+                ui.set_player_has_previous(s.prev.is_some());
+                ui.set_player_has_next(s.next.is_some());
                 tracing::info!(segments = s.segments.len(), next = s.next.is_some(), "playback extras");
             },
         );
@@ -209,10 +219,11 @@ impl App {
         let _ = self.player.mpv().command("stop", &[]);
     }
 
-    fn skip_segment_or_play_next(&self) {
+    /// Returns false when there was nothing to skip.
+    pub fn skip_segment_or_play_next(&self) -> bool {
         let (countdown_next, segment_end) = {
             let session = self.session.borrow();
-            let Some(s) = session.as_ref() else { return };
+            let Some(s) = session.as_ref() else { return false };
             let pos = self.player.position();
             (
                 s.countdown.and(s.next.as_ref().map(|n| n.id.clone())),
@@ -222,8 +233,15 @@ impl App {
         if let Some(id) = countdown_next {
             self.chain_to(id);
         } else if let Some(end) = segment_end {
+            // Only when the button is on screen (not for auto-skipped kinds).
+            if self.ui().get_player_skip().is_empty() {
+                return false;
+            }
             let _ = self.player.mpv().command("seek", &[&end.to_string(), "absolute"]);
+        } else {
+            return false;
         }
+        true
     }
 
     fn play_adjacent(&self, next: bool) {
@@ -331,6 +349,7 @@ impl App {
             return self.play_item(id, false);
         }
         self.close_panel();
+        self.release_controls();
         self.stats.set(false);
         self.raise_subtitles(false);
         if let Some(m) = self.media.borrow_mut().as_mut() {
@@ -351,7 +370,8 @@ impl App {
     }
 
     pub fn show_osd(&self) {
-        self.osd_until.set(Instant::now() + OSD_DURATION);
+        let d = if self.controls_engaged() { OSD_FOCUSED_DURATION } else { OSD_DURATION };
+        self.osd_until.set(Instant::now() + d);
         self.ui().set_player_osd(true);
     }
 
@@ -365,8 +385,7 @@ impl App {
             let ui = self.ui();
             let w = ui.window();
             let logical_height = w.size().height as f32 / w.scale_factor();
-            // Bar height in the overlay (96px) as a share of the window.
-            (100.0 - 96.0 / logical_height * 100.0).clamp(50.0_f32, 100.0) as i64
+            (100.0 - BAR_HEIGHT / logical_height * 100.0).clamp(50.0_f32, 100.0) as i64
         } else {
             100
         };
@@ -411,12 +430,17 @@ impl App {
         self.check_sub_track_change();
         let ui = self.ui();
         let (pos, dur, paused) = (self.player.position(), self.player.duration(), self.player.paused());
-        ui.set_player_time(format!("{} / {}", format_time(pos), format_time(dur)).into());
+        ui.set_player_time(format_time(pos).into());
+        ui.set_player_total(format_time(dur).into());
         ui.set_player_progress(if dur > 0.0 { (pos / dur) as f32 } else { 0.0 });
         ui.set_player_paused(paused);
         if now > self.osd_until.get() {
             ui.set_player_osd(false);
+            if !paused {
+                self.release_controls();
+            }
         }
+        self.update_controls();
         self.raise_subtitles(ui.get_player_osd() || paused);
         if self.stats.get() {
             ui.set_player_stats(format!("{}\ntonemap {}", self.player.stats(), self.tone_mapping_name()).into());
@@ -452,7 +476,11 @@ impl App {
                 return;
             }
             Action::SubtitlePanel => return self.open_panel(),
-            Action::SkipSegment => return self.skip_segment_or_play_next(),
+            Action::SkipSegment => {
+                self.skip_segment_or_play_next();
+                return;
+            }
+            Action::Activate | Action::OsdMenu => return self.controls_activate(),
             Action::NextEpisode => return self.play_adjacent(true),
             Action::PreviousEpisode => return self.play_adjacent(false),
             Action::CycleShader => return self.cycle_shader(),
@@ -487,19 +515,8 @@ impl App {
                 let ms = (mpv.get_property::<f64>("sub-delay").unwrap_or(0.0) * 1000.0).round();
                 Some(format!("Subtitle delay {:+.1} s (remembered)", ms / 1000.0))
             }
-            Action::CycleAudio => {
-                let lang = prop("current-tracks/audio/lang");
-                self.remember(|state, key| state.remember_audio(key, Lang::parse(&lang).as_ref()));
-                Some(format!("Audio: {lang} {}", prop("current-tracks/audio/title")))
-            }
-            Action::CycleSubtitle | Action::CycleSubtitleBack => {
-                let off = matches!(prop("sid").as_str(), "no" | "false" | "");
-                let lang = prop("current-tracks/sub/lang");
-                self.remember(|state, key| {
-                    state.remember_subtitle(key, if off { None } else { Lang::parse(&lang) }.as_ref())
-                });
-                Some(if off { "Subtitles off".into() } else { format!("Subtitles: {lang} {}", prop("current-tracks/sub/title")) })
-            }
+            Action::CycleAudio => Some(self.remember_audio_choice()),
+            Action::CycleSubtitle | Action::CycleSubtitleBack => Some(self.remember_subtitle_choice()),
             Action::ToggleSubtitles => Some(
                 if mpv.get_property::<bool>("sub-visibility").unwrap_or(true) { "Subtitles shown" } else { "Subtitles hidden" }
                     .into(),
@@ -509,6 +526,30 @@ impl App {
         if let Some(msg) = feedback {
             self.toast(msg.trim().to_owned());
         }
+    }
+
+    /// Remembers the audio track just picked; returns the message to show.
+    pub fn remember_audio_choice(&self) -> String {
+        let mpv = self.player.mpv();
+        let prop = |k: &str| mpv.get_property::<String>(k).unwrap_or_default();
+        let lang = prop("current-tracks/audio/lang");
+        self.remember(|state, key| state.remember_audio(key, Lang::parse(&lang).as_ref()));
+        let name = Lang::parse(&lang).map_or(lang, |l| l.name());
+        format!("Audio: {name} {}", prop("current-tracks/audio/title")).trim().to_owned()
+    }
+
+    /// Remembers the subtitle track just picked; returns the message to show.
+    pub fn remember_subtitle_choice(&self) -> String {
+        let mpv = self.player.mpv();
+        let prop = |k: &str| mpv.get_property::<String>(k).unwrap_or_default();
+        let off = matches!(prop("sid").as_str(), "no" | "false" | "");
+        let lang = prop("current-tracks/sub/lang");
+        self.remember(|state, key| state.remember_subtitle(key, if off { None } else { Lang::parse(&lang) }.as_ref()));
+        if off {
+            return "Subtitles off".into();
+        }
+        let name = Lang::parse(&lang).map_or(lang, |l| l.name());
+        format!("Subtitles: {name} {}", prop("current-tracks/sub/title")).trim().to_owned()
     }
 
     /// Stores a manual track choice for the current show (SPEC §5.2).

@@ -79,6 +79,14 @@ impl Player {
             init.set_option("input-vo-keyboard", false)?;
             init.set_option("cache", "yes")?;
             init.set_option("demuxer-max-bytes", "512MiB")?;
+            // libmpv starts from mpv's fast defaults and reads no mpv.conf,
+            // so ask for what a tuned mpv uses: better scalers, debanding.
+            // (`gpu-hq` is the pre-0.37 name.)
+            if init.set_option("profile", "high-quality").is_err() {
+                let _ = init.set_option("profile", "gpu-hq");
+            }
+            // Slint's framebuffer is 8-bit: dither, or HDR→SDR gradients band.
+            init.set_option("dither-depth", "auto")?;
             Ok(())
         })?;
         let player = Self { mpv: Box::leak(Box::new(mpv)) };

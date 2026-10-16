@@ -41,6 +41,10 @@ pub enum PanelAction {
     AiTranslate(u32, usize),
     /// Keymap editor: rebind this action.
     KeyBinding(rj_input::Context, rj_input::Action),
+    /// Switch to this mpv audio track.
+    Audio(i64),
+    /// Switch to this mpv subtitle track (None = off).
+    Subtitle(Option<i64>),
 }
 
 /// What the side panel is showing.
@@ -48,6 +52,7 @@ pub enum PanelAction {
 pub enum PanelKind {
     #[default]
     Subtitles,
+    Audio,
     Keymap,
 }
 
@@ -68,11 +73,11 @@ enum Downloaded {
     OnServer,
 }
 
-fn header(title: String) -> (PanelItem, PanelAction) {
+pub fn header(title: String) -> (PanelItem, PanelAction) {
     (PanelItem { title: title.into(), header: true, ..Default::default() }, PanelAction::None)
 }
 
-fn entry(title: impl Into<SharedString>, detail: impl Into<SharedString>, action: PanelAction) -> (PanelItem, PanelAction) {
+pub fn entry(title: impl Into<SharedString>, detail: impl Into<SharedString>, action: PanelAction) -> (PanelItem, PanelAction) {
     (PanelItem { title: title.into(), detail: detail.into(), ..Default::default() }, action)
 }
 
@@ -375,6 +380,8 @@ impl App {
             self.refresh_panel();
         }
         self.panel_move(0);
+        let current = self.player.mpv().get_property::<i64>("sid").ok();
+        self.focus_panel_entry(|a| *a == PanelAction::Subtitle(current));
     }
 
     pub fn close_panel(&self) {
@@ -386,38 +393,28 @@ impl App {
         self.panel.borrow().is_some()
     }
 
-    fn current_sub_label(&self) -> (String, bool) {
-        let mpv = self.player.mpv();
-        let prop = |k: &str| mpv.get_property::<String>(k).ok().filter(|v| !v.is_empty());
-        let Some(_) = prop("current-tracks/sub/id") else { return ("Subtitles off".into(), false) };
-        let lang = prop("current-tracks/sub/lang").and_then(|l| Lang::parse(&l)).map_or("Unknown".into(), |l| l.name());
-        let title = prop("current-tracks/sub/title").unwrap_or_default();
-        let ext = mpv.get_property::<bool>("current-tracks/sub/external").unwrap_or(false);
-        let delay = (mpv.get_property::<f64>("sub-delay").unwrap_or(0.0) * 1000.0) as i64;
-        let mut s = lang;
-        if !title.is_empty() {
-            s.push_str(&format!(" · {title}"));
-        }
-        s.push_str(if ext { " · external" } else { " · embedded" });
-        if delay != 0 {
-            s.push_str(&format!(" · delay {}", seconds(delay)));
-        }
-        (s, true)
-    }
-
     /// Rebuilds the panel lines from the current search state.
     pub fn refresh_panel(&self) {
         match self.panel.borrow().as_ref().map(|p| p.kind) {
             None => return,
             Some(PanelKind::Keymap) => return self.refresh_keymap_panel(),
+            Some(PanelKind::Audio) => {
+                let entries = self.audio_panel_entries();
+                return self.show_panel_entries(entries);
+            }
             Some(PanelKind::Subtitles) => {}
         }
         let prefs = self.config.borrow().track_preferences();
         let top = prefs.languages.first().cloned();
-        let mut entries = vec![header("CURRENT".into())];
-        let (current, has_sub) = self.current_sub_label();
-        entries.push(entry(current, "J / Shift+J to switch tracks · Z / X adjust delay", PanelAction::None));
-        let mut sync = entry("Auto-sync current subtitle", "Align it to another subtitle track of this video", PanelAction::AutoSync);
+        let mut entries = vec![header("ON THIS VIDEO".into())];
+        entries.extend(self.subtitle_track_entries());
+        let has_sub = self.player.mpv().get_property::<i64>("sid").is_ok();
+        entries.push(header("FIX OR GET SUBTITLES".into()));
+        let mut sync = entry(
+            "Auto-sync current subtitle",
+            "If it's early or late · Z / X shift it by hand",
+            PanelAction::AutoSync,
+        );
         sync.0.dimmed = !has_sub;
         entries.push(sync);
         if let Some(top) = &top {
@@ -475,12 +472,26 @@ impl App {
         entries.push(header(String::new()));
         entries.push(entry("Search again", "", PanelAction::Search));
 
-        let ui = self.ui();
-        ui.set_panel_status(status.into());
-        ui.set_panel_items(ModelRc::new(VecModel::from(entries.iter().map(|(i, _)| i.clone()).collect::<Vec<_>>())));
+        self.ui().set_panel_status(status.into());
+        self.show_panel_entries(entries);
+    }
+
+    fn show_panel_entries(&self, entries: Vec<(PanelItem, PanelAction)>) {
+        let items: Vec<PanelItem> = entries.iter().map(|(i, _)| i.clone()).collect();
+        self.ui().set_panel_items(ModelRc::new(VecModel::from(items)));
         let mut panel = self.panel.borrow_mut();
         let Some(p) = panel.as_mut() else { return };
         p.entries = entries;
+        drop(panel);
+        self.panel_move(0);
+    }
+
+    /// Puts the panel cursor on the first entry whose action matches.
+    pub fn focus_panel_entry(&self, matches: impl Fn(&PanelAction) -> bool) {
+        let mut panel = self.panel.borrow_mut();
+        let Some(p) = panel.as_mut() else { return };
+        let Some(i) = p.entries.iter().position(|(_, a)| matches(a)) else { return };
+        p.focus = i;
         drop(panel);
         self.panel_move(0);
     }
@@ -528,6 +539,8 @@ impl App {
             Some(PanelAction::AiTranscribe) => self.queue_ai_from_player(None),
             Some(PanelAction::AiTranslate(index, lang)) => self.queue_ai_from_player(Some((index, lang))),
             Some(PanelAction::KeyBinding(ctx, action)) => self.start_capture(ctx, action),
+            Some(PanelAction::Audio(id)) => self.choose_audio(id),
+            Some(PanelAction::Subtitle(id)) => self.choose_subtitle(id),
             Some(PanelAction::None) | None => {}
         }
     }

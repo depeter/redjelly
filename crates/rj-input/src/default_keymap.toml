@@ -43,6 +43,8 @@
 "Esc" = "back"
 "Pad.DPadUp" = "nav_up"
 "Pad.DPadDown" = "nav_down"
+"Pad.DPadLeft" = "nav_left"
+"Pad.DPadRight" = "nav_right"
 "Pad.South" = "activate"
 "Pad.East" = "back"
 
@@ -77,7 +79,9 @@
 "Shift+Z" = "sub_delay:-1000"
 "Shift+X" = "sub_delay:1000"
 "Ctrl+Z" = "sub_auto_sync"
-"Enter" = "skip_segment"
+# Enter / A: skip intro if offered, else show the controls (then press the
+# focused button; the arrows move between buttons while they have focus).
+"Enter" = "activate"
 "I" = "show_stats"
 "Esc" = "back"
 "Ctrl+S" = "cycle_shader"
@@ -96,7 +100,7 @@
 "MediaNext" = "next_episode"
 "MediaPrevious" = "previous_episode"
 "MediaStop" = "stop"
-"Pad.South" = "play_pause"
+"Pad.South" = "activate"
 "Pad.East" = "back"
 "Pad.West" = "cycle_audio"
 "Pad.North" = "subtitle_panel"
@@ -106,4 +110,6 @@
 "Pad.RightTrigger" = "seek:60"
 "Pad.DPadUp" = "volume:5"
 "Pad.DPadDown" = "volume:-5"
-"Pad.Start" = "osd_menu"
+"Pad.DPadLeft" = "seek:-10"
+"Pad.DPadRight" = "seek:10"
+"Pad.Start" = "play_pause"

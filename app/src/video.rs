@@ -160,6 +160,20 @@ impl App {
         cfg.video.tone_mapping_presets.get(cfg.video.tone_mapping).map(|p| p.name.clone()).unwrap_or_default()
     }
 
+    /// Ctrl+P: next picture-quality level (global, saved).
+    pub fn cycle_picture_quality(&self) {
+        let q = {
+            let mut cfg = self.config.borrow_mut();
+            let all = rj_core::config::PictureQuality::ALL;
+            let i = all.iter().position(|q| *q == cfg.video.quality).map_or(0, |i| (i + 1) % all.len());
+            cfg.video.quality = all[i];
+            let _ = cfg.save(&self.config_path);
+            all[i]
+        };
+        self.player.apply_quality(q);
+        self.toast(format!("Picture quality: {}", q.label()));
+    }
+
     /// Ctrl+T: next tone-mapping preset (global, saved).
     pub fn cycle_tone_mapping(&self) {
         {

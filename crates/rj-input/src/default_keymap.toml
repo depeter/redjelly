@@ -86,6 +86,7 @@
 "Esc" = "back"
 "Ctrl+S" = "cycle_shader"
 "Ctrl+T" = "cycle_tone_mapping"
+"Ctrl+P" = "cycle_picture_quality"
 "0" = "seek_percent:0"
 "1" = "seek_percent:10"
 "2" = "seek_percent:20"

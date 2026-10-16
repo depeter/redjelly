@@ -443,7 +443,10 @@ impl App {
         self.update_controls();
         self.raise_subtitles(ui.get_player_osd() || paused);
         if self.stats.get() {
-            ui.set_player_stats(format!("{}\ntonemap {}", self.player.stats(), self.tone_mapping_name()).into());
+            let quality = self.config.borrow().video.quality.label();
+            ui.set_player_stats(
+                format!("{}\ntonemap {}\nquality {quality}", self.player.stats(), self.tone_mapping_name()).into(),
+            );
         }
         self.update_segments(pos, dur, now);
 
@@ -485,6 +488,7 @@ impl App {
             Action::PreviousEpisode => return self.play_adjacent(false),
             Action::CycleShader => return self.cycle_shader(),
             Action::CycleToneMapping => return self.cycle_tone_mapping(),
+            Action::CyclePictureQuality => return self.cycle_picture_quality(),
             Action::Back if self.session.borrow().as_ref().is_some_and(|s| s.countdown.is_some()) => {
                 if let Some(s) = self.session.borrow_mut().as_mut() {
                     s.countdown = None;

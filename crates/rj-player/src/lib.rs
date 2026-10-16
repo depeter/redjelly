@@ -8,7 +8,7 @@ pub mod render;
 pub mod track_map;
 
 use libmpv2::Mpv;
-use rj_core::config::{AssOverride, Config};
+use rj_core::config::{AssOverride, Config, PictureQuality};
 use rj_input::Action;
 
 pub use libmpv2;
@@ -79,23 +79,42 @@ impl Player {
             init.set_option("input-vo-keyboard", false)?;
             init.set_option("cache", "yes")?;
             init.set_option("demuxer-max-bytes", "512MiB")?;
-            // libmpv starts from mpv's fast defaults and reads no mpv.conf,
-            // so ask for what a tuned mpv uses: better scalers, debanding.
-            // (`gpu-hq` is the pre-0.37 name.)
-            if init.set_option("profile", "high-quality").is_err() {
-                let _ = init.set_option("profile", "gpu-hq");
-            }
             // Slint's framebuffer is 8-bit: dither, or HDR→SDR gradients band.
             init.set_option("dither-depth", "auto")?;
             Ok(())
         })?;
         let player = Self { mpv: Box::leak(Box::new(mpv)) };
         player.apply_subtitle_style(cfg)?;
+        player.apply_quality(cfg.video.quality);
         Ok(player)
     }
 
     pub fn mpv(&self) -> &'static Mpv {
         self.mpv
+    }
+
+    /// Scaler/deband settings. Explicit values rather than mpv's profiles,
+    /// whose contents change between mpv versions. Video is rendered on
+    /// the UI thread, so a frame that takes too long is a dropped frame.
+    pub fn apply_quality(&self, q: PictureQuality) {
+        let (scale, dscale, deband, correct, linear) = match q {
+            PictureQuality::Fast => ("bilinear", "bilinear", "no", "no", "no"),
+            PictureQuality::Balanced => ("spline36", "mitchell", "no", "yes", "no"),
+            PictureQuality::High => ("ewa_lanczossharp", "mitchell", "yes", "yes", "yes"),
+        };
+        for (prop, value) in [
+            ("scale", scale),
+            ("cscale", scale),
+            ("dscale", dscale),
+            ("deband", deband),
+            ("correct-downscaling", correct),
+            ("linear-downscaling", linear),
+            ("sigmoid-upscaling", linear),
+        ] {
+            if let Err(e) = self.mpv.set_property(prop, value) {
+                tracing::warn!("{prop}={value}: {e}");
+            }
+        }
     }
 
     pub fn apply_subtitle_style(&self, cfg: &Config) -> Result<(), MpvError> {

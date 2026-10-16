@@ -53,6 +53,7 @@ pub enum Action {
     SkipSegment,
     CycleShader,
     CycleToneMapping,
+    CyclePictureQuality,
     OsdMenu,
 }
 
@@ -118,6 +119,7 @@ impl FromStr for Action {
             "jobs" => Action::Jobs,
             "settings" => Action::Settings,
             "cycle_tone_mapping" => Action::CycleToneMapping,
+            "cycle_picture_quality" => Action::CyclePictureQuality,
             "toggle_fullscreen" => Action::ToggleFullscreen,
             "show_keymap" => Action::ShowKeymap,
             "show_stats" => Action::ShowStats,
@@ -167,6 +169,7 @@ impl fmt::Display for Action {
             Action::Jobs => f.write_str("AI subtitle jobs"),
             Action::Settings => f.write_str("Settings"),
             Action::CycleToneMapping => f.write_str("Next HDR tone-mapping preset"),
+            Action::CyclePictureQuality => f.write_str("Picture quality (fast / balanced / high)"),
             Action::Stop => f.write_str("Stop"),
             Action::Back => f.write_str("Back"),
             Action::Search => f.write_str("Search"),

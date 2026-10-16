@@ -575,13 +575,6 @@ fn main() -> anyhow::Result<()> {
                 }
             }
         }
-        RenderingState::AfterRendering => {
-            // Frame timing feedback for mpv's pacing; only for frames it drew.
-            let on_player = ui_weak.upgrade().is_some_and(|ui| ui.get_screen() == SCREEN_PLAYER);
-            if let (true, Some((r, _))) = (on_player, renderer.borrow().as_ref()) {
-                r.report_swap();
-            }
-        }
         RenderingState::RenderingTeardown => {
             renderer.borrow_mut().take();
         }

@@ -61,6 +61,12 @@ pub enum SegmentAction {
     Off,
 }
 
+/// mpv `hwdec`. Video goes through the host's OpenGL context, where on
+/// Windows d3d11va/dxva2 have no zero-copy interop and `auto-safe` can end
+/// up decoding on the CPU (stutter in high-bitrate scenes). nvdec has a CUDA
+/// to GL interop; everything else decodes on the GPU and copies back.
+pub const DEFAULT_HWDEC: &str = if cfg!(windows) { "nvdec,auto-copy-safe" } else { "auto-safe" };
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct PlaybackConfig {
@@ -78,7 +84,7 @@ pub struct PlaybackConfig {
 impl Default for PlaybackConfig {
     fn default() -> Self {
         Self {
-            hwdec: "auto-safe".into(),
+            hwdec: DEFAULT_HWDEC.into(),
             intro: SegmentAction::Ask,
             recap: SegmentAction::Auto,
             outro: SegmentAction::Ask,
@@ -207,9 +213,36 @@ impl ToneMappingPreset {
     }
 }
 
+/// How much GPU work mpv spends on scaling and debanding.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PictureQuality {
+    /// Bilinear scaling, no debanding: for weak GPUs or 4K HDR stutter.
+    Fast,
+    /// Sharp scalers, no debanding.
+    Balanced,
+    /// EWA scaling, debanding, linear-light downscaling: heavy at 4K, fine
+    /// on a decent GPU once decoding is on the GPU too (see DEFAULT_HWDEC).
+    #[default]
+    High,
+}
+
+impl PictureQuality {
+    pub const ALL: [Self; 3] = [Self::Fast, Self::Balanced, Self::High];
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Fast => "Fast",
+            Self::Balanced => "Balanced",
+            Self::High => "High (heavy on the GPU)",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct VideoConfig {
+    pub quality: PictureQuality,
     /// Presets cycled with Ctrl+T during playback (projector tuning).
     pub tone_mapping_presets: Vec<ToneMappingPreset>,
     /// Index of the active preset.
@@ -243,6 +276,7 @@ impl Default for VideoConfig {
                 ToneMappingPreset::new("Natural · keeps colours", "mobius", "auto", "yes"),
             ],
             tone_mapping: 0,
+            quality: PictureQuality::default(),
         }
     }
 }
@@ -275,6 +309,10 @@ impl Config {
             Ok(text) => {
                 let mut cfg: Self =
                     toml::from_str(&text).map_err(|source| ConfigError::Parse { path: path.into(), source })?;
+                // The old Windows default; see DEFAULT_HWDEC.
+                if cfg!(windows) && cfg.playback.hwdec == "auto-safe" {
+                    cfg.playback.hwdec = DEFAULT_HWDEC.into();
+                }
                 if cfg.video.tone_mapping_presets == VideoConfig::old_default_presets() {
                     cfg.video.tone_mapping_presets = VideoConfig::default().tone_mapping_presets;
                 }

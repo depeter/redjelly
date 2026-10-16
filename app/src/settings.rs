@@ -25,6 +25,7 @@ pub enum Setting {
     Countdown,
     Hwdec,
     ToneMapping,
+    PictureQuality,
     SubAutoSearch,
     SubAutoSync,
     SubUpload,
@@ -51,7 +52,10 @@ pub enum Setting {
 
 const COUNTDOWNS: &[u32] = &[0, 5, 10, 15, 30];
 const SUB_SIZES: &[u32] = &[36, 40, 46, 52, 58, 64];
-const HWDEC: &[&str] = &["auto-safe", "auto", "no"];
+/// The first entry is the platform default (see `DEFAULT_HWDEC`).
+/// auto-copy-safe decodes on the GPU and copies frames back, so it never
+/// needs an interop with our GL context.
+const HWDEC: &[&str] = &[rj_core::config::DEFAULT_HWDEC, "auto-copy-safe", "auto-safe", "no"];
 const RUNTIMES: &[&str] = &["cuda12", "cuda11", "cpu"];
 const MODELS: &[&str] = &["large-v3-turbo-q5_0", "large-v3-turbo", "medium-q5_0", "small"];
 /// 0.0 = follow Windows display scaling.
@@ -137,6 +141,7 @@ impl App {
                 "Picture",
                 vec![
                     card("HDR tone mapping (Ctrl+T)", self.tone_mapping_name(), Setting::ToneMapping),
+                    card("Picture quality (Ctrl+P)", cfg.video.quality.label().into(), Setting::PictureQuality),
                     card(
                         "UI size",
                         if scale <= 0.0 { "Windows scaling".into() } else { format!("{:.0} % (after restart)", scale * 100.0) },
@@ -306,6 +311,10 @@ impl App {
                     let n = cfg.video.tone_mapping_presets.len().max(1);
                     cfg.video.tone_mapping = (cfg.video.tone_mapping + 1) % n;
                 }
+                PictureQuality => {
+                    let all = rj_core::config::PictureQuality::ALL;
+                    cfg.video.quality = all[all.iter().position(|q| *q == cfg.video.quality).map_or(0, |i| (i + 1) % all.len())];
+                }
                 SubAutoSearch => cfg.subtitles.auto_search ^= true,
                 SubAutoSync => cfg.subtitles.auto_sync_non_hash ^= true,
                 SubUpload => cfg.subtitles.upload_to_server ^= true,
@@ -334,6 +343,7 @@ impl App {
                 let _ = self.player.mpv().set_property("hwdec", v.as_str());
             }
             Setting::ToneMapping => self.apply_tone_mapping(),
+            Setting::PictureQuality => self.player.apply_quality(self.config.borrow().video.quality),
             Setting::SubSize | Setting::SubFont => {
                 let _ = self.player.apply_subtitle_style(&self.config.borrow());
             }

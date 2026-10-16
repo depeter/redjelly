@@ -48,14 +48,14 @@ impl VideoRenderer {
     }
 
     /// Draws the current video frame into the default framebuffer.
+    ///
+    /// No `report_swap`: Slint has no hook after the real buffer swap, and
+    /// reporting at the wrong time (or for UI-only repaints) skews mpv's
+    /// vsync estimate so it drops frames that weren't late — choppy motion.
     pub fn render(&self, width: i32, height: i32) -> Result<(), MpvError> {
         // Clears the update flag; the frame is drawn every time the host
         // repaints so the UI layer never shows a stale background.
         let _ = self.ctx.update();
         self.ctx.render::<HostGpa>(0, width, height, true)
-    }
-
-    pub fn report_swap(&self) {
-        self.ctx.report_swap();
     }
 }

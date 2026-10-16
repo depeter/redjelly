@@ -1,6 +1,6 @@
 ; redjelly installer (NSIS 3, Modern UI 2).
 ; Built by scripts/build-windows.sh:
-;   makensis -DVERSION=0.1.0 -DSRC=<dist/redjelly> -DOUT=<setup.exe> installer/redjelly.nsi
+;   makensis -DVERSION=0.1.0 -DSRC=<dist/redjelly> -DOUT=<installer.exe> installer/redjelly.nsi
 ;
 ; Per-user install (no admin / UAC prompt) into %LOCALAPPDATA%\Programs,
 ; with a Start menu entry, optional desktop shortcut, and an Apps & features
@@ -19,7 +19,7 @@ SetCompressor /SOLID lzma
   !error "pass -DSRC=<folder with redjelly.exe>"
 !endif
 !ifndef OUT
-  !define OUT "redjelly-setup-${VERSION}.exe"
+  !define OUT "redjelly-install-${VERSION}.exe"
 !endif
 
 !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\redjelly"

@@ -7,7 +7,7 @@
 #   [MAKENSIS=/path/to/makensis NSISDIR=/path/to/share/nsis] \
 #   scripts/build-windows.sh
 #
-# With MAKENSIS set it also builds dist/redjelly-setup-<version>.exe.
+# With MAKENSIS set it also builds dist/redjelly-install-<version>.zip (zipped installer).
 # NSIS without root: `apt-get download nsis nsis-common` + `dpkg-deb -x`.
 #
 # llvm-mingw: https://github.com/mstorsjo/llvm-mingw/releases
@@ -42,7 +42,9 @@ echo "built $root/dist/redjelly-windows-x64.zip"
 
 if [ -n "${MAKENSIS:-}" ]; then
   version=$(sed -n 's/^version = "\(.*\)"/\1/p' "$root/Cargo.toml" | head -1)
-  setup="$root/dist/redjelly-setup-$version.exe"
-  "$MAKENSIS" -V2 -DVERSION="$version" -DSRC="$dist" -DOUT="$setup" "$root/installer/redjelly.nsi"
-  echo "built $setup"
+  # Browsers block unsigned "*setup*.exe" downloads, so ship it zipped.
+  name="redjelly-install-$version"
+  "$MAKENSIS" -V2 -DVERSION="$version" -DSRC="$dist" -DOUT="$root/dist/$name.exe" "$root/installer/redjelly.nsi"
+  (cd "$root/dist" && rm -f "$name.zip" && python3 -c "import zipfile, sys; zipfile.ZipFile(sys.argv[1] + '.zip', 'w', zipfile.ZIP_DEFLATED).write(sys.argv[1] + '.exe')" "$name")
+  echo "built $root/dist/$name.zip"
 fi

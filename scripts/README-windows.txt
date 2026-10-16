@@ -1,7 +1,7 @@
 redjelly test build
 ===================
 
-Install with redjelly-setup-<version>.exe (per-user, no admin rights;
+Install with redjelly-install-<version>.exe (per-user, no admin rights;
 Start menu entry, optional desktop shortcut, uninstall via Apps & features).
 The zip is the same app as a portable folder.
 Logs are in %LOCALAPPDATA%\redjelly\data\logs\redjelly.log (and mpv.log).

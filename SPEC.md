@@ -335,7 +335,7 @@ All of these ship in v1; the order is for dependency, not priority.
 
 ## 10. Packaging
 Cross-built from Linux with `scripts/build-windows.sh` (llvm-mingw, gnullvm target):
-- `redjelly-setup-<version>.exe` — NSIS 3 installer (NSIS from Debian packages,
+- `redjelly-install-<version>.zip` — zipped NSIS 3 installer (browsers block bare unsigned setup .exe downloads) (NSIS from Debian packages,
   unpacked without root): per-user into `%LOCALAPPDATA%\Programs\redjelly`, no UAC,
   Start menu shortcut, optional desktop shortcut, Apps & features entry with
   uninstaller (optionally removes settings and AI models), upgrades in place.

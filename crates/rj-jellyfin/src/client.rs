@@ -333,7 +333,9 @@ impl Client {
                 .append_pair("audioBitRate", "64000")
                 .append_pair("audioChannels", "1")
                 .append_pair("audioSampleRate", "16000")
-                .append_pair("deviceId", &self.info.device_id);
+                // Its own device id, so stopping playback on this device
+                // never kills the extraction's transcode.
+                .append_pair("deviceId", &format!("{}-ai", self.info.device_id));
             if let Some(i) = audio_index {
                 q.append_pair("audioStreamIndex", &i.to_string());
             }

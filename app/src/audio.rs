@@ -29,16 +29,17 @@ pub async fn extract_wav(
         audio.sort_unstable();
         audio.iter().position(|i| *i == idx).map(|p| p as i64 + 1)
     });
+    let duration = ms.run_time_ticks.filter(|t| *t > 0).map(|t| t as f64 / 10_000_000.0);
     let wav = wav.to_path_buf();
     tokio::task::spawn_blocking(move || {
         let mut report = |p: f32| progress("Extracting audio", p);
-        match rj_player::extract::extract_audio(&server_url, Some(&auth), None, &wav, &mut report, &cancel) {
+        match rj_player::extract::extract_audio(&server_url, Some(&auth), None, duration, &wav, &mut report, &cancel) {
             Ok(()) => Ok(()),
             Err(e) if e == "cancelled" => Err(e),
             Err(e) => {
                 tracing::warn!("server audio transcode failed ({e}); decoding the full stream locally");
                 let mut report = |p: f32| progress("Extracting audio (full download)", p);
-                rj_player::extract::extract_audio(&direct_url, Some(&auth), mpv_aid, &wav, &mut report, &cancel)
+                rj_player::extract::extract_audio(&direct_url, Some(&auth), mpv_aid, duration, &wav, &mut report, &cancel)
             }
         }
     })

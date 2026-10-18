@@ -198,6 +198,8 @@ pub struct MediaSource {
     #[serde(default)]
     pub size: Option<u64>,
     #[serde(default)]
+    pub run_time_ticks: Option<i64>,
+    #[serde(default)]
     pub supports_direct_play: bool,
     #[serde(default)]
     pub transcoding_url: Option<String>,

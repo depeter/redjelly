@@ -96,21 +96,22 @@ pub fn plan(item: &Item, target: &Lang) -> Option<JobKind> {
     })
 }
 
-/// Sends throttled progress to the UI thread.
+/// Sends throttled progress to the UI thread. A new stage always gets
+/// through, so the previous stage's 100% never lingers.
 #[derive(Clone)]
 struct Reporter {
     id: u64,
-    last: Arc<Mutex<Instant>>,
+    last: Arc<Mutex<(Instant, String)>>,
 }
 
 impl Reporter {
     fn report(&self, status: String, progress: f32) {
         {
             let mut last = self.last.lock().unwrap();
-            if last.elapsed() < Duration::from_millis(400) && progress < 1.0 {
+            if last.0.elapsed() < Duration::from_millis(400) && progress < 1.0 && last.1 == status {
                 return;
             }
-            *last = Instant::now();
+            *last = (Instant::now(), status.clone());
         }
         let id = self.id;
         let _ = slint::invoke_from_event_loop(move || with_app(|app| app.job_progress(id, status, progress)));
@@ -183,6 +184,8 @@ async fn run(input: JobInput, rep: Reporter) -> anyhow::Result<PathBuf> {
                 threads: if threads == 0 { std::thread::available_parallelism().map_or(4, |n| n.get()) } else { threads },
                 work_dir: work_dir.clone(),
             };
+            // Loading the model and finding speech take a while before the first percent.
+            rep.report("Transcribing".into(), 0.0);
             let (cancel2, rep2, wav2, spoken2) = (cancel.clone(), rep.clone(), wav.clone(), spoken.clone());
             let result = tokio::task::spawn_blocking(move || {
                 whisper.transcribe(&wav2, spoken2.as_ref(), false, &mut |p| rep2.report("Transcribing".into(), p * 0.8), &cancel2)
@@ -326,7 +329,7 @@ impl App {
             }
         };
         self.ai_running.set(true);
-        let rep = Reporter { id, last: Arc::new(Mutex::new(Instant::now() - Duration::from_secs(1))) };
+        let rep = Reporter { id, last: Arc::new(Mutex::new((Instant::now() - Duration::from_secs(1), String::new()))) };
         self.spawn_ui(run(input, rep), move |app, result| app.job_finished(id, result));
     }
 

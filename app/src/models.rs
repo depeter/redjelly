@@ -383,7 +383,7 @@ mod tests {
         assert!(m.whisper_cli().is_some(), "whisper-cli unpacked");
 
         let wav = root.join("audio.wav");
-        rj_player::extract::extract_audio(&input, None, None, &wav, &mut |_| {}, &cancel).unwrap();
+        rj_player::extract::extract_audio(&input, None, None, None, &wav, &mut |_| {}, &cancel).unwrap();
         let mut whisper = rj_ai::whisper_cli::WhisperCli {
             exe: m.whisper_cli().unwrap(),
             model: m.whisper_model(),

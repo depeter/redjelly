@@ -3,15 +3,22 @@
 
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::time::{Duration, Instant};
 
 use libmpv2::Mpv;
 use libmpv2::events::Event;
 
-/// `aid`: mpv audio track id (`None` = default track). `progress` gets 0..1.
+/// No decoding progress for this long means the source has stalled.
+const STALL: Duration = Duration::from_secs(90);
+
+/// `aid`: mpv audio track id (`None` = default track). `duration` (seconds)
+/// is the real length when known: a live transcode only reports how much has
+/// arrived so far. `progress` gets 0..1.
 pub fn extract_audio(
     url: &str,
     auth_header: Option<&str>,
     aid: Option<i64>,
+    duration: Option<f64>,
     out_wav: &Path,
     progress: &mut dyn FnMut(f32),
     cancel: &AtomicBool,
@@ -44,6 +51,8 @@ pub fn extract_audio(
     mpv.command("loadfile", &[url]).map_err(|e| format!("loading {url}: {e}"))?;
 
     let mut started = false;
+    let begun = Instant::now();
+    let (mut last_pos, mut last_advance) = (-1.0f64, Instant::now());
     loop {
         if cancel.load(Ordering::Relaxed) {
             let _ = mpv.command("stop", &[]);
@@ -55,12 +64,20 @@ pub fn extract_audio(
             Some(Err(e)) => return Err(format!("decoding failed: {e}")),
             _ => {}
         }
-        if started {
-            let pos: f64 = mpv.get_property("time-pos").unwrap_or(0.0);
-            let dur: f64 = mpv.get_property("duration").unwrap_or(0.0);
+        // time-pos is unavailable once the file has ended.
+        if let (true, Ok(pos)) = (started, mpv.get_property::<f64>("time-pos")) {
+            let dur = duration.filter(|d| *d > 0.0).unwrap_or_else(|| mpv.get_property("duration").unwrap_or(0.0));
+            // Capped: 100% means the file is done.
             if dur > 0.0 {
-                progress((pos / dur).clamp(0.0, 1.0) as f32);
+                progress((pos / dur).clamp(0.0, 0.99) as f32);
             }
+            if pos > last_pos {
+                (last_pos, last_advance) = (pos, Instant::now());
+            }
+        }
+        if last_advance.elapsed() > STALL {
+            tracing::warn!("audio extraction stalled at {last_pos:.0}s");
+            return Err(format!("stalled at {:.0} min", last_pos.max(0.0) / 60.0));
         }
     }
     drop(mpv);
@@ -68,6 +85,16 @@ pub fn extract_audio(
     // A WAV header alone is 44 bytes: anything that small has no audio.
     if size < 16_000 {
         return Err("no audio was decoded".into());
+    }
+    // 16 kHz × 16-bit mono = 32000 bytes a second.
+    let decoded = size.saturating_sub(44) as f64 / 32_000.0;
+    tracing::info!("extracted {decoded:.0} s of audio in {:.0?}", begun.elapsed());
+    // A dropped or timed-out connection also ends the file.
+    if let Some(d) = duration.filter(|d| *d > 0.0)
+        && decoded < d * 0.97
+    {
+        tracing::warn!("audio stream ended early at {decoded:.0}s of {d:.0}s");
+        return Err(format!("stream ended early at {:.0} of {:.0} min", decoded / 60.0, d / 60.0));
     }
     progress(1.0);
     Ok(())
@@ -85,7 +112,7 @@ mod tests {
         let out = std::env::temp_dir().join(format!("rj-extract-{}.wav", std::process::id()));
         let start = std::time::Instant::now();
         let mut last = 0.0;
-        extract_audio(&input, None, None, &out, &mut |p| last = p, &AtomicBool::new(false)).unwrap();
+        extract_audio(&input, None, None, None, &out, &mut |p| last = p, &AtomicBool::new(false)).unwrap();
         let bytes = std::fs::read(&out).unwrap();
         std::fs::remove_file(&out).unwrap();
         println!("{} bytes in {:?}", bytes.len(), start.elapsed());

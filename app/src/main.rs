@@ -600,6 +600,8 @@ fn main() -> anyhow::Result<()> {
     let pad_tick = slint::Timer::default();
     pad_tick.start(slint::TimerMode::Repeated, Duration::from_millis(16), || with_app(|app| app.poll_gamepads()));
 
+    // Open fullscreen; only F / Alt+Enter / double-click leave it.
+    ui.window().set_fullscreen(true);
     ui.run()?;
     // Stop playback cleanly so the server gets a final position.
     with_app(|app| {

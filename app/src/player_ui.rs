@@ -361,9 +361,6 @@ impl App {
             let _ = slint::quit_event_loop();
             return;
         }
-        if ui.window().is_fullscreen() {
-            ui.window().set_fullscreen(false);
-        }
         // Back to where playback started, refreshed for the new progress.
         self.show_top();
         self.reload_top();
@@ -497,10 +494,6 @@ impl App {
                 return self.toast("Autoplay cancelled for this episode");
             }
             Action::SubAutoSync => return self.auto_sync_current(),
-            Action::Back if ui.window().is_fullscreen() => {
-                ui.window().set_fullscreen(false);
-                return;
-            }
             Action::Back => self.apply_to_player(Action::Stop),
             other => self.apply_to_player(other),
         }

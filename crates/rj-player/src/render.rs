@@ -52,6 +52,11 @@ impl VideoRenderer {
     /// No `report_swap`: Slint has no hook after the real buffer swap, and
     /// reporting at the wrong time (or for UI-only repaints) skews mpv's
     /// vsync estimate so it drops frames that weren't late — choppy motion.
+    /// So mpv's default `BLOCK_FOR_TARGET_TIME` stays on: a new frame's
+    /// render waits until the frame is due and the vsync'd swap then shows
+    /// it on the next refresh, which keeps an even cadence without swap
+    /// feedback. That only holds if the host redraws as soon as
+    /// `on_update` fires, not on a timer of its own.
     pub fn render(&self, width: i32, height: i32) -> Result<(), MpvError> {
         // Clears the update flag; the frame is drawn every time the host
         // repaints so the UI layer never shows a stale background.

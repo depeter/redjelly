@@ -4824,6 +4824,7 @@ dependencies = [
  "tracing-subscriber",
  "uuid",
  "windows-native-keyring-store",
+ "windows-sys 0.61.2",
  "zip 9.0.3",
 ]
 
@@ -5532,6 +5533,7 @@ dependencies = [
  "const-field-offset",
  "i-slint-backend-linuxkms",
  "i-slint-backend-selector",
+ "i-slint-backend-winit",
  "i-slint-common",
  "i-slint-core",
  "i-slint-core-macros",

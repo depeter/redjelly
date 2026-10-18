@@ -1,14 +1,16 @@
 //! libmpv wrapper: owns the mpv core, applies [`Action`]s and settings.
 //!
-//! Video output goes through mpv's render API (`vo=libmpv`); the app creates
-//! the OpenGL render context against Slint's GL context (SPEC §2.1, spike M0).
+//! Video output is either mpv's own native window under the UI
+//! ([`VideoOutput::Window`], the app hands over the window with
+//! [`Player::set_window`]) or mpv's render API (`vo=libmpv`), with the app
+//! creating the OpenGL render context against Slint's (SPEC §2.1, spike M0).
 
 pub mod extract;
 pub mod render;
 pub mod track_map;
 
 use libmpv2::Mpv;
-use rj_core::config::{AssOverride, Config, PictureQuality};
+use rj_core::config::{AssOverride, Config, PictureQuality, VideoOutput};
 use rj_input::Action;
 
 pub use libmpv2;
@@ -67,8 +69,21 @@ impl Player {
     /// `log_file`: mpv's own verbose log, invaluable for playback bug reports.
     pub fn new(cfg: &Config, log_file: Option<&std::path::Path>) -> Result<Self, MpvError> {
         let mpv = Mpv::with_initializer(|init| {
-            init.set_option("vo", "libmpv")?;
-            init.set_option("hwdec", cfg.playback.hwdec.as_str())?;
+            match cfg.video_output() {
+                VideoOutput::Window => {
+                    init.set_option("vo", "gpu-next")?;
+                    init.set_option("gpu-api", "d3d11")?;
+                    // Lock frame timing to the display's refresh and resample
+                    // audio to match: even cadence instead of dropped/doubled
+                    // frames (what Kodi's "sync playback to display" does).
+                    init.set_option("video-sync", "display-resample")?;
+                    // The UI window on top owns the cursor and all input.
+                    init.set_option("input-cursor", false)?;
+                    init.set_option("cursor-autohide", "no")?;
+                }
+                VideoOutput::Embedded => init.set_option("vo", "libmpv")?,
+            }
+            init.set_option("hwdec", cfg.effective_hwdec())?;
             init.set_option("keep-open", "no")?;
             if let Some(path) = log_file {
                 init.set_option("log-file", path.to_string_lossy().as_ref())?;
@@ -79,7 +94,7 @@ impl Player {
             init.set_option("input-vo-keyboard", false)?;
             init.set_option("cache", "yes")?;
             init.set_option("demuxer-max-bytes", "512MiB")?;
-            // Slint's framebuffer is 8-bit: dither, or HDR→SDR gradients band.
+            // 8-bit output: dither, or HDR→SDR gradients band.
             init.set_option("dither-depth", "auto")?;
             Ok(())
         })?;
@@ -93,9 +108,16 @@ impl Player {
         self.mpv
     }
 
+    /// Window output: the native window (HWND) mpv draws into. Must be set
+    /// before the first file loads; mpv creates its video output then.
+    pub fn set_window(&self, handle: i64) -> Result<(), MpvError> {
+        self.mpv.set_property("wid", handle)
+    }
+
     /// Scaler/deband settings. Explicit values rather than mpv's profiles,
-    /// whose contents change between mpv versions. Video is rendered on
-    /// the UI thread, so a frame that takes too long is a dropped frame.
+    /// whose contents change between mpv versions. A frame that takes too
+    /// long to render is a dropped frame (and with embedded output it
+    /// stalls the UI thread too).
     pub fn apply_quality(&self, q: PictureQuality) {
         let (scale, dscale, deband, correct, linear) = match q {
             PictureQuality::Fast => ("bilinear", "bilinear", "no", "no", "no"),
@@ -188,7 +210,7 @@ impl Player {
         let m = self.mpv;
         let g = |k: &str| m.get_property::<String>(k).unwrap_or_else(|_| "-".into());
         format!(
-            "video   {} {}x{} @ {} fps\nhwdec   {}\nvo      {}\ncolor   {} / {} / peak {}\naudio   {} {} ch\ndrops   {} decoder, {} vo\ncache   {} s",
+            "video   {} {}x{} @ {} fps\nhwdec   {}\nvo      {}\ncolor   {} / {} / peak {}\naudio   {} {} ch\ndisplay {} Hz, sync {}\ndrops   {} decoder, {} vo, {} late, {} mistimed\ncache   {} s",
             g("video-codec"),
             g("video-params/w"),
             g("video-params/h"),
@@ -200,8 +222,12 @@ impl Player {
             g("video-params/sig-peak"),
             g("audio-codec-name"),
             g("audio-params/channel-count"),
+            g("display-fps"),
+            g("video-sync"),
             g("decoder-frame-drop-count"),
             g("frame-drop-count"),
+            g("vo-delayed-frame-count"),
+            g("mistimed-frame-count"),
             g("demuxer-cache-duration"),
         )
     }

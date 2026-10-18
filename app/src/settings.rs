@@ -26,6 +26,7 @@ pub enum Setting {
     Hwdec,
     ToneMapping,
     PictureQuality,
+    VideoOutput,
     SubAutoSearch,
     SubAutoSync,
     SubUpload,
@@ -134,7 +135,15 @@ impl App {
                         if p.next_episode_countdown == 0 { "Off".into() } else { format!("After {} s countdown", p.next_episode_countdown) },
                         Setting::Countdown,
                     ),
-                    card("Hardware decoding", p.hwdec.clone(), Setting::Hwdec),
+                    card(
+                        "Hardware decoding",
+                        if p.hwdec == rj_core::config::DEFAULT_HWDEC && cfg.effective_hwdec() != p.hwdec {
+                            format!("{} (default)", cfg.effective_hwdec())
+                        } else {
+                            p.hwdec.clone()
+                        },
+                        Setting::Hwdec,
+                    ),
                 ],
             ),
             row(
@@ -142,6 +151,8 @@ impl App {
                 vec![
                     card("HDR tone mapping (Ctrl+T)", self.tone_mapping_name(), Setting::ToneMapping),
                     card("Picture quality (Ctrl+P)", cfg.video.quality.label().into(), Setting::PictureQuality),
+                    #[cfg(windows)]
+                    card("Video output", format!("{} (after restart)", cfg.video.output.label()), Setting::VideoOutput),
                     card(
                         "UI size",
                         if scale <= 0.0 { "Windows scaling".into() } else { format!("{:.0} % (after restart)", scale * 100.0) },
@@ -311,6 +322,10 @@ impl App {
                     let n = cfg.video.tone_mapping_presets.len().max(1);
                     cfg.video.tone_mapping = (cfg.video.tone_mapping + 1) % n;
                 }
+                VideoOutput => {
+                    let all = rj_core::config::VideoOutput::ALL;
+                    cfg.video.output = all[all.iter().position(|o| *o == cfg.video.output).map_or(0, |i| (i + 1) % all.len())];
+                }
                 PictureQuality => {
                     let all = rj_core::config::PictureQuality::ALL;
                     cfg.video.quality = all[all.iter().position(|q| *q == cfg.video.quality).map_or(0, |i| (i + 1) % all.len())];
@@ -339,7 +354,7 @@ impl App {
     fn apply_live(&self, s: Setting) {
         match s {
             Setting::Hwdec => {
-                let v = self.config.borrow().playback.hwdec.clone();
+                let v = self.config.borrow().effective_hwdec().to_owned();
                 let _ = self.player.mpv().set_property("hwdec", v.as_str());
             }
             Setting::ToneMapping => self.apply_tone_mapping(),
@@ -351,6 +366,7 @@ impl App {
                 *self.opensubs.borrow_mut() = None;
             }
             Setting::UiScale => self.toast("UI size changes after restarting redjelly"),
+            Setting::VideoOutput => self.toast("Video output changes after restarting redjelly"),
             _ => {}
         }
     }

@@ -23,6 +23,8 @@ mod secrets;
 mod settings;
 mod subtitles;
 mod video;
+#[cfg(windows)]
+mod video_window;
 
 use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
@@ -30,13 +32,14 @@ use std::rc::Rc;
 use std::time::{Duration, Instant};
 
 use anyhow::Context as _;
-use rj_core::config::Config;
+use rj_core::config::{Config, VideoOutput};
 use rj_core::state::AppState;
 use rj_input::media_controls::OsMediaControls;
 use rj_input::{Action, Context, KeyChord, Keymap};
 use rj_jellyfin::Client;
 use rj_player::Player;
 use rj_player::render::VideoRenderer;
+use slint::winit_030::WinitWindowAccessor;
 use slint::{ComponentHandle, GraphicsAPI, ModelRc, RenderingState, SharedString, VecModel};
 
 use crate::nav::Placement;
@@ -353,14 +356,56 @@ impl App {
         ui.set_keyhelp_visible(true);
     }
 
-    fn setup_media_controls(&self) {
+    /// The UI window's native handle (HWND) on Windows.
+    fn hwnd(&self) -> Option<*mut std::ffi::c_void> {
         use raw_window_handle::{HasWindowHandle, RawWindowHandle};
         let ui = self.ui();
         let handle = ui.window().window_handle();
-        let hwnd = handle.window_handle().ok().and_then(|h| match h.as_raw() {
+        handle.window_handle().ok().and_then(|h| match h.as_raw() {
             RawWindowHandle::Win32(w) => Some(w.hwnd.get() as *mut std::ffi::c_void),
             _ => None,
+        })
+    }
+
+    /// Playback can start: mpv has somewhere to draw.
+    fn on_video_ready(&self) {
+        self.video_ready.set(true);
+        if let Some(req) = self.pending.borrow_mut().take() {
+            self.start(req);
+        }
+    }
+
+    /// Window output: creates mpv's native window behind the UI window and
+    /// makes the player screen see-through.
+    #[cfg(windows)]
+    fn setup_video_window(&self) {
+        let Some(ui_hwnd) = self.hwnd() else {
+            return tracing::error!("no native handle for the UI window; no video");
+        };
+        let result = video_window::VideoWindow::new().and_then(|w| {
+            w.follow(ui_hwnd)?;
+            self.player.set_window(w.handle())?;
+            // Lives as long as the process; mpv draws into it until exit.
+            std::mem::forget(w);
+            Ok(())
         });
+        match result {
+            Ok(()) => {
+                self.ui().set_video_behind(true);
+                self.on_video_ready();
+            }
+            Err(e) => {
+                tracing::error!("video window: {e:#}");
+                self.toast(format!("Couldn't create the video window ({e}). Try Settings → Video output → Embedded."));
+            }
+        }
+    }
+
+    #[cfg(not(windows))]
+    fn setup_video_window(&self) {}
+
+    fn setup_media_controls(&self) {
+        let hwnd = self.hwnd();
         let on_action = |action: Action| {
             let _ = slint::invoke_from_event_loop(move || with_app(|app| app.media_key(action)));
         };
@@ -437,11 +482,16 @@ fn main() -> anyhow::Result<()> {
     tracing::info!("mpv log: {}", mpv_log.display());
     let player = Player::new(&config, Some(&mpv_log)).context("starting mpv")?;
 
-    // Video is drawn with OpenGL under the UI, so the renderer must be GL.
-    slint::BackendSelector::new()
-        .require_opengl()
-        .select()
-        .context("no OpenGL-capable renderer available")?;
+    let video_output = config.video_output();
+    // Embedded video is drawn with OpenGL under the UI, so the renderer
+    // must be GL; window output needs a transparent window to see through.
+    let backend = slint::BackendSelector::new().require_opengl();
+    let backend = if video_output == VideoOutput::Window {
+        backend.with_winit_window_attributes_hook(|a| a.with_transparent(true))
+    } else {
+        backend
+    };
+    backend.select().context("no OpenGL-capable renderer available")?;
 
     let runtime = tokio::runtime::Runtime::new().context("starting tokio")?;
     let ui = AppWindow::new()?;
@@ -532,6 +582,10 @@ fn main() -> anyhow::Result<()> {
     let renderer: RefCell<Option<(VideoRenderer, glow::Context)>> = RefCell::new(None);
     let ui_weak = ui.as_weak();
     let notifier = ui.window().set_rendering_notifier(move |state, api| match state {
+        RenderingState::RenderingSetup if video_output == VideoOutput::Window => {
+            // Needs the live native window: after this frame.
+            slint::Timer::single_shot(Duration::ZERO, || with_app(|app| app.setup_video_window()));
+        }
         RenderingState::RenderingSetup => {
             let GraphicsAPI::NativeOpenGL { get_proc_address } = api else { return };
             // SAFETY: Slint guarantees the GL context is current in this callback.
@@ -540,20 +594,21 @@ fn main() -> anyhow::Result<()> {
             let mpv = APP.with(|a| a.borrow().as_ref().map(|app| app.player.mpv()));
             let Some(mpv) = mpv else { return };
             let created = VideoRenderer::new(mpv, *get_proc_address, move || {
-                let _ = redraw.upgrade_in_event_loop(|ui| ui.window().request_redraw());
+                let _ = redraw.upgrade_in_event_loop(|ui| {
+                    // Straight to winit: off macOS/Wayland, Slint's own
+                    // request_redraw waits for a free-running ~16 ms timer
+                    // that drifts against vsync, so video frames landed on
+                    // 1, 2 or 3 refreshes at random — visible judder.
+                    if ui.window().with_winit_window(|w| w.request_redraw()).is_none() {
+                        ui.window().request_redraw();
+                    }
+                });
             });
             match created {
                 Ok(r) => {
                     *renderer.borrow_mut() = Some((r, gl));
                     // Loading may touch UI properties: do it after this frame.
-                    slint::Timer::single_shot(Duration::ZERO, || {
-                        with_app(|app| {
-                            app.video_ready.set(true);
-                            if let Some(req) = app.pending.borrow_mut().take() {
-                                app.start(req);
-                            }
-                        })
-                    });
+                    slint::Timer::single_shot(Duration::ZERO, || with_app(|app| app.on_video_ready()));
                 }
                 Err(e) => tracing::error!("creating mpv render context: {e}"),
             }

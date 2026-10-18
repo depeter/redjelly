@@ -1001,7 +1001,10 @@ export component AppWindow inherits Window {
     preferred-height: 720px;
     min-width: 640px;
     min-height: 400px;
-    background: Theme.bg;
+    /// mpv draws in its own window behind this one: the player screen
+    /// must be see-through.
+    in property <bool> video-behind;
+    background: root.screen == 2 && root.video-behind ? transparent : Theme.bg;
 
     /// 1 = browse, 2 = player, 3 = login form, 4 = quick connect, 5 = prompt.
     in property <int> screen: 1;

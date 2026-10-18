@@ -61,10 +61,11 @@ pub enum SegmentAction {
     Off,
 }
 
-/// mpv `hwdec`. Video goes through the host's OpenGL context, where on
-/// Windows d3d11va/dxva2 have no zero-copy interop and `auto-safe` can end
-/// up decoding on the CPU (stutter in high-bitrate scenes). nvdec has a CUDA
-/// to GL interop; everything else decodes on the GPU and copies back.
+/// mpv `hwdec`. With embedded output video goes through the host's OpenGL
+/// context, where on Windows d3d11va/dxva2 have no zero-copy interop and
+/// `auto-safe` can end up decoding on the CPU (stutter in high-bitrate
+/// scenes). nvdec has a CUDA to GL interop; everything else decodes on the
+/// GPU and copies back. See [`Config::effective_hwdec`] for window output.
 pub const DEFAULT_HWDEC: &str = if cfg!(windows) { "nvdec,auto-copy-safe" } else { "auto-safe" };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -239,9 +240,40 @@ impl PictureQuality {
     }
 }
 
+/// Where mpv draws the picture.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum VideoOutput {
+    /// mpv's own native window under the (transparent) UI window: D3D11,
+    /// gpu-next and display-synced timing, like standalone mpv. Windows only.
+    Window,
+    /// mpv's render API inside the UI's OpenGL context. Frame timing is at
+    /// the mercy of the UI toolkit's redraws, so motion can judder.
+    Embedded,
+}
+
+impl VideoOutput {
+    pub const ALL: [Self; 2] = [Self::Window, Self::Embedded];
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::Window => "Own window (smoothest)",
+            Self::Embedded => "Embedded (OpenGL)",
+        }
+    }
+}
+
+impl Default for VideoOutput {
+    fn default() -> Self {
+        if cfg!(windows) { Self::Window } else { Self::Embedded }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct VideoConfig {
+    /// Applies on restart.
+    pub output: VideoOutput,
     pub quality: PictureQuality,
     /// Presets cycled with Ctrl+T during playback (projector tuning).
     pub tone_mapping_presets: Vec<ToneMappingPreset>,
@@ -276,6 +308,7 @@ impl Default for VideoConfig {
                 ToneMappingPreset::new("Natural · keeps colours", "mobius", "auto", "yes"),
             ],
             tone_mapping: 0,
+            output: VideoOutput::default(),
             quality: PictureQuality::default(),
         }
     }
@@ -299,6 +332,21 @@ pub fn dirs() -> Result<directories::ProjectDirs, ConfigError> {
 }
 
 impl Config {
+    /// Video output actually used: window output only exists on Windows.
+    pub fn video_output(&self) -> VideoOutput {
+        if cfg!(windows) { self.video.output } else { VideoOutput::Embedded }
+    }
+
+    /// The `hwdec` to give mpv. In its own D3D11 window mpv has zero-copy
+    /// d3d11va, so the default's OpenGL workaround becomes plain `auto-safe`.
+    pub fn effective_hwdec(&self) -> &str {
+        if self.video_output() == VideoOutput::Window && self.playback.hwdec == DEFAULT_HWDEC {
+            "auto-safe"
+        } else {
+            &self.playback.hwdec
+        }
+    }
+
     pub fn default_path() -> Result<PathBuf, ConfigError> {
         Ok(dirs()?.config_dir().join("config.toml"))
     }

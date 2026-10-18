@@ -395,7 +395,10 @@ impl App {
 
     /// Rebuilds the panel lines from the current search state.
     pub fn refresh_panel(&self) {
-        match self.panel.borrow().as_ref().map(|p| p.kind) {
+        // Bound first: a borrow in the match head lives through the arms,
+        // and they borrow the panel mutably.
+        let kind = self.panel.borrow().as_ref().map(|p| p.kind);
+        match kind {
             None => return,
             Some(PanelKind::Keymap) => return self.refresh_keymap_panel(),
             Some(PanelKind::Audio) => {

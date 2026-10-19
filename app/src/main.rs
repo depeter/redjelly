@@ -114,6 +114,8 @@ pub struct App {
     gamepads: RefCell<Option<rj_input::gamepad::Gamepads>>,
     /// Player button with key/controller focus; None = keys control playback.
     controls_focus: Cell<Option<i32>>,
+    /// When Esc last hid the player bar (see `pointer_moved`).
+    osd_hidden_at: Cell<Option<Instant>>,
     update: RefCell<update::UpdateState>,
     /// Downloaded installers.
     update_dir: PathBuf,
@@ -547,6 +549,7 @@ fn main() -> anyhow::Result<()> {
             }
         }),
         controls_focus: Cell::new(None),
+        osd_hidden_at: Cell::new(None),
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
     });
@@ -572,7 +575,7 @@ fn main() -> anyhow::Result<()> {
             ui.window().set_fullscreen(!ui.window().is_fullscreen());
         })
     });
-    ui.on_player_pointer_moved(|| with_app(|app| app.show_osd()));
+    ui.on_player_pointer_moved(|| with_app(|app| app.pointer_moved()));
     ui.on_player_button(|b| with_app(|app| app.press_control(b)));
     ui.on_player_seek(|f| with_app(|app| app.seek_to_fraction(f)));
     ui.on_player_set_volume(|f| with_app(|app| app.set_volume_fraction(f)));

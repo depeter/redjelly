@@ -2,7 +2,7 @@
 //! Mouse and touch use them directly; with keys or a controller, Enter / A
 //! shows the bar with Play focused and the arrows move between buttons.
 
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use rj_core::lang::Lang;
 use rj_input::Action;
@@ -27,6 +27,9 @@ pub const SEEK_BAR: i32 = 10;
 
 /// The button row, left to right.
 const ROW: [i32; 10] = [STOP, PREVIOUS, REWIND, PLAY, FORWARD, NEXT, SUBTITLES, AUDIO, VOLUME, FULLSCREEN];
+
+/// After Esc hides the bar, pointer events this soon are side effects.
+const HIDE_GRACE: Duration = Duration::from_millis(500);
 
 const REWIND_SECS: f64 = -10.0;
 const FORWARD_SECS: f64 = 30.0;
@@ -74,7 +77,19 @@ impl App {
     pub fn hide_controls(&self) {
         self.release_controls();
         self.osd_until.set(Instant::now());
+        self.osd_hidden_at.set(Some(Instant::now()));
         self.ui().set_player_osd(false);
+    }
+
+    /// The mouse moved over the video or the bar: show the bar. Removing the
+    /// bar re-delivers the resting pointer to the video's TouchArea, whose
+    /// mouse-x/y were stale while the bar covered it — a "move" that would
+    /// bring the bar straight back after Esc. Ignore those for a moment.
+    pub fn pointer_moved(&self) {
+        if self.osd_hidden_at.get().is_some_and(|t| t.elapsed() < HIDE_GRACE) {
+            return;
+        }
+        self.show_osd();
     }
 
     fn control_shown(&self, button: i32) -> bool {

@@ -23,7 +23,7 @@ Player keys
   Up/Down volume        M mute           F fullscreen          , . frame step
   A cycle audio         J cycle subs     V show/hide subs      Z/X sub delay
   [ ] speed             0-9 seek to 0-90%  PgUp/PgDn chapters  I stats overlay
-  ? list keys           Esc stop playback
+  ? list keys           Esc/Backspace stop
   Mouse: click = pause, double-click = fullscreen, cursor hides while watching.
   Media keys / Windows media overlay control playback too.
 

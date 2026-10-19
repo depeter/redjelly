@@ -494,7 +494,7 @@ impl App {
                 return self.toast("Autoplay cancelled for this episode");
             }
             Action::SubAutoSync => return self.auto_sync_current(),
-            Action::Back => self.apply_to_player(Action::Stop),
+            Action::Back | Action::Stop => return self.stop_playback(),
             other => self.apply_to_player(other),
         }
 
@@ -558,6 +558,18 @@ impl App {
         if let Err(e) = state.save(&self.state_path) {
             tracing::warn!("saving state: {e}");
         }
+    }
+
+    /// Esc / Stop: back to the previous screen at once. Waiting for mpv to
+    /// go idle first could take seconds (window output tears down its D3D11
+    /// video output), so the session ends here and mpv stops behind it.
+    fn stop_playback(&self) {
+        let playing = self.session.borrow_mut().as_mut().map(|s| s.chain_to.take()).is_some();
+        if playing {
+            // Reports the final position, which mpv forgets once stopped.
+            self.end_session();
+        }
+        self.apply_to_player(Action::Stop);
     }
 
     fn apply_to_player(&self, action: Action) {

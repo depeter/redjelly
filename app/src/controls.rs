@@ -70,6 +70,13 @@ impl App {
         self.focus_control(None);
     }
 
+    /// Hides the bar now (Esc) instead of waiting for it to time out.
+    pub fn hide_controls(&self) {
+        self.release_controls();
+        self.osd_until.set(Instant::now());
+        self.ui().set_player_osd(false);
+    }
+
     fn control_shown(&self, button: i32) -> bool {
         let ui = self.ui();
         match button {
@@ -114,11 +121,7 @@ impl App {
                 }
             }
             (Action::Activate, _) => self.controls_activate(),
-            (Action::Back, _) => {
-                self.release_controls();
-                self.osd_until.set(Instant::now());
-                self.ui().set_player_osd(false);
-            }
+            (Action::Back, _) => self.hide_controls(),
             _ => {}
         }
     }

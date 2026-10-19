@@ -133,7 +133,7 @@ id recorded. This mapping lives in `rj-player` and is unit-tested.
 | V | toggle subtitles | S | open subtitle panel (search/download/AI) |
 | Z / X | sub delay −/+100 ms | Ctrl+Z | auto-sync subtitle (alass) |
 | Enter | skip intro/credits (when shown) | I | stats overlay |
-| Esc / Backspace | stop → back | ? | keybinding cheat sheet |
+| Esc / Backspace | hide controls → stop → back | ? | keybinding cheat sheet |
 | 0–9 | seek to 0%–90% | Ctrl+S | cycle shader preset |
 
 ### 4.3 Keymap file

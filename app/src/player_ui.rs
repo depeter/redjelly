@@ -466,6 +466,11 @@ impl App {
 
     pub fn handle_player(&self, action: Action) {
         let ui = self.ui();
+        // Esc in two steps: first hide the bar, then leave. (While paused
+        // the bar can't hide, so Esc leaves straight away.)
+        if action == Action::Back && ui.get_player_osd() && !ui.get_player_paused() {
+            return self.hide_controls();
+        }
         self.show_osd();
         match action {
             Action::ShowStats => {

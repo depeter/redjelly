@@ -74,6 +74,12 @@ Settings (Ctrl+S, or Home → More)
   projector; applies after restart), key bindings editor (press any key or
   controller button to assign; Backspace removes), sign out.
 
+Updates
+  redjelly checks GitHub for a new version at start and every 12 hours (not
+  while you're watching) and shows a message when one is out. Settings ->
+  Updates shows what's new; "Install now" downloads it, checks its signature,
+  and restarts redjelly on the new version.
+
 While watching
   Enter    skip intro/recap/credits when the button shows; play next episode
            during the countdown (Esc keeps watching)

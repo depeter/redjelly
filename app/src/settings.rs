@@ -49,6 +49,8 @@ pub enum Setting {
     SwitchUser,
     SignOut,
     ChangeServer,
+    Update,
+    AutoUpdate,
 }
 
 const COUNTDOWNS: &[u32] = &[0, 5, 10, 15, 30];
@@ -218,6 +220,13 @@ impl App {
                     card("Server", cfg.server.url.clone().unwrap_or_default(), Setting::ChangeServer),
                 ],
             ),
+            row(
+                "Updates",
+                vec![
+                    card(&format!("redjelly {}", env!("CARGO_PKG_VERSION")), self.update_summary(), Setting::Update),
+                    card("Check automatically", on_off(cfg.update.auto_check), Setting::AutoUpdate),
+                ],
+            ),
         ];
         Content {
             source: Source::Settings,
@@ -233,13 +242,13 @@ impl App {
         }
     }
 
-    fn save_config(&self) {
+    pub(crate) fn save_config(&self) {
         if let Err(e) = self.config.borrow().save(&self.config_path) {
             self.toast(format!("Couldn't save settings: {e}"));
         }
     }
 
-    fn refresh_settings(&self) {
+    pub(crate) fn refresh_settings(&self) {
         if self.top_source() == Some(Source::Settings) {
             self.present(self.settings_content(), Placement::ReplaceTop);
         }
@@ -304,6 +313,7 @@ impl App {
                 return self.switch_user();
             }
             ChangeServer => return self.show_login_form(0),
+            Update => return self.open_update_panel(),
             _ => {}
         }
 
@@ -342,6 +352,7 @@ impl App {
                 AiGpu => cfg.ai.use_gpu ^= true,
                 AiVad => cfg.ai.vad ^= true,
                 UiScale => cfg.appearance.ui_scale = next_in(UI_SCALES, cfg.appearance.ui_scale),
+                AutoUpdate => cfg.update.auto_check ^= true,
                 _ => {}
             }
         }

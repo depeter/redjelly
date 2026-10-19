@@ -45,6 +45,9 @@ pub enum PanelAction {
     Audio(i64),
     /// Switch to this mpv subtitle track (None = off).
     Subtitle(Option<i64>),
+    UpdateInstall,
+    UpdateSkip,
+    UpdateCheck,
 }
 
 /// What the side panel is showing.
@@ -54,6 +57,7 @@ pub enum PanelKind {
     Subtitles,
     Audio,
     Keymap,
+    Update,
 }
 
 #[derive(Default)]
@@ -166,7 +170,7 @@ struct AudioSync {
 }
 
 /// Shows progress as a toast, at most once a second.
-fn toast_progress() -> impl Fn(String) + Send + Sync + Clone + 'static {
+pub(crate) fn toast_progress() -> impl Fn(String) + Send + Sync + Clone + 'static {
     let last = Arc::new(std::sync::Mutex::new(std::time::Instant::now() - Duration::from_secs(5)));
     move |msg: String| {
         let mut l = last.lock().unwrap();
@@ -401,6 +405,7 @@ impl App {
         match kind {
             None => return,
             Some(PanelKind::Keymap) => return self.refresh_keymap_panel(),
+            Some(PanelKind::Update) => return self.refresh_update_panel(),
             Some(PanelKind::Audio) => {
                 let entries = self.audio_panel_entries();
                 return self.show_panel_entries(entries);
@@ -479,7 +484,7 @@ impl App {
         self.show_panel_entries(entries);
     }
 
-    fn show_panel_entries(&self, entries: Vec<(PanelItem, PanelAction)>) {
+    pub(crate) fn show_panel_entries(&self, entries: Vec<(PanelItem, PanelAction)>) {
         let items: Vec<PanelItem> = entries.iter().map(|(i, _)| i.clone()).collect();
         self.ui().set_panel_items(ModelRc::new(VecModel::from(items)));
         let mut panel = self.panel.borrow_mut();
@@ -544,6 +549,9 @@ impl App {
             Some(PanelAction::KeyBinding(ctx, action)) => self.start_capture(ctx, action),
             Some(PanelAction::Audio(id)) => self.choose_audio(id),
             Some(PanelAction::Subtitle(id)) => self.choose_subtitle(id),
+            Some(PanelAction::UpdateInstall) => self.install_update(),
+            Some(PanelAction::UpdateSkip) => self.skip_update(),
+            Some(PanelAction::UpdateCheck) => self.check_for_update(true),
             Some(PanelAction::None) | None => {}
         }
     }

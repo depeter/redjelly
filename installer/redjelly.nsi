@@ -68,12 +68,22 @@ Section "redjelly" SecMain
   SetOutPath "$INSTDIR"
 
   ; Updating while redjelly runs would fail half-way: ask to close it first.
+  ; Silent installs come from redjelly's self-update, which has just told
+  ; redjelly to quit: wait up to 30 s for it instead.
+  StrCpy $R1 0
   retry:
     ClearErrors
     IfFileExists "$INSTDIR\redjelly.exe" 0 copy
     Delete "$INSTDIR\redjelly.exe"
     IfErrors 0 copy
+    IfSilent 0 ask
+    IntOp $R1 $R1 + 1
+    IntCmp $R1 60 give_up 0 give_up
+    Sleep 500
+    Goto retry
+  ask:
     MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "redjelly is still running.$\r$\nClose it, then press Retry." IDRETRY retry
+  give_up:
     Abort
   copy:
 
@@ -107,6 +117,15 @@ SectionEnd
 Section /o "Desktop shortcut" SecDesktop
   CreateShortcut "$DESKTOP\redjelly.lnk" "$INSTDIR\redjelly.exe" "" "$INSTDIR\redjelly.exe" 0 SW_SHOWNORMAL "" "Jellyfin client"
 SectionEnd
+
+; `/RELAUNCH` (self-update): start the new version when done.
+Function .onInstSuccess
+  ${GetParameters} $0
+  ClearErrors
+  ${GetOptions} $0 "/RELAUNCH" $1
+  IfErrors +2
+    Exec '"$INSTDIR\redjelly.exe"'
+FunctionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} "The redjelly app with its video engine (mpv)."

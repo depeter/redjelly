@@ -22,6 +22,7 @@ mod screens;
 mod secrets;
 mod settings;
 mod subtitles;
+mod update;
 mod video;
 #[cfg(windows)]
 mod video_window;
@@ -113,6 +114,9 @@ pub struct App {
     gamepads: RefCell<Option<rj_input::gamepad::Gamepads>>,
     /// Player button with key/controller focus; None = keys control playback.
     controls_focus: Cell<Option<i32>>,
+    update: RefCell<update::UpdateState>,
+    /// Downloaded installers.
+    update_dir: PathBuf,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -184,6 +188,7 @@ impl App {
             ui.set_toast(SharedString::new());
         }
         self.player_tick(now);
+        self.update_tick(now);
     }
 
     fn on_key(&self, text: &str, ctrl: bool, alt: bool, shift: bool) -> bool {
@@ -542,6 +547,8 @@ fn main() -> anyhow::Result<()> {
             }
         }),
         controls_focus: Cell::new(None),
+        update: RefCell::new(Default::default()),
+        update_dir: dirs.cache_dir().join("update"),
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));

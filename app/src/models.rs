@@ -67,16 +67,16 @@ pub struct Models {
 }
 
 /// One file (or archive) to fetch.
-struct Download {
-    label: String,
-    url: String,
-    dest: PathBuf,
+pub(crate) struct Download {
+    pub label: String,
+    pub url: String,
+    pub dest: PathBuf,
     /// Unpack into `dest` (a directory) instead of saving as a file.
-    archive: Option<Archive>,
+    pub archive: Option<Archive>,
 }
 
 #[derive(Clone, Copy)]
-enum Archive {
+pub(crate) enum Archive {
     Zip,
     #[cfg_attr(windows, allow(dead_code))]
     TarGz,
@@ -285,7 +285,7 @@ fn find_file(dir: &Path, name: &str, depth: usize) -> Option<PathBuf> {
     subdirs.iter().find_map(|d| find_file(d, name, depth - 1))
 }
 
-async fn fetch(
+pub(crate) async fn fetch(
     http: &reqwest::Client,
     d: &Download,
     status: &(dyn Fn(String, f32) + Send + Sync),

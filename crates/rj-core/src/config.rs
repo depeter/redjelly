@@ -28,6 +28,7 @@ pub struct Config {
     pub ai: AiConfig,
     pub video: VideoConfig,
     pub appearance: AppearanceConfig,
+    pub update: UpdateConfig,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -324,6 +325,21 @@ pub struct AppearanceConfig {
 impl Default for AppearanceConfig {
     fn default() -> Self {
         Self { ui_scale: 1.0 }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(default)]
+pub struct UpdateConfig {
+    /// Look for a new release at startup and every 12 hours.
+    pub auto_check: bool,
+    /// A release the user chose to skip (e.g. "0.1.5"): no reminder for it.
+    pub skipped: Option<String>,
+}
+
+impl Default for UpdateConfig {
+    fn default() -> Self {
+        Self { auto_check: true, skipped: None }
     }
 }
 

@@ -24,6 +24,7 @@ image = { version = "0.25", default-features = false, features = ["jpeg", "png",
 reqwest.workspace = true
 serde_json.workspace = true
 zip = { version = "9", default-features = false, features = ["deflate"] }
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
 
 [build-dependencies]
 slint-build = "1.18"

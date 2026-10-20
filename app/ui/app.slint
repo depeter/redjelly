@@ -27,13 +27,15 @@ export struct Card {
 }
 
 /// style: 0 = poster (2:3), 1 = wide (16:9), 2 = button, 3 = setting
-/// (label + value).
+/// (label + value), 4 = compact button (only for `pinned` cards).
 export struct Row {
     title: string,
     style: int,
     cards: [Card],
     /// Horizontal scroll, in cards.
     scroll: int,
+    /// Trailing cards drawn as compact buttons (style 4) at the right edge.
+    pinned: int,
 }
 
 export struct Header {
@@ -67,8 +69,8 @@ component CardView inherits Rectangle {
 
     property <length> img-w: style == 1 ? 288px : 160px;
     property <length> img-h: style == 1 ? 162px : 240px;
-    width: style == 2 ? 220px : style == 3 ? 300px : img-w;
-    height: style == 2 ? 56px : style == 3 ? 72px : img-h + 52px;
+    width: style == 2 ? 220px : style == 3 ? 300px : style == 4 ? 112px : img-w;
+    height: style == 2 || style == 4 ? 56px : style == 3 ? 72px : img-h + 52px;
 
     if root.style == 3: Rectangle {
         border-radius: 8px;
@@ -95,15 +97,15 @@ component CardView inherits Rectangle {
         }
     }
 
-    if root.style == 2: Rectangle {
+    if root.style == 2 || root.style == 4: Rectangle {
         border-radius: 8px;
         background: root.focused ? Theme.accent : Theme.card;
         animate background { duration: 90ms; }
         Text {
-            width: parent.width - 24px;
+            width: parent.width - 16px;
             text: root.card.title;
             color: Theme.text;
-            font-size: 17px;
+            font-size: root.style == 4 ? 15px : 17px;
             font-weight: 600;
             horizontal-alignment: center;
             overflow: elide;
@@ -271,14 +273,35 @@ component BrowseView inherits Rectangle {
                     }
                     Rectangle {
                         height: row.style == 2 ? 56px : row.style == 3 ? 72px : (row.style == 1 ? 162px : 240px) + 52px;
-                        HorizontalLayout {
-                            x: -row.scroll * ((row.style == 1 ? 288px : row.style == 2 ? 220px : row.style == 3 ? 300px : 160px) + Theme.gap);
-                            animate x { duration: 140ms; }
-                            spacing: Theme.gap;
-                            alignment: start;
+                        // Must match layout::pinned_width.
+                        property <length> pinned-width: row.pinned > 0 ? row.pinned * (112px + Theme.gap) + Theme.side-pad : 0px;
+                        property <int> free: row.cards.length - row.pinned;
+                        Rectangle {
+                            x: 0;
+                            width: parent.width - parent.pinned-width;
+                            clip: row.pinned > 0;
+                            HorizontalLayout {
+                                x: -row.scroll * ((row.style == 1 ? 288px : row.style == 2 ? 220px : row.style == 3 ? 300px : 160px) + Theme.gap);
+                                animate x { duration: 140ms; }
+                                spacing: Theme.gap;
+                                alignment: start;
+                                for card[c] in row.cards: CardView {
+                                    // Pinned ones are last, so hiding them leaves no gap.
+                                    visible: c < free;
+                                    card: card;
+                                    style: row.style;
+                                    focused: r == root.focus-row && c == root.focus-col;
+                                    clicked => { root.card-clicked(r, c); }
+                                }
+                            }
+                        }
+                        if row.pinned > 0: Rectangle {
                             for card[c] in row.cards: CardView {
+                                visible: c >= free;
+                                x: parent.width - Theme.side-pad - (row.cards.length - c) * (112px + Theme.gap) + Theme.gap;
+                                y: 0;
                                 card: card;
-                                style: row.style;
+                                style: 4;
                                 focused: r == root.focus-row && c == root.focus-col;
                                 clicked => { root.card-clicked(r, c); }
                             }

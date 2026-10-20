@@ -110,7 +110,7 @@ impl App {
             played: false,
             target: Target::Setting(s),
         };
-        let row = |title: &str, cards: Vec<CardContent>| RowContent { title: title.into(), style: STYLE_SETTING, cards, start: 0 };
+        let row = |title: &str, cards: Vec<CardContent>| RowContent { title: title.into(), style: STYLE_SETTING, cards, start: 0, pinned: 0 };
         let p = &cfg.playback;
         let sub = &cfg.subtitles;
         let prov = &cfg.providers;

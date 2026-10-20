@@ -437,7 +437,7 @@ impl App {
                 },
                 ..Default::default()
             }),
-            rows: if empty { Vec::new() } else { vec![RowContent { title: String::new(), style: STYLE_WIDE, cards, start: 0 }] },
+            rows: if empty { Vec::new() } else { vec![RowContent { title: String::new(), style: STYLE_WIDE, cards, start: 0, pinned: 0 }] },
             focus: (0, 0),
             paging: None,
         }

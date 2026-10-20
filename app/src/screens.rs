@@ -40,6 +40,9 @@ pub enum Target {
     Job(u64),
     Setting(crate::settings::Setting),
     SwitchUser,
+    Quit,
+    /// Asks for a second press, then powers the computer off.
+    Shutdown,
 }
 
 #[derive(Debug, Clone)]
@@ -59,6 +62,8 @@ pub struct RowContent {
     pub cards: Vec<CardContent>,
     /// Column focus lands on when entering this row.
     pub start: usize,
+    /// How many trailing cards sit apart at the right edge, as compact buttons.
+    pub pinned: usize,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -145,7 +150,7 @@ fn button(title: impl Into<String>, target: Target) -> CardContent {
 }
 
 fn row(title: impl Into<String>, style: i32, cards: Vec<CardContent>) -> RowContent {
-    RowContent { title: title.into(), style, cards, start: 0 }
+    RowContent { title: title.into(), style, cards, start: 0, pinned: 0 }
 }
 
 fn runtime(item: &Item) -> Option<String> {
@@ -307,7 +312,11 @@ pub async fn home(c: &Client) -> anyhow::Result<Content> {
         ]
     };
     rows.push(row("More", STYLE_BUTTON, toolbar()));
-    rows.insert(0, row("", STYLE_BUTTON, toolbar()));
+    let mut top = row("", STYLE_BUTTON, toolbar());
+    top.cards.push(button("Quit", Target::Quit));
+    top.cards.push(button("Shut down", Target::Shutdown));
+    top.pinned = 2;
+    rows.insert(0, top);
     let focus = if rows.len() > 1 { (1, 0) } else { (0, 0) };
     Ok(Content { source: Source::Home, header: None, rows, focus, paging: None })
 }

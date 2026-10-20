@@ -41,7 +41,7 @@ fn card(title: &str, sub: &str, img: Option<slint::Image>, progress: f32, played
 }
 
 fn row(title: &str, style: i32, cards: Vec<Card>) -> Row {
-    Row { title: title.into(), style, cards: ModelRc::new(VecModel::from(cards)), scroll: 0 }
+    Row { title: title.into(), style, cards: ModelRc::new(VecModel::from(cards)), scroll: 0, pinned: 0 }
 }
 
 fn save(window: &MinimalSoftwareWindow, path: &str) {
@@ -80,6 +80,8 @@ fn main() {
             card("Settings", "", None, -1.0, false),
             card("AI subtitle jobs", "", None, -1.0, false),
             card("Switch user", "", None, -1.0, false),
+            card("Quit", "", None, -1.0, false),
+            card("Shut down", "", None, -1.0, false),
         ]),
         row("Continue watching", 1, vec![
             card("Fate", "Billy the Kid · S01E06", wide(10), 0.23, false),
@@ -89,6 +91,8 @@ fn main() {
         row("Latest in Movies", 0, (0..9).map(|i| card(&format!("Movie {i}"), "2024", poster(i * 20), -1.0, i % 3 == 0)).collect()),
         row("Latest in Shows", 0, (0..9).map(|i| card(&format!("Show {i}"), "2023", poster(i * 30), -1.0, false)).collect()),
     ];
+    let mut rows = rows;
+    rows[0].pinned = 2;
     ui.set_rows(ModelRc::new(VecModel::from(rows)));
     ui.set_header_visible(false);
     ui.set_focus_row(1);

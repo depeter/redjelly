@@ -56,6 +56,32 @@ pub const SCREEN_QUICK_CONNECT: i32 = 4;
 pub const SCREEN_PROMPT: i32 = 5;
 const TOAST_DURATION: Duration = Duration::from_secs(4);
 
+/// Asks the OS to power off now.
+fn power_off() -> std::io::Result<()> {
+    #[cfg(windows)]
+    let mut cmd = {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        let mut c = std::process::Command::new("shutdown");
+        c.args(["/s", "/t", "0"]).creation_flags(CREATE_NO_WINDOW);
+        c
+    };
+    #[cfg(target_os = "macos")]
+    let mut cmd = {
+        let mut c = std::process::Command::new("osascript");
+        c.args(["-e", "tell application \"System Events\" to shut down"]);
+        c
+    };
+    #[cfg(not(any(windows, target_os = "macos")))]
+    let mut cmd = {
+        let mut c = std::process::Command::new("systemctl");
+        c.arg("poweroff");
+        c
+    };
+    let status = cmd.status()?;
+    if status.success() { Ok(()) } else { Err(std::io::Error::other(format!("{status}"))) }
+}
+
 thread_local! {
     /// The app lives on the UI thread; async tasks reach it through
     /// `slint::invoke_from_event_loop` + this slot.
@@ -119,6 +145,8 @@ pub struct App {
     update: RefCell<update::UpdateState>,
     /// Downloaded installers.
     update_dir: PathBuf,
+    /// When Shut down was first pressed; a second press in time confirms.
+    shutdown_armed: Cell<Option<Instant>>,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -177,6 +205,22 @@ impl App {
     fn toast(&self, msg: impl Into<SharedString>) {
         self.ui().set_toast(msg.into());
         self.toast_until.set(Instant::now() + TOAST_DURATION);
+    }
+
+    /// First press asks for confirmation; a second one within the toast's
+    /// lifetime powers the computer off and quits.
+    fn shutdown(&self) {
+        let armed = self.shutdown_armed.take().is_some_and(|t| t.elapsed() < TOAST_DURATION);
+        if !armed {
+            self.shutdown_armed.set(Some(Instant::now()));
+            return self.toast("Press Shut down again to turn off the computer");
+        }
+        match power_off() {
+            Ok(()) => {
+                let _ = slint::quit_event_loop();
+            }
+            Err(e) => self.toast(format!("Couldn't shut down: {e}")),
+        }
     }
 
     fn clear_toast(&self) {
@@ -552,6 +596,7 @@ fn main() -> anyhow::Result<()> {
         osd_hidden_at: Cell::new(None),
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
+        shutdown_armed: Cell::new(None),
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));

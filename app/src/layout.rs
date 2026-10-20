@@ -11,12 +11,15 @@ pub const STYLE_WIDE: i32 = 1;
 pub const STYLE_BUTTON: i32 = 2;
 /// Settings: label + value.
 pub const STYLE_SETTING: i32 = 3;
+/// Compact button pinned to a row's right edge (see `Row.pinned`).
+pub const STYLE_PINNED: i32 = 4;
 
 pub fn card_width(style: i32) -> f32 {
     match style {
         STYLE_WIDE => 288.0,
         STYLE_BUTTON => 220.0,
         STYLE_SETTING => 300.0,
+        STYLE_PINNED => 112.0,
         _ => 160.0,
     }
 }
@@ -44,6 +47,11 @@ pub fn scroll_y(rows: &[(i32, bool)], focus: usize) -> f32 {
 /// Whole cards that fit in a row at this window width.
 pub fn visible_cards(window_width: f32, style: i32) -> usize {
     (((window_width - SIDE_PAD + GAP) / (card_width(style) + GAP)).floor() as usize).max(1)
+}
+
+/// Width a row's `pinned` buttons take from its right end, margin included.
+pub fn pinned_width(pinned: usize) -> f32 {
+    if pinned == 0 { 0.0 } else { pinned as f32 * (card_width(STYLE_PINNED) + GAP) + SIDE_PAD }
 }
 
 /// Columns for library grids (also keeps a right margin).

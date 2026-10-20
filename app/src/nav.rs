@@ -192,6 +192,7 @@ impl App {
                 style: row.style,
                 cards: ModelRc::from(model.clone()),
                 scroll: 0,
+                pinned: row.pinned as i32,
             });
             shapes.push((row.style, !row.title.is_empty()));
             cols.push(row.start.min(row.cards.len().saturating_sub(1)));
@@ -303,7 +304,11 @@ impl App {
         let c = s.cols[r];
 
         let style = s.shapes[r].0;
-        let scroll = layout::row_scroll(c, layout::visible_cards(width, style), len) as i32;
+        // Pinned buttons never scroll: the rest scrolls in the space left.
+        let pinned = s.rows.row_data(r).map_or(0, |row| row.pinned as usize).min(len);
+        let width = width - layout::pinned_width(pinned);
+        let free = len - pinned;
+        let scroll = layout::row_scroll(c.min(free.saturating_sub(1)), layout::visible_cards(width, style), free) as i32;
         if let Some(mut row) = s.rows.row_data(r)
             && row.scroll != scroll {
                 row.scroll = scroll;
@@ -370,6 +375,10 @@ impl App {
             Target::Job(id) => self.activate_job(id),
             Target::Setting(s) => self.activate_setting(s),
             Target::SwitchUser => self.switch_user(),
+            Target::Quit => {
+                let _ = slint::quit_event_loop();
+            }
+            Target::Shutdown => self.shutdown(),
         }
     }
 
@@ -483,6 +492,7 @@ impl App {
                         style: layout::STYLE_POSTER,
                         cards: ModelRc::from(model.clone()),
                         scroll: 0,
+                        pinned: 0,
                     });
                     s.cards.push(model);
                     s.targets.push(Vec::new());

@@ -221,6 +221,37 @@ impl Client {
         }
     }
 
+    /// Open requests (pending approval or approved, not yet available) and
+    /// failed ones, newest first. Users without request-management rights
+    /// only get their own.
+    pub async fn open_requests(&self, take: u32) -> Result<Vec<MediaRequest>, Error> {
+        let page = |filter: &'static str| async move {
+            self.get::<RequestPage>(
+                "request",
+                &[("take", take.to_string()), ("filter", filter.into()), ("sort", "added".into())],
+            )
+            .await
+        };
+        let (open, failed) = tokio::try_join!(page("unavailable"), page("failed"))?;
+        let mut all = open.results;
+        all.extend(failed.results);
+        all.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+        all.truncate(take as usize);
+        Ok(all)
+    }
+
+    /// Radarr (`MediaKind::Movie`) or Sonarr servers; needs a Jellyseerr admin.
+    pub async fn servarr_servers(&self, kind: MediaKind) -> Result<Vec<ServarrServer>, Error> {
+        self.get(
+            match kind {
+                MediaKind::Movie => "settings/radarr",
+                MediaKind::Tv => "settings/sonarr",
+            },
+            &[],
+        )
+        .await
+    }
+
     /// Requests a title; `seasons` is required for shows.
     pub async fn request(&self, kind: MediaKind, id: u32, seasons: &[u32]) -> Result<(), Error> {
         let mut body = json!({ "mediaType": kind.as_str(), "mediaId": id });

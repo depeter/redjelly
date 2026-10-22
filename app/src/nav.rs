@@ -3,6 +3,7 @@
 //! Each screen keeps its own models, focus and per-row column, so Back
 //! restores exactly where you were (SPEC §4.1).
 
+use std::collections::HashMap;
 use std::rc::Rc;
 
 use rj_jellyfin::Client;
@@ -18,6 +19,9 @@ pub struct Screen {
     header_visible: bool,
     rows: Rc<VecModel<Row>>,
     cards: Vec<Rc<VecModel<Card>>>,
+    /// Image cache keys per card, to carry images over on refresh.
+    image_keys: Vec<Vec<Option<String>>>,
+    backdrop_key: Option<String>,
     targets: Vec<Vec<Target>>,
     /// (style, has title) per row, for scroll maths.
     shapes: Vec<(i32, bool)>,
@@ -36,6 +40,37 @@ pub enum Placement {
     ReplaceTop,
     /// New root (after login, switching user).
     Reset,
+    /// Background status refresh of the current screen: like `ReplaceTop`,
+    /// but silent on errors and keeps loaded images.
+    Refresh,
+}
+
+impl Screen {
+    /// Loaded images by cache key.
+    fn loaded_images(&self) -> HashMap<String, slint::Image> {
+        let mut m = HashMap::new();
+        for (model, keys) in self.cards.iter().zip(&self.image_keys) {
+            for (i, key) in keys.iter().enumerate() {
+                if let (Some(k), Some(card)) = (key, model.row_data(i))
+                    && card.has_image
+                {
+                    m.insert(k.clone(), card.image);
+                }
+            }
+        }
+        if let Some(k) = &self.backdrop_key
+            && self.header.has_backdrop
+        {
+            m.insert(k.clone(), self.header.backdrop.clone());
+        }
+        m
+    }
+}
+
+impl Placement {
+    fn replaces(self) -> bool {
+        matches!(self, Placement::ReplaceTop | Placement::Refresh)
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -95,12 +130,12 @@ impl App {
         let prefs = self.config.borrow().track_preferences().languages;
         let url = self.config.borrow().server.url.clone().unwrap_or_default();
         let discover = self.config.borrow().discover.seerr_url.is_some();
-        let popular = if source == Source::Home { self.home_popular() } else { None };
+        let seerr_rows = if source == Source::Home { self.home_seerr_rows() } else { None };
         let src = source.clone();
         self.load(source, placement, async move {
             match &src {
                 Source::Users => screens::users(&client, &url).await,
-                Source::Home => screens::home(&client, discover, popular).await,
+                Source::Home => screens::home(&client, discover, seerr_rows).await,
                 Source::Library { parent_id, title, collection_type } => {
                     screens::library(&client, parent_id, title, collection_type.as_deref(), columns).await
                 }
@@ -137,6 +172,7 @@ impl App {
                 }
                 match result {
                     Ok(content) => app.present(content, placement),
+                    Err(e) if placement == Placement::Refresh => tracing::debug!("refreshing {source:?}: {e:#}"),
                     Err(e) => {
                         tracing::warn!("loading {source:?}: {e:#}");
                         if source == Source::Users && app.nav.borrow().is_empty() {
@@ -152,13 +188,17 @@ impl App {
     }
 
     pub fn present(&self, content: Content, placement: Placement) {
-        if placement == Placement::ReplaceTop {
+        if placement.replaces() {
             // Drop stale results (e.g. an older search that finished late).
             if self.top_source().as_ref() != Some(&content.source) {
                 return;
             }
         }
-        let mut screen = self.build_screen(content);
+        let reuse = match placement {
+            Placement::Refresh => self.nav.borrow().last().map(Screen::loaded_images).unwrap_or_default(),
+            _ => HashMap::new(),
+        };
+        let mut screen = self.build_screen(content, &reuse);
         {
             let mut nav = self.nav.borrow_mut();
             match placement {
@@ -167,7 +207,7 @@ impl App {
                     nav.clear();
                     nav.push(screen);
                 }
-                Placement::ReplaceTop => {
+                Placement::ReplaceTop | Placement::Refresh => {
                     if let Some(old) = nav.pop() {
                         screen.focus_row = old.focus_row.min(screen.cards.len().saturating_sub(1));
                         for (i, c) in old.cols.iter().enumerate() {
@@ -184,12 +224,12 @@ impl App {
                 }
             }
         }
-        if self.ui().get_screen() == SCREEN_BROWSE || placement != Placement::ReplaceTop {
+        if self.ui().get_screen() == SCREEN_BROWSE || !placement.replaces() {
             self.show_top();
         }
     }
 
-    fn build_screen(&self, content: Content) -> Screen {
+    fn build_screen(&self, content: Content, reuse: &HashMap<String, slint::Image>) -> Screen {
         let generation = self.next_gen.get() + 1;
         self.next_gen.set(generation);
 
@@ -197,14 +237,22 @@ impl App {
         let mut targets = Vec::new();
         let mut shapes = Vec::new();
         let mut cols = Vec::new();
+        let mut image_keys = Vec::new();
         let rows_model = Rc::new(VecModel::default());
         for (r, row) in content.rows.into_iter().enumerate() {
-            let model = Rc::new(VecModel::from(row.cards.iter().map(to_card).collect::<Vec<_>>()));
+            let mut built: Vec<Card> = row.cards.iter().map(to_card).collect();
             for (c, card) in row.cards.iter().enumerate() {
-                if let Some(src) = &card.image {
-                    self.load_image(generation, Slot::Card(r, c), src.clone());
+                let Some(src) = &card.image else { continue };
+                match reuse.get(&src.key) {
+                    Some(img) => {
+                        built[c].image = img.clone();
+                        built[c].has_image = true;
+                    }
+                    None => self.load_image(generation, Slot::Card(r, c), src.clone()),
                 }
             }
+            image_keys.push(row.cards.iter().map(|c| c.image.as_ref().map(|i| i.key.clone())).collect());
+            let model = Rc::new(VecModel::from(built));
             rows_model.push(Row {
                 title: row.title.as_str().into(),
                 style: row.style,
@@ -218,9 +266,11 @@ impl App {
             cards.push(model);
         }
 
+        let backdrop_key = content.header.as_ref().and_then(|h| h.backdrop.as_ref()).map(|b| b.key.clone());
         let (header, header_visible) = match content.header {
             Some(h) => {
-                if let Some(src) = h.backdrop.clone() {
+                let kept = backdrop_key.as_ref().and_then(|k| reuse.get(k)).cloned();
+                if let (None, Some(src)) = (&kept, h.backdrop.clone()) {
                     self.load_image(generation, Slot::Backdrop, src);
                 }
                 if let Some((kind, id)) = h.ratings_for {
@@ -232,8 +282,8 @@ impl App {
                         meta: h.meta.into(),
                         info: h.info.into(),
                         overview: h.overview.into(),
-                        backdrop: Default::default(),
-                        has_backdrop: false,
+                        has_backdrop: kept.is_some(),
+                        backdrop: kept.unwrap_or_default(),
                     },
                     true,
                 )
@@ -251,6 +301,8 @@ impl App {
             header_visible,
             rows: rows_model,
             cards,
+            image_keys,
+            backdrop_key,
             targets,
             shapes,
             cols,

@@ -9,7 +9,7 @@ use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 use rj_core::config::{DiscoverFilters, DiscoverKind, DiscoverSort, LibraryFilter, RuntimeBucket};
-use rj_seerr::models::{Details, Genre, Ratings, Title, WatchProvider, status};
+use rj_seerr::models::{Details, DownloadItem, Genre, Ratings, Title, WatchProvider, status};
 use rj_seerr::{Client as SeerrClient, DiscoverQuery, Error as SeerrError, MediaKind, Sort};
 
 use crate::App;
@@ -52,6 +52,10 @@ pub enum DiscoverAction {
     Reset,
     Results,
     Request { kind: MediaKind, id: u32, title: String },
+    /// Radarr/Sonarr interactive search for the title page's title.
+    ManualSearch,
+    /// Blocklist its downloads (if any) and search automatically.
+    SearchAgain,
     ToggleSeason(u32),
     RequestSeasons,
 }
@@ -543,7 +547,7 @@ pub fn ratings_line(r: &Ratings) -> String {
     parts.join(" · ")
 }
 
-fn tmdb_image(path: Option<&str>, size: &str) -> Option<ImageSrc> {
+pub fn tmdb_image(path: Option<&str>, size: &str) -> Option<ImageSrc> {
     let path = path?;
     Some(ImageSrc { url: format!("{TMDB_IMAGES}/{size}{path}"), key: format!("tmdb-{size}-{}", path.trim_start_matches('/')) })
 }
@@ -582,9 +586,14 @@ fn found_card(f: &Found) -> CardContent {
         None if t.vote_average > 0.0 => parts.push(format!("★ {:.1}", t.vote_average)),
         None => {}
     }
-    let label = status_label(t.media_info.as_ref());
-    if !label.is_empty() {
-        parts.push(label.into());
+    match t.media_info.as_ref().and_then(|i| crate::requests::request_status(i, crate::requests::today())) {
+        Some(s) => parts.push(s),
+        None => {
+            let label = status_label(t.media_info.as_ref());
+            if !label.is_empty() {
+                parts.push(label.into());
+            }
+        }
     }
     if f.kind == MediaKind::Tv {
         parts.push("Show".into());
@@ -593,7 +602,12 @@ fn found_card(f: &Found) -> CardContent {
         title: t.title.clone(),
         subtitle: parts.join(" · "),
         image: tmdb_image(t.poster_path.as_deref(), "w342"),
-        progress: -1.0,
+        progress: t
+            .media_info
+            .as_ref()
+            .and_then(|i| i.download_status.first())
+            .and_then(DownloadItem::progress)
+            .map_or(-1.0, |p| p as f32),
         played: t.media_info.as_ref().is_some_and(|i| i.status == status::AVAILABLE),
         mark: 0,
         target: title_target(f.kind, t),
@@ -813,10 +827,11 @@ impl App {
         Ok((shared, client, Login { jellyfin, password }))
     }
 
-    /// Home's "Popular & well rated" row: recent, well rated movies from
-    /// TMDb. None when Jellyseerr isn't set up; empty on any failure, so
-    /// Home never waits more than a few seconds or fails because of it.
-    pub fn home_popular(&self) -> Option<impl Future<Output = Vec<CardContent>> + Send + 'static> {
+    /// Home's Jellyseerr rows: "Requests" (open requests and their
+    /// download state) and "Popular & well rated" (recent, well rated
+    /// movies). None when Jellyseerr isn't set up; rows that fail or take
+    /// too long are left out, so Home never fails because of them.
+    pub fn home_seerr_rows(&self) -> Option<impl Future<Output = Vec<RowContent>> + Send + 'static> {
         self.seerr_url()?;
         let (shared, client, login) = self.seerr_setup().ok()?;
         let query = DiscoverQuery {
@@ -827,25 +842,38 @@ impl App {
             ..Default::default()
         };
         Some(async move {
-            let fetch = with_session(shared, client, login, move |c| {
+            let requests = with_session(shared.clone(), client.clone(), login.clone(), crate::requests::requests_row);
+            let popular = with_session(shared, client, login, move |c| {
                 let q = query.clone();
                 async move { c.discover(MediaKind::Movie, &q, 1).await }
             });
-            match tokio::time::timeout(std::time::Duration::from_secs(5), fetch).await {
-                Ok(Ok(page)) => page
-                    .results
-                    .into_iter()
-                    .map(|title| found_card(&Found { kind: MediaKind::Movie, title, ratings: None }))
-                    .collect(),
-                Ok(Err(e)) => {
-                    tracing::warn!("home popular row: {e:#}");
-                    Vec::new()
-                }
-                Err(_) => {
-                    tracing::warn!("home popular row: Jellyseerr took too long");
-                    Vec::new()
+            let (requests, popular) = tokio::join!(
+                tokio::time::timeout(std::time::Duration::from_secs(8), requests),
+                tokio::time::timeout(std::time::Duration::from_secs(5), popular),
+            );
+            fn ok<T>(what: &str, r: Result<anyhow::Result<T>, tokio::time::error::Elapsed>) -> Option<T> {
+                match r {
+                    Ok(Ok(v)) => Some(v),
+                    Ok(Err(e)) => {
+                        tracing::warn!("home {what} row: {e:#}");
+                        None
+                    }
+                    Err(_) => {
+                        tracing::warn!("home {what} row: Jellyseerr took too long");
+                        None
+                    }
                 }
             }
+            let requests: Vec<CardContent> = ok("requests", requests).unwrap_or_default();
+            let popular: Vec<CardContent> = ok("popular", popular)
+                .map(|page: rj_seerr::models::Page| {
+                    page.results
+                        .into_iter()
+                        .map(|title| found_card(&Found { kind: MediaKind::Movie, title, ratings: None }))
+                        .collect()
+                })
+                .unwrap_or_default();
+            crate::requests::home_rows(requests, popular)
         })
     }
 
@@ -897,6 +925,7 @@ impl App {
                     // Results start empty and fill themselves.
                     app.maybe_load_more();
                 }
+                Err(e) if placement == Placement::Refresh => tracing::debug!("discover refresh: {e:#}"),
                 Err(e) => {
                     tracing::warn!("discover: {e:#}");
                     app.toast(format!("{e:#}"));
@@ -948,11 +977,27 @@ impl App {
                     },
                 );
             }
-            Source::SeerrTitle { kind, id } => self.seerr_load(
-                placement,
-                move |c| async move { c.details(kind, id).await },
-                move |app, d| title_content(kind, &d, app.config.borrow().discover.region.as_deref()),
-            ),
+            Source::SeerrTitle { kind, id } => {
+                let cache = self.requests.arr.clone();
+                self.seerr_load(
+                    placement,
+                    move |c| {
+                        let cache = cache.clone();
+                        async move {
+                            let d = c.details(kind, id).await?;
+                            // Radarr/Sonarr only matter until it's all there.
+                            let info = d.media_info.as_ref().filter(|i| i.status != status::AVAILABLE);
+                            let arr = crate::requests::arr_info(&c, &cache, kind, info).await;
+                            Ok((d, arr))
+                        }
+                    },
+                    move |app, (d, arr)| {
+                        let content = title_content(kind, &d, app.config.borrow().discover.region.as_deref(), &arr);
+                        app.set_title_arr(kind, &d, arr);
+                        content
+                    },
+                )
+            }
             Source::SeasonPicker { id } => {
                 if placement == Placement::ReplaceTop && self.discover.seasons.borrow().as_ref().is_some_and(|p| p.id == id) {
                     return self.present(self.season_content(), placement);
@@ -1279,6 +1324,8 @@ impl App {
 
     pub fn discover_action(&self, action: DiscoverAction) {
         match action {
+            DiscoverAction::ManualSearch => self.manual_search(),
+            DiscoverAction::SearchAgain => self.search_again(),
             DiscoverAction::Set(c) => {
                 apply(&mut self.config.borrow_mut().discover.last, c);
                 self.save_config();
@@ -1456,7 +1503,7 @@ fn cast_cards(d: &Details) -> Vec<CardContent> {
 }
 
 /// A TMDb title page: what Jellyseerr knows, with Request / Open / Trailer.
-fn title_content(kind: MediaKind, d: &Details, region: Option<&str>) -> Content {
+fn title_content(kind: MediaKind, d: &Details, region: Option<&str>, arr: &crate::requests::ArrInfo) -> Content {
     let info = d.media_info.clone().unwrap_or_default();
     let mut buttons = Vec::new();
     if info.in_library()
@@ -1494,6 +1541,12 @@ fn title_content(kind: MediaKind, d: &Details, region: Option<&str>) -> Content 
         }
     }
 
+    if arr.client.is_some() && arr.arr_id.is_some() {
+        buttons.push(button("Manual search…", Target::Discover(DiscoverAction::ManualSearch)));
+        let again = if arr.queue.is_empty() { "Search again" } else { "Remove & search again" };
+        buttons.push(button(again, Target::Discover(DiscoverAction::SearchAgain)));
+    }
+
     let mut meta: Vec<String> = Vec::new();
     if let Some(y) = d.year() {
         meta.push(y.to_string());
@@ -1512,19 +1565,21 @@ fn title_content(kind: MediaKind, d: &Details, region: Option<&str>) -> Content 
     if d.vote_average > 0.0 {
         meta.push(format!("TMDb {:.1}", d.vote_average));
     }
-    let status_line = match status_label(Some(&info)) {
-        "" => "Not in your library",
-        s => s,
+    let status_line = match (crate::requests::request_status(&info, crate::requests::today()), status_label(Some(&info))) {
+        (Some(s), _) => s,
+        (None, "") => "Not in your library".to_owned(),
+        (None, s) => s.to_owned(),
     };
     let info_line = match d.tagline.as_deref().filter(|t| !t.is_empty()) {
         Some(t) => format!("{t}  ·  {status_line}"),
-        None => status_line.to_owned(),
+        None => status_line,
     };
 
     let mut rows = Vec::new();
     if !buttons.is_empty() {
         rows.push(row("", STYLE_BUTTON, buttons));
     }
+    rows.extend(crate::requests::download_row(arr));
     let about = title_about(kind, d);
     if !about.is_empty() {
         rows.push(row("About", STYLE_SETTING, about));
@@ -1710,7 +1765,7 @@ mod tests {
             "watchProviders": [{ "iso_3166_1": "BE", "flatrate": [{ "id": 8, "name": "Netflix" }] }]
         }))
         .unwrap();
-        let c = title_content(MediaKind::Movie, &d, Some("BE"));
+        let c = title_content(MediaKind::Movie, &d, Some("BE"), &Default::default());
         let titled = |t: &str| c.rows.iter().find(|r| r.title.starts_with(t));
         assert!(c.rows[0].cards.iter().any(|b| b.title == "Trailer"));
         assert!(c.rows[0].cards.iter().any(|b| b.title == "Request"));
@@ -1723,7 +1778,7 @@ mod tests {
         assert_eq!(titled("Cast").unwrap().cards[0].subtitle, "Cobb");
         assert!(c.header.unwrap().info.starts_with("Your mind"));
         // No region: no Where to watch row.
-        assert!(title_content(MediaKind::Movie, &d, None).rows.iter().all(|r| !r.title.starts_with("Where")));
+        assert!(title_content(MediaKind::Movie, &d, None, &Default::default()).rows.iter().all(|r| !r.title.starts_with("Where")));
     }
 
     #[test]

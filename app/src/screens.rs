@@ -419,24 +419,27 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
 }
 
 /// `discover`: Jellyseerr is set up, so offer the Discover wizard.
-/// `popular`: cards for the "Popular & well rated" row, loaded alongside.
+/// `seerr_rows`: Jellyseerr rows (Requests, Popular) loaded alongside, shown
+/// after "Next up".
 pub async fn home(
     c: &Client,
     discover: bool,
-    popular: Option<impl Future<Output = Vec<CardContent>>>,
+    seerr_rows: Option<impl Future<Output = Vec<RowContent>>>,
 ) -> anyhow::Result<Content> {
-    let popular = async move {
-        match popular {
+    let seerr_rows = async move {
+        match seerr_rows {
             Some(f) => f.await,
             None => Vec::new(),
         }
     };
-    let (server, popular) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, popular);
+    let (server, seerr_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, seerr_rows);
     let (resume, next_up, views) = server?;
     let mut rows = vec![
         row("Continue watching", STYLE_WIDE, resume.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
         row("Next up", STYLE_WIDE, next_up.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
-        row("Popular & well rated", STYLE_POSTER, popular),
+    ];
+    rows.extend(seerr_rows);
+    rows.push(
         row(
             "Libraries",
             STYLE_WIDE,
@@ -455,7 +458,7 @@ pub async fn home(
                 })
                 .collect(),
         ),
-    ];
+    );
     // Fetch every library's "latest" row concurrently.
     let pending: Vec<_> = views
         .items

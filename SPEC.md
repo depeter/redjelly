@@ -328,6 +328,26 @@ With Jellyseerr set up, Home also has a **Popular & well rated** row (TMDb movie
 the last 2 years, score 7+ with 200+ votes, by popularity), loaded alongside the other
 rows and dropped if Jellyseerr is slow (5 s) or fails.
 
+**Requests**: a Home **Requests** row (before Popular) lists open and failed requests
+(everyone's when the Jellyseerr account may see them; 8 s budget) with a live status:
+waiting for approval, declined/failed, searching / no release yet (after 2 days),
+or Radarr/Sonarr's queue state from Jellyseerr's `downloadStatus` (downloading N% ·
+time left, queued, paused, delay, importing, stuck/warning, failed, client
+unreachable; the worst of several files wins). The same status shows on Discover
+cards and title pages. Title pages of requested titles read Radarr/Sonarr's address
+and API key from Jellyseerr's settings (needs a Jellyseerr admin account; tries
+Jellyseerr's hostname, then the external URL; cached per server) and add:
+- a **Download** row with each queue entry's real state and messages;
+- **Manual search…**: a side panel with the *arr's interactive search results
+  (quality · size · age · seeders · indexer · language · custom format score, rejected
+  ones dimmed with reasons, in the *arr's own order); Enter grabs. Shows pick a season
+  first (season packs + episodes), or a single episode;
+- **Remove & search again** (second press within 4 s confirms): removes the queued
+  downloads from the client, blocklists them and starts an automatic search; "Search
+  again" when nothing is queued.
+Home and title pages refresh silently every 30 s while on screen (no panel open),
+keeping already-loaded images.
+
 **Detail page**: tagline, full plot, About (release date, runtime, age/critic
 ratings, genres, director, writers, producers, studio, country), Cast & crew with
 photos (each opens that person's titles in the library), one card per video/audio/

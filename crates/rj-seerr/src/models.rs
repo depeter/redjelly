@@ -57,18 +57,169 @@ pub mod status {
     pub const AVAILABLE: u8 = 5;
 }
 
+/// Request approval state (`MediaRequestStatus`).
+pub mod request_status {
+    pub const PENDING_APPROVAL: u8 = 1;
+    pub const APPROVED: u8 = 2;
+    pub const DECLINED: u8 = 3;
+    pub const FAILED: u8 = 4;
+    pub const COMPLETED: u8 = 5;
+}
+
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaInfo {
     #[serde(default)]
     pub status: u8,
+    #[serde(default)]
+    pub tmdb_id: Option<u32>,
+    #[serde(default)]
+    pub media_type: Option<MediaKind>,
     /// Jellyfin item id once the title is in the library.
     #[serde(default)]
     pub jellyfin_media_id: Option<String>,
     #[serde(default)]
-    pub requests: Vec<serde_json::Value>,
+    pub requests: Vec<RequestInfo>,
     #[serde(default)]
     pub seasons: Vec<SeasonStatus>,
+    /// Jellyseerr's id of the Radarr/Sonarr server holding it.
+    #[serde(default)]
+    pub service_id: Option<u32>,
+    /// The movie / series id inside that Radarr/Sonarr.
+    #[serde(default)]
+    pub external_service_id: Option<u32>,
+    /// Radarr/Sonarr queue entries, as Jellyseerr last polled them.
+    #[serde(default)]
+    pub download_status: Vec<DownloadItem>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RequestInfo {
+    #[serde(default)]
+    pub id: u64,
+    #[serde(default)]
+    pub status: u8,
+    /// ISO 8601.
+    #[serde(default)]
+    pub created_at: Option<String>,
+    #[serde(default)]
+    pub requested_by: Option<User>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DownloadItem {
+    #[serde(default)]
+    pub title: String,
+    #[serde(default)]
+    pub size: f64,
+    #[serde(default)]
+    pub size_left: f64,
+    /// Radarr/Sonarr queue status: downloading, queued, paused, completed,
+    /// delay, warning, failed, downloadClientUnavailable, …
+    #[serde(default)]
+    pub status: String,
+    /// `HH:MM:SS` or `D.HH:MM:SS`.
+    #[serde(default)]
+    pub time_left: Option<String>,
+    #[serde(default)]
+    pub episode: Option<EpisodeRef>,
+}
+
+impl DownloadItem {
+    /// 0–1, when the size is known.
+    pub fn progress(&self) -> Option<f64> {
+        (self.size > 0.0).then(|| (1.0 - self.size_left / self.size).clamp(0.0, 1.0))
+    }
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EpisodeRef {
+    #[serde(default)]
+    pub season_number: u32,
+    #[serde(default)]
+    pub episode_number: u32,
+}
+
+/// One entry of `/request`.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MediaRequest {
+    pub id: u64,
+    #[serde(default)]
+    pub status: u8,
+    #[serde(default)]
+    pub created_at: Option<String>,
+    #[serde(default, rename = "type")]
+    pub kind: Option<MediaKind>,
+    #[serde(default)]
+    pub media: Option<MediaInfo>,
+    #[serde(default)]
+    pub requested_by: Option<User>,
+}
+
+impl MediaRequest {
+    /// The media with this request folded in (the list leaves
+    /// `media.requests` empty).
+    pub fn media_with_request(&self) -> MediaInfo {
+        let mut m = self.media.clone().unwrap_or_default();
+        if m.requests.is_empty() {
+            m.requests.push(RequestInfo {
+                id: self.id,
+                status: self.status,
+                created_at: self.created_at.clone(),
+                requested_by: self.requested_by.clone(),
+            });
+        }
+        m
+    }
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+pub(crate) struct RequestPage {
+    #[serde(default)]
+    pub results: Vec<MediaRequest>,
+}
+
+/// A Radarr/Sonarr server as configured in Jellyseerr (admin only).
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ServarrServer {
+    pub id: u32,
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub hostname: String,
+    #[serde(default)]
+    pub port: u16,
+    #[serde(default)]
+    pub api_key: String,
+    #[serde(default)]
+    pub use_ssl: bool,
+    #[serde(default)]
+    pub base_url: Option<String>,
+    /// The address users open in a browser; often the reachable one.
+    #[serde(default)]
+    pub external_url: Option<String>,
+}
+
+impl ServarrServer {
+    /// Addresses to try: the one Jellyseerr uses, then the external one.
+    pub fn urls(&self) -> Vec<String> {
+        let mut v = Vec::new();
+        if !self.hostname.is_empty() {
+            let scheme = if self.use_ssl { "https" } else { "http" };
+            let host = self.hostname.trim_end_matches('/');
+            let host = host.split("://").last().unwrap_or(host);
+            v.push(format!("{scheme}://{host}:{}{}", self.port, self.base_url.as_deref().unwrap_or("").trim_end_matches('/')));
+        }
+        if let Some(e) = self.external_url.as_deref().map(|e| e.trim().trim_end_matches('/')).filter(|e| !e.is_empty()) {
+            v.push(e.to_owned());
+        }
+        v
+    }
 }
 
 impl MediaInfo {

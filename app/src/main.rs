@@ -18,6 +18,7 @@ mod login;
 mod models;
 mod nav;
 mod playback;
+mod requests;
 mod player_ui;
 mod screens;
 mod secrets;
@@ -150,6 +151,7 @@ pub struct App {
     /// When Shut down was first pressed; a second press in time confirms.
     shutdown_armed: Cell<Option<Instant>>,
     discover: discover::State,
+    requests: requests::State,
     /// yt-dlp for YouTube trailers (see `ytdlp.rs`).
     ytdlp_path: PathBuf,
 }
@@ -240,6 +242,7 @@ impl App {
         }
         self.player_tick(now);
         self.update_tick(now);
+        self.requests_tick(now);
     }
 
     fn on_key(&self, text: &str, ctrl: bool, alt: bool, shift: bool) -> bool {
@@ -604,6 +607,7 @@ fn main() -> anyhow::Result<()> {
         update_dir: dirs.cache_dir().join("update"),
         shutdown_armed: Cell::new(None),
         discover: Default::default(),
+        requests: Default::default(),
         ytdlp_path,
     });
     app.apply_tone_mapping();

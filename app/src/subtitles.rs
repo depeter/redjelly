@@ -48,6 +48,8 @@ pub enum PanelAction {
     UpdateInstall,
     UpdateSkip,
     UpdateCheck,
+    /// Release search panel: the n-th stored action (requests.rs).
+    Release(usize),
 }
 
 /// What the side panel is showing.
@@ -58,6 +60,8 @@ pub enum PanelKind {
     Audio,
     Keymap,
     Update,
+    /// Radarr/Sonarr release search (requests.rs).
+    Releases,
 }
 
 #[derive(Default)]
@@ -406,6 +410,7 @@ impl App {
             None => return,
             Some(PanelKind::Keymap) => return self.refresh_keymap_panel(),
             Some(PanelKind::Update) => return self.refresh_update_panel(),
+            Some(PanelKind::Releases) => return,
             Some(PanelKind::Audio) => {
                 let entries = self.audio_panel_entries();
                 return self.show_panel_entries(entries);
@@ -552,6 +557,7 @@ impl App {
             Some(PanelAction::UpdateInstall) => self.install_update(),
             Some(PanelAction::UpdateSkip) => self.skip_update(),
             Some(PanelAction::UpdateCheck) => self.check_for_update(true),
+            Some(PanelAction::Release(i)) => self.release_action(i),
             Some(PanelAction::None) | None => {}
         }
     }

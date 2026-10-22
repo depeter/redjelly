@@ -419,11 +419,24 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
 }
 
 /// `discover`: Jellyseerr is set up, so offer the Discover wizard.
-pub async fn home(c: &Client, discover: bool) -> anyhow::Result<Content> {
-    let (resume, next_up, views) = tokio::try_join!(c.resume(24), c.next_up(24), c.user_views())?;
+/// `popular`: cards for the "Popular & well rated" row, loaded alongside.
+pub async fn home(
+    c: &Client,
+    discover: bool,
+    popular: Option<impl Future<Output = Vec<CardContent>>>,
+) -> anyhow::Result<Content> {
+    let popular = async move {
+        match popular {
+            Some(f) => f.await,
+            None => Vec::new(),
+        }
+    };
+    let (server, popular) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, popular);
+    let (resume, next_up, views) = server?;
     let mut rows = vec![
         row("Continue watching", STYLE_WIDE, resume.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
         row("Next up", STYLE_WIDE, next_up.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
+        row("Popular & well rated", STYLE_POSTER, popular),
         row(
             "Libraries",
             STYLE_WIDE,

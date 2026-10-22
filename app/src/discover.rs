@@ -43,6 +43,7 @@ const TV_ALIASES: [(&str, &str); 5] = [
 const TMDB_IMAGES: &str = "https://image.tmdb.org/t/p";
 
 type RatingsCache = Arc<Mutex<HashMap<(MediaKind, u32), Ratings>>>;
+type SharedClient = Arc<Mutex<Option<SeerrClient>>>;
 
 /// What a Discover card does.
 #[derive(Debug, Clone)]
@@ -99,7 +100,8 @@ struct SeasonPick {
 /// Discover state on `App`.
 #[derive(Default)]
 pub struct State {
-    client: RefCell<Option<SeerrClient>>,
+    /// Shared with async work (the Home row loads off the UI thread).
+    client: SharedClient,
     genres: RefCell<Option<(Vec<Genre>, Vec<Genre>)>>,
     /// (region, providers) for the Extras step.
     providers: RefCell<Option<(String, Vec<WatchProvider>)>>,
@@ -112,7 +114,7 @@ pub struct State {
 impl State {
     /// Forget the session and cached lists (URL or password changed).
     pub fn reset(&self) {
-        self.client.borrow_mut().take();
+        forget_session(&self.client);
         self.genres.borrow_mut().take();
         self.providers.borrow_mut().take();
     }
@@ -134,6 +136,67 @@ async fn sign_in(c: &mut SeerrClient, login: &Login) -> anyhow::Result<String> {
         }
         Err(e) => Err(e.into()),
     }
+}
+
+fn forget_session(shared: &SharedClient) {
+    if let Ok(mut c) = shared.lock() {
+        c.take();
+    }
+}
+
+/// Runs `op` signed in (signing in first, and once more if the session
+/// expired), keeping the session in `shared` for next time.
+async fn with_session<T, Fut>(
+    shared: SharedClient,
+    mut c: SeerrClient,
+    login: Login,
+    op: impl Fn(SeerrClient) -> Fut,
+) -> anyhow::Result<T>
+where
+    Fut: Future<Output = Result<T, SeerrError>>,
+{
+    let mut fresh = false;
+    if !c.has_session() {
+        if let Err(e) = sign_in(&mut c, &login).await {
+            forget_session(&shared);
+            return Err(e);
+        }
+        fresh = true;
+    }
+    let r = match op(c.clone()).await {
+        Err(SeerrError::Unauthorized) if !fresh => match sign_in(&mut c, &login).await {
+            Ok(_) => op(c.clone()).await,
+            Err(e) => {
+                forget_session(&shared);
+                return Err(e);
+            }
+        },
+        r => r,
+    };
+    if let Ok(mut s) = shared.lock() {
+        *s = Some(c);
+    }
+    Ok(r?)
+}
+
+/// `YYYY-MM-DD`, `days` before today (UTC).
+fn date_days_ago(days: u64) -> String {
+    let now = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs());
+    civil_date(now / 86_400 - days)
+}
+
+/// Days since 1970-01-01 → `YYYY-MM-DD` (Howard Hinnant's algorithm).
+fn civil_date(days: u64) -> String {
+    let z = days as i64 + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = yoe + era * 400 + i64::from(m <= 2);
+    format!("{y:04}-{m:02}-{d:02}")
 }
 
 // ---- Genres ---------------------------------------------------------------------
@@ -728,57 +791,67 @@ impl App {
         T: Send + 'static,
         Fut: Future<Output = Result<T, SeerrError>> + Send + 'static,
     {
-        let setup = (|| {
-            let url = self.seerr_url().ok_or_else(|| anyhow::anyhow!("Set the Jellyseerr address in Settings → Discover"))?;
-            let jellyfin = self.client.borrow().clone().ok_or_else(|| anyhow::anyhow!("Not signed in"))?;
-            let password = self
-                .seerr_password_account()
-                .and_then(|a| self.tokens.get_secret(&a))
-                .ok_or_else(|| anyhow::anyhow!("Enter your Jellyfin password for Jellyseerr in Settings → Discover"))?;
-            let client = match self.discover.client.borrow().clone() {
-                Some(c) => c,
-                None => SeerrClient::new(&url)?,
-            };
-            anyhow::Ok((client, Login { jellyfin, password }))
-        })();
-        let (client, login) = match setup {
-            Ok(s) => s,
-            Err(e) => return crate::with_app(|app| then(app, Err(e))),
+        match self.seerr_setup() {
+            Ok((shared, client, login)) => self.spawn_ui(with_session(shared, client, login, op), then),
+            Err(e) => crate::with_app(|app| then(app, Err(e))),
+        }
+    }
+
+    /// The pieces `with_session` needs, or why Jellyseerr can't be used.
+    fn seerr_setup(&self) -> anyhow::Result<(SharedClient, SeerrClient, Login)> {
+        let url = self.seerr_url().ok_or_else(|| anyhow::anyhow!("Set the Jellyseerr address in Settings → Discover"))?;
+        let jellyfin = self.client.borrow().clone().ok_or_else(|| anyhow::anyhow!("Not signed in"))?;
+        let password = self
+            .seerr_password_account()
+            .and_then(|a| self.tokens.get_secret(&a))
+            .ok_or_else(|| anyhow::anyhow!("Enter your Jellyfin password for Jellyseerr in Settings → Discover"))?;
+        let shared = self.discover.client.clone();
+        let client = match shared.lock().ok().and_then(|c| c.clone()) {
+            Some(c) => c,
+            None => SeerrClient::new(&url)?,
         };
-        self.spawn_ui(
-            async move {
-                let mut c = client;
-                let mut fresh = false;
-                if !c.has_session() {
-                    if let Err(e) = sign_in(&mut c, &login).await {
-                        return (None, Err(e));
-                    }
-                    fresh = true;
+        Ok((shared, client, Login { jellyfin, password }))
+    }
+
+    /// Home's "Popular & well rated" row: recent, well rated movies from
+    /// TMDb. None when Jellyseerr isn't set up; empty on any failure, so
+    /// Home never waits more than a few seconds or fails because of it.
+    pub fn home_popular(&self) -> Option<impl Future<Output = Vec<CardContent>> + Send + 'static> {
+        self.seerr_url()?;
+        let (shared, client, login) = self.seerr_setup().ok()?;
+        let query = DiscoverQuery {
+            sort: Sort::Popularity,
+            date_from: Some(date_days_ago(2 * 365)),
+            vote_average_min: Some(7.0),
+            vote_count_min: Some(200),
+            ..Default::default()
+        };
+        Some(async move {
+            let fetch = with_session(shared, client, login, move |c| {
+                let q = query.clone();
+                async move { c.discover(MediaKind::Movie, &q, 1).await }
+            });
+            match tokio::time::timeout(std::time::Duration::from_secs(5), fetch).await {
+                Ok(Ok(page)) => page
+                    .results
+                    .into_iter()
+                    .map(|title| found_card(&Found { kind: MediaKind::Movie, title, ratings: None }))
+                    .collect(),
+                Ok(Err(e)) => {
+                    tracing::warn!("home popular row: {e:#}");
+                    Vec::new()
                 }
-                let r = match op(c.clone()).await {
-                    Err(SeerrError::Unauthorized) if !fresh => match sign_in(&mut c, &login).await {
-                        Ok(_) => op(c.clone()).await,
-                        Err(e) => return (None, Err(e)),
-                    },
-                    r => r,
-                };
-                (Some(c), r.map_err(anyhow::Error::from))
-            },
-            move |app, (client, result)| {
-                match client {
-                    Some(c) => *app.discover.client.borrow_mut() = Some(c),
-                    None => {
-                        app.discover.client.borrow_mut().take();
-                    }
+                Err(_) => {
+                    tracing::warn!("home popular row: Jellyseerr took too long");
+                    Vec::new()
                 }
-                then(app, result);
-            },
-        );
+            }
+        })
     }
 
     /// Settings → Discover → Test: signs in afresh and reports who.
     pub fn test_seerr(&self) {
-        self.discover.client.borrow_mut().take();
+        forget_session(&self.discover.client);
         *self.discover.status.borrow_mut() = "Signing in…".into();
         self.refresh_settings();
         self.seerr_call(
@@ -1393,6 +1466,14 @@ mod tests {
 
         let f = DiscoverFilters { all_genres: true, ..f };
         assert!(Cursor::new(&f, None, &m, &t).kinds.is_empty());
+    }
+
+    #[test]
+    fn civil_dates() {
+        assert_eq!(civil_date(0), "1970-01-01");
+        assert_eq!(civil_date(19_723), "2024-01-01");
+        assert_eq!(civil_date(19_782), "2024-02-29");
+        assert_eq!(civil_date(20_748), "2026-10-22");
     }
 
     #[test]

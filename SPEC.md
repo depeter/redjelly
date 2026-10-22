@@ -324,6 +324,16 @@ seasons pre-selected). Jellyseerr sign-in uses the current Jellyfin user's name 
 their password from the credential store (one per Jellyfin user), so requests are
 attributed and quota-checked per person. Movie and series detail pages append IMDb /
 RT scores to the meta line once fetched.
+With Jellyseerr set up, Home also has a **Popular & well rated** row (TMDb movies from
+the last 2 years, score 7+ with 200+ votes, by popularity), loaded alongside the other
+rows and dropped if Jellyseerr is slow (5 s) or fails.
+
+**Detail page**: tagline, full plot, About (release date, runtime, age/critic
+ratings, genres, director, writers, producers, studio, country), Cast & crew with
+photos (each opens that person's titles in the library), one card per video/audio/
+subtitle track plus the file, and a Trailer button: the server's trailer file, else
+the YouTube trailer through mpv's ytdl hook with yt-dlp downloaded on first use into
+`%LOCALAPPDATA%\redjelly\data\tools` and refreshed weekly.
 
 Performance targets: cold start to interactive Home < 1 s with warm cache; library
 grid scroll at display refresh rate with 10k items (virtualised list, async image

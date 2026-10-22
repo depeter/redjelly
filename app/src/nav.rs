@@ -95,11 +95,12 @@ impl App {
         let prefs = self.config.borrow().track_preferences().languages;
         let url = self.config.borrow().server.url.clone().unwrap_or_default();
         let discover = self.config.borrow().discover.seerr_url.is_some();
+        let popular = if source == Source::Home { self.home_popular() } else { None };
         let src = source.clone();
         self.load(source, placement, async move {
             match &src {
                 Source::Users => screens::users(&client, &url).await,
-                Source::Home => screens::home(&client, discover).await,
+                Source::Home => screens::home(&client, discover, popular).await,
                 Source::Library { parent_id, title, collection_type } => {
                     screens::library(&client, parent_id, title, collection_type.as_deref(), columns).await
                 }

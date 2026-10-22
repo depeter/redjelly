@@ -67,7 +67,9 @@ pub struct Player {
 
 impl Player {
     /// `log_file`: mpv's own verbose log, invaluable for playback bug reports.
-    pub fn new(cfg: &Config, log_file: Option<&std::path::Path>) -> Result<Self, MpvError> {
+    /// `ytdl_path`: yt-dlp for web URLs (YouTube trailers); it may not be
+    /// downloaded yet, mpv only runs it when such a URL is played.
+    pub fn new(cfg: &Config, log_file: Option<&std::path::Path>, ytdl_path: Option<&std::path::Path>) -> Result<Self, MpvError> {
         let mpv = Mpv::with_initializer(|init| {
             match cfg.video_output() {
                 VideoOutput::Window => {
@@ -92,6 +94,11 @@ impl Player {
             init.set_option("osc", false)?;
             init.set_option("input-default-bindings", false)?;
             init.set_option("input-vo-keyboard", false)?;
+            if let Some(p) = ytdl_path {
+                init.set_option("ytdl", true)?;
+                init.set_option("script-opts", format!("ytdl_hook-ytdl_path={}", p.display()))?;
+                init.set_option("ytdl-format", "bv*[height<=1080]+ba/b[height<=1080]/b")?;
+            }
             init.set_option("cache", "yes")?;
             init.set_option("demuxer-max-bytes", "512MiB")?;
             // 8-bit output: dither, or HDR→SDR gradients band.
@@ -155,9 +162,10 @@ impl Player {
     }
 
     /// Loads a stream. `auth_header` is sent with every HTTP request mpv makes.
+    /// `auth_header` empty = none (anything not from the Jellyfin server).
     pub fn load(&self, url: &str, auth_header: &str, start_secs: f64) -> Result<(), MpvError> {
-        self.mpv
-            .set_property("http-header-fields", format!("Authorization: {auth_header}"))?;
+        let fields = if auth_header.is_empty() { String::new() } else { format!("Authorization: {auth_header}") };
+        self.mpv.set_property("http-header-fields", fields)?;
         self.mpv.command("loadfile", &[url, "replace", "-1", &format!("start={start_secs}")])
     }
 

@@ -25,6 +25,7 @@ mod settings;
 mod subtitles;
 mod update;
 mod video;
+mod ytdlp;
 #[cfg(windows)]
 mod video_window;
 
@@ -149,6 +150,8 @@ pub struct App {
     /// When Shut down was first pressed; a second press in time confirms.
     shutdown_armed: Cell<Option<Instant>>,
     discover: discover::State,
+    /// yt-dlp for YouTube trailers (see `ytdlp.rs`).
+    ytdlp_path: PathBuf,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -533,7 +536,8 @@ fn main() -> anyhow::Result<()> {
 
     let mpv_log = log_dir.join("mpv.log");
     tracing::info!("mpv log: {}", mpv_log.display());
-    let player = Player::new(&config, Some(&mpv_log)).context("starting mpv")?;
+    let ytdlp_path = ytdlp::path(&dirs.data_local_dir().join("tools"));
+    let player = Player::new(&config, Some(&mpv_log), Some(&ytdlp_path)).context("starting mpv")?;
 
     let video_output = config.video_output();
     // Embedded video is drawn with OpenGL under the UI, so the renderer
@@ -600,6 +604,7 @@ fn main() -> anyhow::Result<()> {
         update_dir: dirs.cache_dir().join("update"),
         shutdown_armed: Cell::new(None),
         discover: Default::default(),
+        ytdlp_path,
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));

@@ -94,6 +94,60 @@ pub struct Item {
     pub child_count: Option<u32>,
     #[serde(default)]
     pub season_name: Option<String>,
+    // Full-item fields (single `Items/{id}` responses).
+    #[serde(default)]
+    pub original_title: Option<String>,
+    #[serde(default)]
+    pub taglines: Vec<String>,
+    #[serde(default)]
+    pub people: Vec<Person>,
+    #[serde(default)]
+    pub studios: Vec<NameId>,
+    #[serde(default)]
+    pub production_locations: Vec<String>,
+    #[serde(default)]
+    pub premiere_date: Option<String>,
+    /// Rotten Tomatoes-style 0–100, when the server's metadata has one.
+    #[serde(default)]
+    pub critic_rating: Option<f32>,
+    #[serde(default)]
+    pub remote_trailers: Vec<RemoteTrailer>,
+    #[serde(default)]
+    pub local_trailer_count: Option<u32>,
+}
+
+/// Cast or crew member.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct Person {
+    pub id: String,
+    #[serde(default)]
+    pub name: String,
+    /// Character for actors, job for others.
+    #[serde(default)]
+    pub role: Option<String>,
+    /// Actor, Director, Writer, Producer, GuestStar, …
+    #[serde(rename = "Type", default)]
+    pub kind: String,
+    #[serde(default)]
+    pub primary_image_tag: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct NameId {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub id: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct RemoteTrailer {
+    pub url: String,
+    #[serde(default)]
+    pub name: Option<String>,
 }
 
 /// Which image to show for an item, resolved from the fields above.

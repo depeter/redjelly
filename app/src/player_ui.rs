@@ -31,6 +31,13 @@ const REPORT_START: ReportFn = |c, r| Box::pin(async move { c.report_start(&r).a
 const REPORT_PROGRESS: ReportFn = |c, r| Box::pin(async move { c.report_progress(&r).await });
 pub const REPORT_STOPPED: ReportFn = |c, r| Box::pin(async move { c.report_stopped(&r).await });
 
+/// Where a trailer plays from.
+enum Trailer {
+    /// A trailer item on the Jellyfin server.
+    Item(String),
+    Web(Box<PlayRequest>),
+}
+
 impl App {
     pub fn play_item(&self, id: String, from_start: bool) {
         let Some(client) = self.client.borrow().clone() else { return };
@@ -49,12 +56,51 @@ impl App {
         });
     }
 
+    /// Plays a trailer: the server's own file when there is one, else the
+    /// web trailer through yt-dlp (fetched on first use).
+    pub fn play_trailer(&self, item_id: String, local: bool, remote: Option<String>, title: String) {
+        let Some(client) = self.client.borrow().clone() else { return };
+        if self.busy.get() {
+            return;
+        }
+        self.busy.set(true);
+        self.toast(if remote.is_some() && !local { "Loading trailer… (first time also gets yt-dlp)" } else { "Loading trailer…" });
+        let (http, ytdlp) = (self.http.clone(), self.ytdlp_path.clone());
+        self.spawn_ui(
+            async move {
+                if local {
+                    match client.local_trailers(&item_id).await {
+                        Ok(t) if !t.is_empty() => return Ok(Trailer::Item(t[0].id.clone())),
+                        Ok(_) => {}
+                        Err(e) => tracing::warn!("local trailers: {e}"),
+                    }
+                }
+                let url = remote.ok_or_else(|| anyhow::anyhow!("no trailer found"))?;
+                crate::ytdlp::ensure(&http, &ytdlp).await?;
+                Ok(Trailer::Web(Box::new(PlayRequest { title: format!("{title} · Trailer"), ..PlayRequest::standalone(&url) })))
+            },
+            |app, result: anyhow::Result<Trailer>| {
+                app.busy.set(false);
+                app.clear_toast();
+                match result {
+                    Ok(Trailer::Web(req)) => app.start(*req),
+                    Ok(Trailer::Item(id)) => app.play_item(id, true),
+                    Err(e) => app.toast(format!("Can't play the trailer: {e:#}")),
+                }
+            },
+        );
+    }
+
     pub fn start(&self, req: PlayRequest) {
         if !self.video_ready.get() {
             *self.pending.borrow_mut() = Some(req);
             return;
         }
-        let auth = self.client.borrow().as_ref().map(|c| c.auth_header()).unwrap_or_default();
+        // Only server streams get the token, never e.g. YouTube.
+        let auth = match &req.item {
+            Some(_) => self.client.borrow().as_ref().map(|c| c.auth_header()).unwrap_or_default(),
+            None => String::new(),
+        };
         if let Err(e) = self.player.load(&req.url, &auth, req.start_secs) {
             self.toast(format!("mpv refused the file: {e}"));
             return;

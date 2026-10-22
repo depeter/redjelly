@@ -264,6 +264,12 @@ impl Client {
         self.get(&format!("Items/{id}"), &[("userId", &s.user_id)]).await
     }
 
+    /// Trailer files stored next to the item on the server.
+    pub async fn local_trailers(&self, id: &str) -> Result<Vec<Item>, Error> {
+        let s = self.session()?;
+        self.get(&format!("Items/{id}/LocalTrailers"), &[("userId", &s.user_id)]).await
+    }
+
     pub fn image_url(&self, item_id: &str, kind: &str, tag: &str, max_width: u32) -> Result<Url, Error> {
         let mut u = self.url(&format!("Items/{item_id}/Images/{kind}"))?;
         u.query_pairs_mut()

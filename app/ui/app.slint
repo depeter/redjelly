@@ -256,8 +256,9 @@ component BrowseView inherits Rectangle {
                 wrap: word-wrap;
             }
             if root.header.overview != "": Text {
-                max-width: 900px;
-                max-height: 66px;
+                max-width: 1000px;
+                // The whole plot on detail pages; only very long ones elide.
+                max-height: 168px;
                 text: root.header.overview;
                 color: #d4d4d8;
                 font-size: 15px;

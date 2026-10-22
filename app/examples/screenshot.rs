@@ -105,16 +105,18 @@ fn main() {
     ui.set_toast("".into());
     ui.set_header(Header {
         title: "The Long Night".into(),
-        meta: "2024 · 2h 14m · 16 · ★ 7.4 · Drama, Thriller".into(),
-        info: "Audio: English 5.1, Dutch 2.0 · Subtitles: English, Dutch".into(),
-        overview: "A sprawling story about a family that has to survive a winter without end. When the power fails, old secrets surface and alliances shift in ways nobody could have predicted, and the night keeps getting longer.".into(),
+        meta: "2024 · 2h 14m · 16 · ★ 7.4 · Drama, Thriller · IMDb 7.8 · RT 92% · Audience 88%".into(),
+        info: "Some nights never end.".into(),
+        overview: "A sprawling story about a family that has to survive a winter without end. When the power fails, old secrets surface and alliances shift in ways nobody could have predicted, and the night keeps getting longer. The eldest daughter, long estranged, returns to the farm with a stranger nobody trusts; her brother has been keeping the generator running with fuel he shouldn't have. As the cold closes in, the family has to decide who they can afford to protect, and what they are willing to give up to see the morning.".into(),
         backdrop: fake_image(640, 360, 90),
         has_backdrop: true,
     });
     ui.set_header_visible(true);
     ui.set_rows(ModelRc::new(VecModel::from(vec![
-        row("", 2, vec![card("Resume 1:02:13", "", None, -1.0, false), card("Play from start", "", None, -1.0, false), card("Mark watched", "", None, -1.0, false)]),
-        row("More in Season 1", 1, (1..6).map(|i| card(&format!("Episode {i}"), &format!("S01E0{i}"), wide(i * 25), if i == 2 { 0.5 } else { -1.0 }, i == 1)).collect()),
+        row("", 2, vec![card("Resume 1:02:13", "", None, -1.0, false), card("Play from start", "", None, -1.0, false), card("Trailer", "", None, -1.0, false), card("Mark watched", "", None, -1.0, false)]),
+        row("About", 3, vec![card("Released", "15 Jul 2024", None, -1.0, false), card("Director", "Ana Moreau", None, -1.0, false), card("Writers", "Ana Moreau, Tom Baines", None, -1.0, false), card("Studio", "Northlight Pictures", None, -1.0, false)]),
+        row("Cast & crew", 0, (1..8).map(|i| card(&format!("Actor {i}"), "Role name", poster(i * 31), -1.0, false)).collect()),
+        row("Video & audio · no Dutch subtitles", 3, vec![card("Video", "4K HEVC HDR10", None, -1.0, false), card("Audio · English", "Dolby TrueHD 7.1 · default", None, -1.0, false)]),
     ])));
     save(&window, &format!("{out}/detail.png"));
 

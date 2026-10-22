@@ -5,7 +5,7 @@ use rj_jellyfin::Client;
 use rj_jellyfin::models::{ImageRef, Item, StreamType, TICKS_PER_SECOND, User};
 
 use crate::images::ImageSrc;
-use crate::layout::{STYLE_BUTTON, STYLE_POSTER, STYLE_WIDE};
+use crate::layout::{STYLE_BUTTON, STYLE_POSTER, STYLE_SETTING, STYLE_WIDE};
 use crate::playback::format_time;
 
 /// What a screen shows; also how to reload it.
@@ -17,6 +17,8 @@ pub enum Source {
     Series { id: String },
     Detail { id: String },
     Search { term: String },
+    /// Library items featuring a cast or crew member.
+    Person { id: String, name: String },
     /// AI subtitle jobs (built locally, not loaded from the server).
     Jobs,
     /// Built locally too.
@@ -52,6 +54,8 @@ pub enum Target {
     /// Asks for a second press, then powers the computer off.
     Shutdown,
     Discover(crate::discover::DiscoverAction),
+    /// Server trailer file when `local`, else the web `remote` URL.
+    Trailer { item_id: String, local: bool, remote: Option<String>, title: String },
 }
 
 #[derive(Debug, Clone)]
@@ -204,51 +208,179 @@ fn meta_line(item: &Item) -> String {
     parts.join(" · ")
 }
 
-/// "Audio: eng 5.1, dut 2.0 · Subtitles: eng, dut" for the detail header.
-fn media_line(item: &Item, preferred: &[rj_core::lang::Lang]) -> String {
-    let Some(ms) = item.media_sources.first() else { return String::new() };
-    let lang = |s: &rj_jellyfin::models::MediaStream| {
-        s.language.as_deref().and_then(rj_core::lang::Lang::parse).map_or("?".into(), |l| l.to_string())
-    };
-    let mut audio: Vec<String> = Vec::new();
-    let mut subs: Vec<String> = Vec::new();
-    let mut video = String::new();
+/// "15 Jul 2010" from Jellyfin's ISO dates.
+fn format_date(iso: &str) -> Option<String> {
+    const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let (y, m, d) = (iso.get(..4)?, iso.get(5..7)?.parse::<usize>().ok()?, iso.get(8..10)?.parse::<u32>().ok()?);
+    Some(format!("{d} {} {y}", MONTHS.get(m.checked_sub(1)?)?))
+}
+
+fn format_size(bytes: u64) -> String {
+    let gb = bytes as f64 / 1e9;
+    if gb >= 1.0 { format!("{gb:.1} GB") } else { format!("{:.0} MB", bytes as f64 / 1e6) }
+}
+
+fn stream_lang(s: &rj_jellyfin::models::MediaStream) -> String {
+    s.language.as_deref().and_then(rj_core::lang::Lang::parse).map_or("Unknown language".into(), |l| l.name())
+}
+
+/// Read-only label + value card.
+fn info_card(label: impl Into<String>, value: impl Into<String>) -> CardContent {
+    CardContent {
+        title: label.into(),
+        subtitle: value.into(),
+        image: None,
+        progress: -1.0,
+        played: false,
+        mark: 0,
+        target: Target::None,
+    }
+}
+
+/// One card per video, audio and subtitle track, plus the file; and a
+/// note when the top preferred subtitle language is missing.
+fn media_cards(item: &Item, preferred: &[rj_core::lang::Lang]) -> (Vec<CardContent>, Option<String>) {
+    let Some(ms) = item.media_sources.first() else { return (Vec::new(), None) };
+    let mut cards = Vec::new();
+    let mut sub_langs = Vec::new();
     for s in &ms.media_streams {
+        let detail = s.display_title.clone().or_else(|| s.codec.clone()).unwrap_or_default();
+        let flags = |s: &rj_jellyfin::models::MediaStream| {
+            let mut f = Vec::new();
+            if s.is_default {
+                f.push("default");
+            }
+            if s.is_forced {
+                f.push("forced");
+            }
+            if s.is_hearing_impaired {
+                f.push("SDH");
+            }
+            if s.is_external {
+                f.push("external");
+            }
+            if f.is_empty() { String::new() } else { format!(" · {}", f.join(", ")) }
+        };
         match s.kind {
-            StreamType::Video if video.is_empty() => {
-                video = s.display_title.clone().unwrap_or_default();
-            }
-            StreamType::Audio => {
-                let ch = match s.channels {
-                    Some(6) => " 5.1",
-                    Some(8) => " 7.1",
-                    Some(2) => " 2.0",
-                    _ => "",
-                };
-                audio.push(format!("{}{ch}", lang(s)));
-            }
+            StreamType::Video => cards.push(info_card("Video", detail)),
+            StreamType::Audio => cards.push(info_card(format!("Audio · {}", stream_lang(s)), format!("{detail}{}", flags(s)))),
             StreamType::Subtitle => {
-                let l = lang(s);
-                if !subs.contains(&l) {
-                    subs.push(l);
+                if let Some(l) = s.language.as_deref().and_then(rj_core::lang::Lang::parse) {
+                    sub_langs.push(l);
                 }
+                cards.push(info_card(format!("Subtitles · {}", stream_lang(s)), format!("{detail}{}", flags(s))));
             }
             _ => {}
         }
     }
-    let mut parts = vec![];
-    if !video.is_empty() {
-        parts.push(video);
+    let mut file = Vec::new();
+    if let Some(c) = &ms.container {
+        file.push(c.to_uppercase());
     }
-    if !audio.is_empty() {
-        parts.push(format!("Audio: {}", audio.join(", ")));
+    if let Some(size) = ms.size {
+        file.push(format_size(size));
     }
-    parts.push(if subs.is_empty() { "No subtitles".into() } else { format!("Subtitles: {}", subs.join(", ")) });
-    if let Some(top) = preferred.first()
-        && !subs.iter().any(|s| s == top.as_str()) {
-            parts.push(format!("no '{top}' subtitles"));
+    if let Some(name) = ms.path.as_deref().and_then(|p| p.rsplit(['/', '\\']).next()) {
+        file.push(name.to_owned());
+    }
+    if !file.is_empty() {
+        cards.push(info_card("File", file.join(" · ")));
+    }
+    let missing = preferred
+        .first()
+        .filter(|top| !sub_langs.contains(top))
+        .map(|top| format!("no {} subtitles", top.name()));
+    (cards, missing)
+}
+
+/// Facts for the About row, skipping unknowns.
+fn about_cards(item: &Item) -> Vec<CardContent> {
+    let mut cards = Vec::new();
+    if let Some(t) = item.original_title.as_ref().filter(|t| **t != item.name) {
+        cards.push(info_card("Original title", t.clone()));
+    }
+    if let Some(d) = item.premiere_date.as_deref().and_then(format_date) {
+        cards.push(info_card(if item.kind == "Episode" { "Aired" } else { "Released" }, d));
+    }
+    if let Some(r) = runtime(item) {
+        cards.push(info_card("Runtime", r));
+    }
+    if let Some(r) = &item.official_rating {
+        cards.push(info_card("Age rating", r.clone()));
+    }
+    if let Some(r) = item.community_rating {
+        cards.push(info_card("Community rating", format!("★ {r:.1}")));
+    }
+    if let Some(r) = item.critic_rating {
+        cards.push(info_card("Critics", format!("{r:.0}%")));
+    }
+    if !item.genres.is_empty() {
+        cards.push(info_card("Genres", item.genres.join(", ")));
+    }
+    let names = |kind: &str| -> Vec<String> {
+        let mut v: Vec<String> = item.people.iter().filter(|p| p.kind == kind).map(|p| p.name.clone()).collect();
+        v.dedup();
+        v
+    };
+    for (kind, one, many) in [("Director", "Director", "Directors"), ("Writer", "Writer", "Writers"), ("Producer", "Producer", "Producers")] {
+        let n = names(kind);
+        if !n.is_empty() {
+            cards.push(info_card(if n.len() == 1 { one } else { many }, n.join(", ")));
         }
-    parts.join(" · ")
+    }
+    if !item.studios.is_empty() {
+        cards.push(info_card("Studio", item.studios.iter().map(|s| s.name.as_str()).collect::<Vec<_>>().join(", ")));
+    }
+    if !item.production_locations.is_empty() {
+        cards.push(info_card("Country", item.production_locations.join(", ")));
+    }
+    cards
+}
+
+/// Cast first, then crew; each opens what else they're in.
+fn people_cards(c: &Client, item: &Item) -> Vec<CardContent> {
+    let rank = |kind: &str| match kind {
+        "Actor" => 0,
+        "GuestStar" => 1,
+        "Director" => 2,
+        "Writer" => 3,
+        _ => 4,
+    };
+    let mut people: Vec<&rj_jellyfin::models::Person> = item.people.iter().collect();
+    people.sort_by_key(|p| rank(&p.kind));
+    people
+        .into_iter()
+        .take(40)
+        .map(|p| CardContent {
+            title: p.name.clone(),
+            subtitle: match p.role.as_deref().filter(|r| !r.is_empty()) {
+                Some(r) if p.kind == "Actor" || p.kind == "GuestStar" => r.to_owned(),
+                Some(r) => format!("{} · {r}", p.kind),
+                None => p.kind.clone(),
+            },
+            image: image(
+                c,
+                p.primary_image_tag.as_ref().map(|t| ImageRef { item_id: p.id.clone(), kind: "Primary", tag: t.clone() }),
+                320,
+            ),
+            progress: -1.0,
+            played: false,
+            mark: 0,
+            target: Target::Open(Source::Person { id: p.id.clone(), name: p.name.clone() }),
+        })
+        .collect()
+}
+
+/// The trailer to offer: a server file first, else a web (YouTube) one.
+fn trailer_target(item: &Item) -> Option<Target> {
+    let remote = item
+        .remote_trailers
+        .iter()
+        .find(|t| t.url.contains("youtu"))
+        .or(item.remote_trailers.first())
+        .map(|t| t.url.clone());
+    let local = item.local_trailer_count.unwrap_or(0) > 0;
+    (local || remote.is_some()).then(|| Target::Trailer { item_id: item.id.clone(), local, remote, title: item.name.clone() })
 }
 
 pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
@@ -494,6 +626,9 @@ pub async fn detail(c: &Client, id: &str, preferred: &[rj_core::lang::Lang]) -> 
         }
         None => buttons.push(button("Play", Target::Play { id: id.into(), from_start: true })),
     }
+    if let Some(t) = trailer_target(&item) {
+        buttons.push(button("Trailer", t));
+    }
     let played = item.user_data.as_ref().is_some_and(|u| u.played);
     buttons.push(button(
         if played { "Mark unwatched" } else { "Mark watched" },
@@ -531,6 +666,23 @@ pub async fn detail(c: &Client, id: &str, preferred: &[rj_core::lang::Lang]) -> 
         }
     }
 
+    let about = about_cards(&item);
+    if !about.is_empty() {
+        rows.push(row("About", STYLE_SETTING, about));
+    }
+    let people = people_cards(c, &item);
+    if !people.is_empty() {
+        rows.push(row("Cast & crew", STYLE_POSTER, people));
+    }
+    let (media, missing) = media_cards(&item, preferred);
+    if !media.is_empty() {
+        let title = match missing {
+            Some(m) => format!("Video & audio · {m}"),
+            None => "Video & audio".into(),
+        };
+        rows.push(row(title, STYLE_SETTING, media));
+    }
+
     let title = match (&item.series_name, episode_code(&item)) {
         (Some(_), Some(code)) => format!("{code} · {}", item.name),
         _ => item.name.clone(),
@@ -544,7 +696,7 @@ pub async fn detail(c: &Client, id: &str, preferred: &[rj_core::lang::Lang]) -> 
         header: Some(HeaderContent {
             title,
             meta,
-            info: media_line(&item, preferred),
+            info: item.taglines.first().cloned().unwrap_or_default(),
             overview: item.overview.clone().unwrap_or_default(),
             backdrop: image(c, item.backdrop(), 1280),
             ratings_for: tmdb_id(&item).filter(|_| item.kind == "Movie").map(|id| (rj_seerr::MediaKind::Movie, id)),
@@ -552,6 +704,37 @@ pub async fn detail(c: &Client, id: &str, preferred: &[rj_core::lang::Lang]) -> 
         rows,
         focus: (0, 0),
         paging: None,
+    })
+}
+
+/// Everything in the library with this person, newest first.
+pub async fn person(c: &Client, id: &str, name: &str, columns: usize) -> anyhow::Result<Content> {
+    let query: Vec<(String, String)> = [
+        ("personIds", id),
+        ("recursive", "true"),
+        ("includeItemTypes", "Movie,Series"),
+        ("sortBy", "ProductionYear,SortName"),
+        ("sortOrder", "Descending"),
+    ]
+    .into_iter()
+    .map(|(k, v)| (k.to_owned(), v.to_owned()))
+    .collect();
+    let mut paging = Paging { source: PageSource::Library(query), loaded: 0, total: 0, columns };
+    let (person, page) = tokio::join!(c.item(id), library_page(c, &paging));
+    let (cards, total) = page?;
+    paging.loaded = cards.len() as u32;
+    paging.total = total;
+    Ok(Content {
+        source: Source::Person { id: id.into(), name: name.into() },
+        header: Some(HeaderContent {
+            title: name.into(),
+            meta: format!("{total} in your library"),
+            overview: person.ok().and_then(|p| p.overview).unwrap_or_default(),
+            ..Default::default()
+        }),
+        rows: grid_rows(cards, columns),
+        focus: (0, 0),
+        paging: (paging.loaded < total).then_some(paging),
     })
 }
 
@@ -585,6 +768,55 @@ pub async fn search(c: &Client, term: &str) -> anyhow::Result<Content> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn movie(json: serde_json::Value) -> Item {
+        let mut base = serde_json::json!({ "Id": "m1", "Name": "Inception", "Type": "Movie" });
+        base.as_object_mut().unwrap().extend(json.as_object().unwrap().clone());
+        serde_json::from_value(base).unwrap()
+    }
+
+    #[test]
+    fn dates_and_sizes() {
+        assert_eq!(format_date("2010-07-15T00:00:00.0000000Z").as_deref(), Some("15 Jul 2010"));
+        assert_eq!(format_date("bad"), None);
+        assert_eq!(format_size(8_400_000_000), "8.4 GB");
+        assert_eq!(format_size(700_000_000), "700 MB");
+    }
+
+    #[test]
+    fn about_lists_crew_and_facts() {
+        let item = movie(serde_json::json!({
+            "OriginalTitle": "Inception",
+            "PremiereDate": "2010-07-15T00:00:00Z",
+            "CriticRating": 87.0,
+            "Studios": [{ "Name": "Legendary", "Id": "s" }],
+            "People": [
+                { "Id": "p1", "Name": "Christopher Nolan", "Type": "Director" },
+                { "Id": "p1", "Name": "Christopher Nolan", "Type": "Writer" },
+                { "Id": "p2", "Name": "Leonardo DiCaprio", "Type": "Actor", "Role": "Cobb", "PrimaryImageTag": "t" }
+            ]
+        }));
+        let about: Vec<(String, String)> = about_cards(&item).into_iter().map(|c| (c.title, c.subtitle)).collect();
+        assert!(!about.iter().any(|(t, _)| t == "Original title"), "same as name");
+        assert!(about.contains(&("Released".into(), "15 Jul 2010".into())));
+        assert!(about.contains(&("Critics".into(), "87%".into())));
+        assert!(about.contains(&("Director".into(), "Christopher Nolan".into())));
+        assert!(about.contains(&("Studio".into(), "Legendary".into())));
+    }
+
+    #[test]
+    fn trailer_prefers_server_file_then_youtube() {
+        let none = movie(serde_json::json!({}));
+        assert!(trailer_target(&none).is_none());
+        let web = movie(serde_json::json!({ "RemoteTrailers": [
+            { "Url": "https://vimeo.com/1" }, { "Url": "https://www.youtube.com/watch?v=abc" }
+        ] }));
+        let Some(Target::Trailer { local, remote, .. }) = trailer_target(&web) else { panic!() };
+        assert!(!local);
+        assert_eq!(remote.as_deref(), Some("https://www.youtube.com/watch?v=abc"));
+        let local = movie(serde_json::json!({ "LocalTrailerCount": 1 }));
+        assert!(matches!(trailer_target(&local), Some(Target::Trailer { local: true, remote: None, .. })));
+    }
 
     #[test]
     fn grid_splits_into_columns() {

@@ -106,6 +106,7 @@ impl App {
                 Source::Series { id } => screens::series(&client, id).await,
                 Source::Detail { id } => screens::detail(&client, id, &prefs).await,
                 Source::Search { term } => screens::search(&client, term).await,
+                Source::Person { id, name } => screens::person(&client, id, name, columns).await,
                 _ => unreachable!("built locally or by discover.rs"),
             }
         });
@@ -380,7 +381,7 @@ impl App {
                 // Grids keep the column; other rows return to where you were.
                 if s.paging.is_some() || matches!(
                     s.source,
-                    Source::Library { .. } | Source::DiscoverResults | Source::Discover { .. } | Source::SeasonPicker { .. }
+                    Source::Library { .. } | Source::Person { .. } | Source::DiscoverResults | Source::Discover { .. } | Source::SeasonPicker { .. }
                 ) {
                     let col = s.cols[r];
                     s.cols[s.focus_row] = col;
@@ -429,6 +430,7 @@ impl App {
             }
             Target::Shutdown => self.shutdown(),
             Target::Discover(a) => self.discover_action(a),
+            Target::Trailer { item_id, local, remote, title } => self.play_trailer(item_id, local, remote, title),
         }
     }
 

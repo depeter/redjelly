@@ -260,8 +260,23 @@ impl ArrClient {
 
     /// Removes a download from the client and blocklists the release.
     pub async fn remove_and_blocklist(&self, queue_id: u64) -> Result<(), ArrError> {
+        self.remove_download(queue_id, true).await
+    }
+
+    /// Removes a download from the queue and the download client.
+    pub async fn remove_download(&self, queue_id: u64, blocklist: bool) -> Result<(), ArrError> {
         let path = format!("queue/{queue_id}");
-        let rb = self.build(Method::DELETE, &path)?.query(&[("removeFromClient", "true"), ("blocklist", "true")]);
+        let rb = self.build(Method::DELETE, &path)?.query(&[("removeFromClient", "true"), ("blocklist", if blocklist { "true" } else { "false" })]);
+        Self::send(rb, &path).await.map(drop)
+    }
+
+    /// Stops tracking a movie / series. Files on disk are kept.
+    pub async fn delete(&self, id: u32) -> Result<(), ArrError> {
+        let path = match self.kind {
+            MediaKind::Movie => format!("movie/{id}"),
+            MediaKind::Tv => format!("series/{id}"),
+        };
+        let rb = self.build(Method::DELETE, &path)?.query(&[("deleteFiles", "false"), ("addImportExclusion", "false")]);
         Self::send(rb, &path).await.map(drop)
     }
 

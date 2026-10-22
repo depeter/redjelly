@@ -56,6 +56,8 @@ pub enum DiscoverAction {
     ManualSearch,
     /// Blocklist its downloads (if any) and search automatically.
     SearchAgain,
+    /// Withdraw the request (and stop Radarr/Sonarr looking for it).
+    RemoveRequest,
     ToggleSeason(u32),
     RequestSeasons,
 }
@@ -797,7 +799,7 @@ impl App {
 
     /// Runs `op` with a signed-in Jellyseerr client (signing in first, and
     /// once more if the session expired), then `then` on the UI thread.
-    fn seerr_call<T, Fut>(
+    pub(crate) fn seerr_call<T, Fut>(
         &self,
         op: impl Fn(SeerrClient) -> Fut + Send + Sync + 'static,
         then: impl FnOnce(&Rc<App>, anyhow::Result<T>) + Send + 'static,
@@ -1326,6 +1328,7 @@ impl App {
         match action {
             DiscoverAction::ManualSearch => self.manual_search(),
             DiscoverAction::SearchAgain => self.search_again(),
+            DiscoverAction::RemoveRequest => self.remove_request(),
             DiscoverAction::Set(c) => {
                 apply(&mut self.config.borrow_mut().discover.last, c);
                 self.save_config();
@@ -1541,6 +1544,9 @@ fn title_content(kind: MediaKind, d: &Details, region: Option<&str>, arr: &crate
         }
     }
 
+    if info.status != status::AVAILABLE && !info.requests.is_empty() {
+        buttons.push(button("Remove request", Target::Discover(DiscoverAction::RemoveRequest)));
+    }
     if arr.client.is_some() && arr.arr_id.is_some() {
         buttons.push(button("Manual search…", Target::Discover(DiscoverAction::ManualSearch)));
         let again = if arr.queue.is_empty() { "Search again" } else { "Remove & search again" };

@@ -69,6 +69,9 @@ pub mod request_status {
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MediaInfo {
+    /// Jellyseerr's own media id (for `/media/{id}`).
+    #[serde(default)]
+    pub id: Option<u64>,
     #[serde(default)]
     pub status: u8,
     #[serde(default)]

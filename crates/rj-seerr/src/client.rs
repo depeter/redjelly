@@ -262,6 +262,18 @@ impl Client {
         Self::send(self.build(Method::POST, path)?.json(&body), path).await?;
         Ok(())
     }
+
+    /// Deletes one request (your own pending ones, or any as an admin).
+    pub async fn delete_request(&self, request_id: u64) -> Result<(), Error> {
+        let path = format!("request/{request_id}");
+        Self::send(self.build(Method::DELETE, &path)?, &path).await.map(drop)
+    }
+
+    /// Clears a title's Jellyseerr data, requests included (admins).
+    pub async fn delete_media(&self, media_id: u64) -> Result<(), Error> {
+        let path = format!("media/{media_id}");
+        Self::send(self.build(Method::DELETE, &path)?, &path).await.map(drop)
+    }
 }
 
 #[cfg(test)]
@@ -454,5 +466,15 @@ mod tests {
         c.request(MediaKind::Tv, 1399, &[1, 2]).await.unwrap();
         let err = c.request(MediaKind::Movie, 550, &[]).await.unwrap_err();
         assert!(err.to_string().contains("already exists"), "{err}");
+    }
+
+    #[tokio::test]
+    async fn deletes() {
+        let server = MockServer::start().await;
+        Mock::given(method("DELETE")).and(path("/api/v1/media/7")).respond_with(ResponseTemplate::new(403)).mount(&server).await;
+        Mock::given(method("DELETE")).and(path("/api/v1/request/12")).respond_with(ResponseTemplate::new(204)).expect(1).mount(&server).await;
+        let c = Client::new(&server.uri()).unwrap();
+        assert!(matches!(c.delete_media(7).await, Err(Error::Unauthorized)));
+        c.delete_request(12).await.unwrap();
     }
 }

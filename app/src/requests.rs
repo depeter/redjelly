@@ -33,6 +33,7 @@ pub struct State {
     releases: RefCell<Option<ReleasePanel>>,
     title: RefCell<Option<TitleArr>>,
     reattempt_armed: Cell<Option<(u32, Instant)>>,
+    remove_armed: Cell<Option<(MediaKind, u32, Instant)>>,
     next_refresh: Cell<Option<Instant>>,
 }
 
@@ -239,6 +240,10 @@ struct TitleArr {
     title: String,
     seasons: Vec<u32>,
     arr: ArrInfo,
+    /// Jellyseerr media id and request ids, for "Remove request".
+    media_id: Option<u64>,
+    requests: Vec<u64>,
+    partial: bool,
 }
 
 // ---- Home "Requests" row --------------------------------------------------------------
@@ -359,17 +364,97 @@ impl App {
         let mut seasons: Vec<u32> = d.seasons.iter().map(|s| s.season_number).collect();
         // Specials last.
         seasons.sort_by_key(|&n| (n == 0, n));
-        *self.requests.title.borrow_mut() = Some(TitleArr { kind, id: d.id, title: d.title.clone(), seasons, arr });
+        let info = d.media_info.clone().unwrap_or_default();
+        *self.requests.title.borrow_mut() = Some(TitleArr {
+            kind,
+            id: d.id,
+            title: d.title.clone(),
+            seasons,
+            arr,
+            media_id: info.id,
+            requests: info.requests.iter().map(|r| r.id).collect(),
+            partial: info.status == status::PARTIALLY_AVAILABLE,
+        });
     }
 
     /// The title page on top's Radarr/Sonarr facts.
     fn title_arr(&self) -> Option<(ArrClient, u32, TitleArr)> {
-        let Some(Source::SeerrTitle { kind, id }) = self.top_source() else { return None };
-        let t = self.requests.title.borrow().clone()?;
-        if t.kind != kind || t.id != id {
-            return None;
-        }
+        let t = self.top_title()?;
         Some((t.arr.client.clone()?, t.arr.arr_id?, t))
+    }
+
+    /// What we know about the title page on top.
+    fn top_title(&self) -> Option<TitleArr> {
+        let Some(Source::SeerrTitle { kind, id }) = self.top_source() else { return None };
+        self.requests.title.borrow().clone().filter(|t| t.kind == kind && t.id == id)
+    }
+
+    /// "Remove request" on a title page (second press confirms): cancels
+    /// queued downloads, removes the title from Radarr/Sonarr (files kept)
+    /// and clears it in Jellyseerr. Partly downloaded shows only lose
+    /// their requests, so what's there stays in Sonarr.
+    pub fn remove_request(&self) {
+        let Some(t) = self.top_title() else { return };
+        let (kind, id) = (t.kind, t.id);
+        let armed = self.requests.remove_armed.take().is_some_and(|(k, i, at)| (k, i) == (kind, id) && at.elapsed() < CONFIRM);
+        if !armed {
+            self.requests.remove_armed.set(Some((kind, id, Instant::now())));
+            let downloads = if t.arr.queue.is_empty() || t.partial { "" } else { " and cancel its download" };
+            return self.toast(format!("Press again to remove the request for {}{downloads}", t.title));
+        }
+        self.toast("Removing the request…");
+        let what = if kind == MediaKind::Movie { "Radarr" } else { "Sonarr" };
+        let arr = if t.partial { None } else { t.arr.client.clone().zip(t.arr.arr_id) };
+        let left_in_arr = !t.partial && arr.is_none() && t.arr.arr_id.is_some();
+        let queue: Vec<u64> = t.arr.queue.iter().map(|q| q.id).collect();
+        let media_id = if t.partial { None } else { t.media_id };
+        let requests = t.requests;
+        self.seerr_call(
+            move |c| {
+                let (arr, queue, requests) = (arr.clone(), queue.clone(), requests.clone());
+                async move {
+                    let mut problem = None;
+                    if let Some((a, arr_id)) = &arr {
+                        for q in &queue {
+                            if let Err(e) = a.remove_download(*q, false).await {
+                                tracing::warn!("removing download {q}: {e}");
+                            }
+                        }
+                        match a.delete(*arr_id).await {
+                            // Already gone (a retry after re-signing in).
+                            Ok(()) | Err(rj_seerr::ArrError::Status { status: reqwest::StatusCode::NOT_FOUND, .. }) => {}
+                            Err(e) => problem = Some(format!("couldn't remove it from {what}: {e}")),
+                        }
+                    }
+                    let cleared = match media_id {
+                        Some(m) => match c.delete_media(m).await {
+                            Ok(()) => true,
+                            // Not an admin: delete the requests one by one.
+                            Err(SeerrError::Unauthorized) => false,
+                            Err(e) => return Err(e),
+                        },
+                        None => false,
+                    };
+                    if !cleared {
+                        for r in &requests {
+                            c.delete_request(*r).await?;
+                        }
+                    }
+                    Ok(problem)
+                }
+            },
+            move |app, r| match r {
+                Ok(problem) => {
+                    app.toast(match problem {
+                        Some(p) => format!("Request removed, but {p}"),
+                        None if left_in_arr => format!("Request removed · it's still in {what} (needs a Jellyseerr admin to remove)"),
+                        None => "Request removed".to_owned(),
+                    });
+                    app.open(Source::SeerrTitle { kind, id }, Placement::ReplaceTop);
+                }
+                Err(e) => app.toast(format!("Couldn't remove the request: {e:#}")),
+            },
+        );
     }
 
     /// "Manual search…" on a title page.

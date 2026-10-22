@@ -345,6 +345,11 @@ Jellyseerr's hostname, then the external URL; cached per server) and add:
 - **Remove & search again** (second press within 4 s confirms): removes the queued
   downloads from the client, blocklists them and starts an automatic search; "Search
   again" when nothing is queued.
+- **Remove request** (any title not fully in the library; second press confirms):
+  removes queued downloads from the client (no blocklist), removes the title from
+  Radarr/Sonarr (files kept) and clears it in Jellyseerr (`DELETE /media/{id}`; non-
+  admins delete their own requests instead, and the title stays in Radarr/Sonarr).
+  Partly downloaded shows only lose their requests.
 Home and title pages refresh silently every 30 s while on screen (no panel open),
 keeping already-loaded images.
 

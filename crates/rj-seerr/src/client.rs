@@ -368,6 +368,42 @@ mod tests {
         assert!(c.ratings(MediaKind::Movie, 1).await.unwrap().is_empty());
     }
 
+    #[test]
+    fn movie_and_tv_details_parse() {
+        let movie: Details = serde_json::from_value(json!({
+            "id": 27205, "title": "Inception", "originalTitle": "Inception", "releaseDate": "2010-07-15",
+            "tagline": "Your mind is the scene of the crime.", "runtime": 148, "budget": 160000000,
+            "revenue": 825532764u64, "status": "Released", "voteCount": 35000,
+            "productionCompanies": [{ "id": 923, "name": "Legendary Pictures", "logoPath": null }],
+            "productionCountries": [{ "iso_3166_1": "US", "name": "United States of America" }],
+            "relatedVideos": [
+                { "url": "https://www.youtube.com/watch?v=clip", "type": "Clip", "site": "YouTube" },
+                { "url": "https://www.youtube.com/watch?v=YoHD9XEInc0", "type": "Trailer", "site": "YouTube" }
+            ],
+            "credits": {
+                "cast": [{ "id": 6193, "name": "Leonardo DiCaprio", "character": "Cobb", "profilePath": "/a.jpg" }],
+                "crew": [{ "id": 525, "name": "Christopher Nolan", "job": "Director" }]
+            },
+            "watchProviders": [{ "iso_3166_1": "BE", "flatrate": [{ "id": 8, "name": "Netflix", "displayPriority": 1 }] }]
+        }))
+        .unwrap();
+        assert_eq!(movie.trailer_url(), Some("https://www.youtube.com/watch?v=YoHD9XEInc0"));
+        assert_eq!(movie.credits.cast[0].character.as_deref(), Some("Cobb"));
+        assert_eq!(movie.watch_providers[0].flatrate[0].name, "Netflix");
+
+        let tv: Details = serde_json::from_value(json!({
+            "id": 1399, "name": "Game of Thrones", "originalName": "Game of Thrones",
+            "firstAirDate": "2011-04-17", "lastAirDate": "2019-05-19", "numberOfEpisodes": 73,
+            "createdBy": [{ "id": 1, "name": "David Benioff" }], "networks": [{ "id": 49, "name": "HBO" }],
+            "episodeRunTime": [60], "relatedVideos": [{ "url": "https://www.youtube.com/watch?v=t", "type": "Teaser", "site": "YouTube" }]
+        }))
+        .unwrap();
+        assert_eq!(tv.title, "Game of Thrones");
+        assert_eq!(tv.year(), Some(2011));
+        assert_eq!(tv.networks[0].name, "HBO");
+        assert_eq!(tv.trailer_url(), Some("https://www.youtube.com/watch?v=t"));
+    }
+
     #[tokio::test]
     async fn request_bodies() {
         let server = MockServer::start().await;

@@ -209,7 +209,7 @@ fn meta_line(item: &Item) -> String {
 }
 
 /// "15 Jul 2010" from Jellyfin's ISO dates.
-fn format_date(iso: &str) -> Option<String> {
+pub fn format_date(iso: &str) -> Option<String> {
     const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     let (y, m, d) = (iso.get(..4)?, iso.get(5..7)?.parse::<usize>().ok()?, iso.get(8..10)?.parse::<u32>().ok()?);
     Some(format!("{d} {} {y}", MONTHS.get(m.checked_sub(1)?)?))
@@ -225,7 +225,7 @@ fn stream_lang(s: &rj_jellyfin::models::MediaStream) -> String {
 }
 
 /// Read-only label + value card.
-fn info_card(label: impl Into<String>, value: impl Into<String>) -> CardContent {
+pub fn info_card(label: impl Into<String>, value: impl Into<String>) -> CardContent {
     CardContent {
         title: label.into(),
         subtitle: value.into(),

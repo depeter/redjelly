@@ -182,9 +182,118 @@ pub struct Details {
     pub seasons: Vec<Season>,
     #[serde(default)]
     pub media_info: Option<MediaInfo>,
+    #[serde(default)]
+    pub tagline: Option<String>,
+    #[serde(default, alias = "originalName")]
+    pub original_title: Option<String>,
+    #[serde(default)]
+    pub original_language: Option<String>,
+    /// "Released", "Returning Series", "Ended", …
+    #[serde(default)]
+    pub status: Option<String>,
+    #[serde(default)]
+    pub vote_count: u32,
+    #[serde(default)]
+    pub budget: u64,
+    #[serde(default)]
+    pub revenue: u64,
+    /// Shows only.
+    #[serde(default)]
+    pub last_air_date: Option<String>,
+    #[serde(default)]
+    pub number_of_episodes: Option<u32>,
+    #[serde(default)]
+    pub production_companies: Vec<Named>,
+    #[serde(default)]
+    pub production_countries: Vec<Named>,
+    #[serde(default)]
+    pub networks: Vec<Named>,
+    #[serde(default)]
+    pub created_by: Vec<Named>,
+    #[serde(default)]
+    pub collection: Option<Named>,
+    #[serde(default)]
+    pub related_videos: Vec<Video>,
+    #[serde(default)]
+    pub credits: Credits,
+    #[serde(default)]
+    pub watch_providers: Vec<RegionProviders>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct Named {
+    #[serde(default)]
+    pub name: String,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Video {
+    #[serde(default)]
+    pub url: Option<String>,
+    #[serde(default)]
+    pub name: Option<String>,
+    /// Trailer, Teaser, Clip, …
+    #[serde(default, rename = "type")]
+    pub kind: Option<String>,
+    #[serde(default)]
+    pub site: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct Credits {
+    #[serde(default)]
+    pub cast: Vec<CastMember>,
+    #[serde(default)]
+    pub crew: Vec<CrewMember>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CastMember {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub character: Option<String>,
+    #[serde(default)]
+    pub profile_path: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CrewMember {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub job: Option<String>,
+    #[serde(default)]
+    pub profile_path: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct RegionProviders {
+    #[serde(default)]
+    pub iso_3166_1: String,
+    /// Subscription services.
+    #[serde(default)]
+    pub flatrate: Vec<WatchProvider>,
+    #[serde(default)]
+    pub rent: Vec<WatchProvider>,
+    #[serde(default)]
+    pub buy: Vec<WatchProvider>,
 }
 
 impl Details {
+    /// The YouTube trailer to play, preferring official trailers.
+    pub fn trailer_url(&self) -> Option<&str> {
+        let find = |kind: &str| {
+            self.related_videos
+                .iter()
+                .find(|v| v.site.as_deref() == Some("YouTube") && v.kind.as_deref() == Some(kind) && v.url.is_some())
+        };
+        find("Trailer").or_else(|| find("Teaser")).and_then(|v| v.url.as_deref())
+    }
+
     pub fn year(&self) -> Option<u32> {
         year_of(self.release_date.as_deref())
     }

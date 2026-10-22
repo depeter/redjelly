@@ -951,7 +951,7 @@ impl App {
             Source::SeerrTitle { kind, id } => self.seerr_load(
                 placement,
                 move |c| async move { c.details(kind, id).await },
-                move |_, d| title_content(kind, &d),
+                move |app, d| title_content(kind, &d, app.config.borrow().discover.region.as_deref()),
             ),
             Source::SeasonPicker { id } => {
                 if placement == Placement::ReplaceTop && self.discover.seasons.borrow().as_ref().is_some_and(|p| p.id == id) {
@@ -1340,8 +1340,123 @@ impl App {
     }
 }
 
-/// A TMDb title page: what Jellyseerr knows, with Request / Open buttons.
-fn title_content(kind: MediaKind, d: &Details) -> Content {
+/// "$160M" / "$825M" / "$1.2B".
+fn money(v: u64) -> String {
+    let v = v as f64;
+    if v >= 1e9 { format!("${:.1}B", v / 1e9) } else { format!("${:.0}M", (v / 1e6).max(1.0)) }
+}
+
+/// Facts for a TMDb title's About row, skipping unknowns.
+fn title_about(kind: MediaKind, d: &Details) -> Vec<CardContent> {
+    use crate::screens::{format_date, info_card};
+    let mut cards = Vec::new();
+    let date = |d: Option<&str>| d.and_then(format_date);
+    match kind {
+        MediaKind::Movie => {
+            if let Some(r) = date(d.release_date.as_deref()) {
+                cards.push(info_card("Released", r));
+            }
+        }
+        MediaKind::Tv => {
+            if let Some(r) = date(d.release_date.as_deref()) {
+                cards.push(info_card("First aired", r));
+            }
+            if let Some(r) = date(d.last_air_date.as_deref()) {
+                cards.push(info_card("Last aired", r));
+            }
+            if let Some(n) = d.number_of_episodes {
+                cards.push(info_card("Episodes", n.to_string()));
+            }
+        }
+    }
+    let mins = d.runtime.or(d.episode_run_time.first().copied()).unwrap_or(0);
+    if mins > 0 {
+        let label = if kind == MediaKind::Tv { "Episode length" } else { "Runtime" };
+        cards.push(info_card(label, if mins >= 60 { format!("{}h {:02}m", mins / 60, mins % 60) } else { format!("{mins} min") }));
+    }
+    if let Some(s) = d.status.as_ref().filter(|s| !s.is_empty()) {
+        cards.push(info_card("Status", s.clone()));
+    }
+    if d.vote_average > 0.0 {
+        cards.push(info_card("TMDb", format!("★ {:.1} · {} votes", d.vote_average, d.vote_count)));
+    }
+    if !d.genres.is_empty() {
+        cards.push(info_card("Genres", d.genres.iter().map(|g| g.name.as_str()).collect::<Vec<_>>().join(", ")));
+    }
+    let crew = |jobs: &[&str]| -> Vec<String> {
+        let mut v: Vec<String> = Vec::new();
+        for c in d.credits.crew.iter().filter(|c| c.job.as_deref().is_some_and(|j| jobs.contains(&j))) {
+            if !v.contains(&c.name) {
+                v.push(c.name.clone());
+            }
+        }
+        v
+    };
+    let names = |v: &[rj_seerr::models::Named]| v.iter().map(|n| n.name.clone()).collect::<Vec<_>>();
+    let lists = [
+        ("Created by", names(&d.created_by)),
+        ("Director", crew(&["Director"])),
+        ("Writers", crew(&["Screenplay", "Writer", "Story", "Novel"])),
+        ("Music", crew(&["Original Music Composer"])),
+        ("Network", names(&d.networks)),
+        ("Studio", names(&d.production_companies)),
+        ("Country", names(&d.production_countries)),
+    ];
+    for (label, list) in lists {
+        if !list.is_empty() {
+            cards.push(info_card(label, list.join(", ")));
+        }
+    }
+    if let Some(t) = d.original_title.as_ref().filter(|t| **t != d.title && !t.is_empty()) {
+        cards.push(info_card("Original title", t.clone()));
+    }
+    if let Some(l) = d.original_language.as_deref().and_then(rj_core::lang::Lang::parse) {
+        cards.push(info_card("Original language", l.name()));
+    }
+    if d.budget > 0 {
+        cards.push(info_card("Budget", money(d.budget)));
+    }
+    if d.revenue > 0 {
+        cards.push(info_card("Box office", money(d.revenue)));
+    }
+    if let Some(c) = d.collection.as_ref().filter(|c| !c.name.is_empty()) {
+        cards.push(info_card("Collection", c.name.clone()));
+    }
+    cards
+}
+
+/// Streaming / rent / buy in `region`, one card each.
+fn where_to_watch(d: &Details, region: Option<&str>) -> Vec<CardContent> {
+    let Some(r) = region.and_then(|r| d.watch_providers.iter().find(|p| p.iso_3166_1.eq_ignore_ascii_case(r))) else {
+        return Vec::new();
+    };
+    let list = |v: &[WatchProvider]| v.iter().map(|p| p.name.clone()).collect::<Vec<_>>().join(", ");
+    [("Streaming", &r.flatrate), ("Rent", &r.rent), ("Buy", &r.buy)]
+        .into_iter()
+        .filter(|(_, v)| !v.is_empty())
+        .map(|(label, v)| crate::screens::info_card(label, list(v)))
+        .collect()
+}
+
+fn cast_cards(d: &Details) -> Vec<CardContent> {
+    d.credits
+        .cast
+        .iter()
+        .take(30)
+        .map(|c| CardContent {
+            title: c.name.clone(),
+            subtitle: c.character.clone().unwrap_or_default(),
+            image: tmdb_image(c.profile_path.as_deref(), "w185"),
+            progress: -1.0,
+            played: false,
+            mark: 0,
+            target: Target::None,
+        })
+        .collect()
+}
+
+/// A TMDb title page: what Jellyseerr knows, with Request / Open / Trailer.
+fn title_content(kind: MediaKind, d: &Details, region: Option<&str>) -> Content {
     let info = d.media_info.clone().unwrap_or_default();
     let mut buttons = Vec::new();
     if info.in_library()
@@ -1352,6 +1467,12 @@ fn title_content(kind: MediaKind, d: &Details) -> Content {
             MediaKind::Tv => Source::Series { id: jf.clone() },
         };
         buttons.push(button("Open in library", Target::Open(src)));
+    }
+    if let Some(url) = d.trailer_url() {
+        buttons.push(button(
+            "Trailer",
+            Target::Trailer { item_id: String::new(), local: false, remote: Some(url.to_owned()), title: d.title.clone() },
+        ));
     }
     match kind {
         MediaKind::Movie if info.status == status::AVAILABLE => {}
@@ -1395,13 +1516,33 @@ fn title_content(kind: MediaKind, d: &Details) -> Content {
         "" => "Not in your library",
         s => s,
     };
-    let rows = if buttons.is_empty() { Vec::new() } else { vec![row("", STYLE_BUTTON, buttons)] };
+    let info_line = match d.tagline.as_deref().filter(|t| !t.is_empty()) {
+        Some(t) => format!("{t}  ·  {status_line}"),
+        None => status_line.to_owned(),
+    };
+
+    let mut rows = Vec::new();
+    if !buttons.is_empty() {
+        rows.push(row("", STYLE_BUTTON, buttons));
+    }
+    let about = title_about(kind, d);
+    if !about.is_empty() {
+        rows.push(row("About", STYLE_SETTING, about));
+    }
+    let watch = where_to_watch(d, region);
+    if !watch.is_empty() {
+        rows.push(row(format!("Where to watch ({})", region.unwrap_or_default()), STYLE_SETTING, watch));
+    }
+    let cast = cast_cards(d);
+    if !cast.is_empty() {
+        rows.push(row("Cast", crate::layout::STYLE_POSTER, cast));
+    }
     Content {
         source: Source::SeerrTitle { kind, id: d.id },
         header: Some(HeaderContent {
             title: d.title.clone(),
             meta: meta.join(" · "),
-            info: status_line.into(),
+            info: info_line,
             overview: d.overview.clone().unwrap_or_default(),
             backdrop: tmdb_image(d.backdrop_path.as_deref(), "w1280"),
             ratings_for: Some((kind, d.id)),
@@ -1556,6 +1697,33 @@ mod tests {
         apply(&mut f, Choice::ImdbMin);
         apply(&mut f, Choice::Decade(1990));
         assert_eq!(summary(&f, &[]), "Movies · 1990s · IMDb 6.0+ · popular");
+    }
+
+    #[test]
+    fn title_page_has_trailer_about_and_watch() {
+        let d: Details = serde_json::from_value(serde_json::json!({
+            "id": 27205, "title": "Inception", "releaseDate": "2010-07-15", "runtime": 148,
+            "budget": 160000000, "revenue": 825532764u64, "tagline": "Your mind is the scene of the crime.",
+            "relatedVideos": [{ "url": "https://www.youtube.com/watch?v=YoHD9XEInc0", "type": "Trailer", "site": "YouTube" }],
+            "credits": { "cast": [{ "name": "Leonardo DiCaprio", "character": "Cobb" }],
+                         "crew": [{ "name": "Christopher Nolan", "job": "Director" }, { "name": "Christopher Nolan", "job": "Screenplay" }] },
+            "watchProviders": [{ "iso_3166_1": "BE", "flatrate": [{ "id": 8, "name": "Netflix" }] }]
+        }))
+        .unwrap();
+        let c = title_content(MediaKind::Movie, &d, Some("BE"));
+        let titled = |t: &str| c.rows.iter().find(|r| r.title.starts_with(t));
+        assert!(c.rows[0].cards.iter().any(|b| b.title == "Trailer"));
+        assert!(c.rows[0].cards.iter().any(|b| b.title == "Request"));
+        let about: Vec<(&str, &str)> = titled("About").unwrap().cards.iter().map(|c| (c.title.as_str(), c.subtitle.as_str())).collect();
+        assert!(about.contains(&("Director", "Christopher Nolan")));
+        assert!(about.contains(&("Writers", "Christopher Nolan")));
+        assert!(about.contains(&("Budget", "$160M")));
+        assert!(about.contains(&("Box office", "$826M")));
+        assert_eq!(titled("Where to watch").unwrap().cards[0].subtitle, "Netflix");
+        assert_eq!(titled("Cast").unwrap().cards[0].subtitle, "Cobb");
+        assert!(c.header.unwrap().info.starts_with("Your mind"));
+        // No region: no Where to watch row.
+        assert!(title_content(MediaKind::Movie, &d, None).rows.iter().all(|r| !r.title.starts_with("Where")));
     }
 
     #[test]

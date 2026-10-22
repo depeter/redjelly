@@ -34,14 +34,29 @@ pub fn row_height(style: i32, has_title: bool) -> f32 {
     body + if has_title { ROW_TITLE } else { 0.0 }
 }
 
+fn row_top(rows: &[(i32, bool)], i: usize) -> f32 {
+    rows.iter().take(i).map(|&(s, t)| row_height(s, t) + ROW_SPACING).sum()
+}
+
 /// Vertical offset that puts row `focus` at the top of the rows area. A
 /// leading button row (home toolbar, Play/Resume) stays visible above it.
 pub fn scroll_y(rows: &[(i32, bool)], focus: usize) -> f32 {
-    let top: f32 = rows.iter().take(focus).map(|&(s, t)| row_height(s, t) + ROW_SPACING).sum();
+    let top = row_top(rows, focus);
     match rows.first() {
         Some(&(STYLE_BUTTON, t)) if focus > 0 => (top - row_height(STYLE_BUTTON, t) - ROW_SPACING).max(0.0),
         _ => top,
     }
+}
+
+/// Offset that also keeps the row above `focus` in view; the UI scrolls as
+/// close to it as the focused row allows (see `focus_bottom`).
+pub fn scroll_peek(rows: &[(i32, bool)], focus: usize) -> f32 {
+    row_top(rows, focus.saturating_sub(1))
+}
+
+/// Bottom edge of row `focus` in the rows area.
+pub fn focus_bottom(rows: &[(i32, bool)], focus: usize) -> f32 {
+    row_top(rows, focus) + rows.get(focus).map_or(0.0, |&(s, t)| row_height(s, t))
 }
 
 /// Whole cards that fit in a row at this window width.
@@ -93,6 +108,16 @@ mod tests {
         let rows = [(STYLE_BUTTON, false), (STYLE_WIDE, true), (STYLE_POSTER, true)];
         assert_eq!(scroll_y(&rows, 1), 0.0);
         assert_eq!(scroll_y(&rows, 2), row_height(STYLE_WIDE, true) + ROW_SPACING);
+    }
+
+    #[test]
+    fn peek_keeps_previous_row() {
+        let rows = [(STYLE_POSTER, true), (STYLE_POSTER, false), (STYLE_POSTER, false)];
+        assert_eq!(scroll_peek(&rows, 0), 0.0);
+        assert_eq!(scroll_peek(&rows, 1), 0.0);
+        assert_eq!(scroll_peek(&rows, 2), row_height(STYLE_POSTER, true) + ROW_SPACING);
+        assert_eq!(focus_bottom(&rows, 0), row_height(STYLE_POSTER, true));
+        assert!(scroll_peek(&rows, 2) < scroll_y(&rows, 2));
     }
 
     #[test]

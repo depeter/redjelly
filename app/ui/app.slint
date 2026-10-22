@@ -211,6 +211,11 @@ component BrowseView inherits Rectangle {
     in property <int> focus-col;
     /// Vertical scroll of the rows area, computed in Rust.
     in property <length> scroll-y;
+    /// Offset keeping the row above the focused one in view; scrolling
+    /// stays between it and `scroll-y` so the focused row (bottom edge
+    /// `focus-bottom`) is always whole.
+    in property <length> scroll-peek;
+    in property <length> focus-bottom;
     callback card-clicked(int, int);
 
     if root.header.has-backdrop: Image {
@@ -261,11 +266,12 @@ component BrowseView inherits Rectangle {
             }
         }
 
-        Rectangle {
+        rows-area := Rectangle {
             vertical-stretch: 1;
             clip: true;
             rows-layout := VerticalLayout {
-                y: -root.scroll-y;
+                // As much of the row above as fits, never cutting the focused row.
+                y: -min(root.scroll-y, max(root.scroll-peek, root.focus-bottom - rows-area.height));
                 animate y { duration: 140ms; }
                 height: self.preferred-height;
                 alignment: start;
@@ -1049,6 +1055,8 @@ export component AppWindow inherits Window {
     in property <int> focus-row;
     in property <int> focus-col;
     in property <length> scroll-y;
+    in property <length> scroll-peek;
+    in property <length> focus-bottom;
 
     // Login
     in-out property <string> server-url;
@@ -1126,6 +1134,8 @@ export component AppWindow inherits Window {
             focus-row: root.focus-row;
             focus-col: root.focus-col;
             scroll-y: root.scroll-y;
+            scroll-peek: root.scroll-peek;
+            focus-bottom: root.focus-bottom;
             card-clicked(r, c) => { root.card-clicked(r, c); }
         }
         if root.screen == 2: PlayerOverlay {

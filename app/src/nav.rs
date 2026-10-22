@@ -337,6 +337,8 @@ impl App {
         if s.cards.is_empty() {
             ui.set_focus_row(-1);
             ui.set_scroll_y(0.0);
+            ui.set_scroll_peek(0.0);
+            ui.set_focus_bottom(0.0);
             return;
         }
         s.focus_row = s.focus_row.min(s.cards.len() - 1);
@@ -359,6 +361,8 @@ impl App {
         ui.set_focus_row(r as i32);
         ui.set_focus_col(c as i32);
         ui.set_scroll_y(layout::scroll_y(&s.shapes, r));
+        ui.set_scroll_peek(layout::scroll_peek(&s.shapes, r));
+        ui.set_focus_bottom(layout::focus_bottom(&s.shapes, r));
         drop(nav);
         self.maybe_load_more();
     }

@@ -197,7 +197,10 @@ fn main() {
     ui.set_rows(ModelRc::new(VecModel::from(grid)));
     ui.set_focus_row(2);
     ui.set_focus_col(3);
-    ui.set_scroll_y(2.0 * (292.0 + 24.0) - 48.0);
+    // Same maths as layout::{scroll_y, scroll_peek, focus_bottom}.
+    ui.set_scroll_y(2.0 * (292.0 + 24.0));
+    ui.set_scroll_peek(292.0 + 24.0);
+    ui.set_focus_bottom(2.0 * (292.0 + 24.0) + 292.0);
     save(&window, &format!("{out}/library.png"));
 
     // Settings

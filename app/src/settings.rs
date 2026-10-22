@@ -125,6 +125,13 @@ impl App {
         let seerr_status = self.discover.status.borrow().clone();
         let rows = vec![
             row(
+                "Updates",
+                vec![
+                    card(&format!("redjelly {}", env!("CARGO_PKG_VERSION")), self.update_summary(), Setting::Update),
+                    card("Check automatically", on_off(cfg.update.auto_check), Setting::AutoUpdate),
+                ],
+            ),
+            row(
                 "Languages",
                 vec![
                     card("Preferred (audio & subtitles)", cfg.languages.preferred.join(", "), Setting::Languages),
@@ -238,13 +245,6 @@ impl App {
                     card("Switch user", "Ctrl+U".into(), Setting::SwitchUser),
                     card("Sign out", "Forget saved login".into(), Setting::SignOut),
                     card("Server", cfg.server.url.clone().unwrap_or_default(), Setting::ChangeServer),
-                ],
-            ),
-            row(
-                "Updates",
-                vec![
-                    card(&format!("redjelly {}", env!("CARGO_PKG_VERSION")), self.update_summary(), Setting::Update),
-                    card("Check automatically", on_off(cfg.update.auto_check), Setting::AutoUpdate),
                 ],
             ),
         ];

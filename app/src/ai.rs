@@ -421,6 +421,7 @@ impl App {
                 image: None,
                 progress: if j.state == JobState::Running { j.progress } else { -1.0 },
                 played: j.state == JobState::Done,
+                mark: 0,
                 target: Target::Job(j.id),
             })
             .collect();

@@ -24,6 +24,8 @@ export struct Card {
     /// 0..1 resume position, negative = none.
     progress: float,
     played: bool,
+    /// Setting cards: 0 = plain, 1 = selected / included, 2 = excluded.
+    mark: int,
 }
 
 /// style: 0 = poster (2:3), 1 = wide (16:9), 2 = button, 3 = setting
@@ -76,6 +78,14 @@ component CardView inherits Rectangle {
         border-radius: 8px;
         background: root.focused ? Theme.accent : Theme.card;
         animate background { duration: 90ms; }
+        // Selection stripe: green = chosen / included, grey = excluded.
+        if root.card.mark > 0: Rectangle {
+            x: 0;
+            width: 6px;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            background: root.card.mark == 1 ? #46a758 : #71717a;
+        }
         VerticalLayout {
             padding-left: 16px;
             padding-right: 16px;

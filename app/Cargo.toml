@@ -8,6 +8,7 @@ description = "Native Jellyfin client"
 [dependencies]
 rj-core.workspace = true
 rj-jellyfin.workspace = true
+rj-seerr.workspace = true
 rj-player.workspace = true
 rj-subs.workspace = true
 rj-ai = { workspace = true, features = ["translate"] }

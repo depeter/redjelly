@@ -10,6 +10,7 @@
 mod ai;
 mod audio;
 mod controls;
+mod discover;
 mod gl_state;
 mod images;
 mod layout;
@@ -147,6 +148,7 @@ pub struct App {
     update_dir: PathBuf,
     /// When Shut down was first pressed; a second press in time confirms.
     shutdown_armed: Cell<Option<Instant>>,
+    discover: discover::State,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -597,6 +599,7 @@ fn main() -> anyhow::Result<()> {
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
         shutdown_armed: Cell::new(None),
+        discover: Default::default(),
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));

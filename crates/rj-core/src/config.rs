@@ -29,6 +29,7 @@ pub struct Config {
     pub video: VideoConfig,
     pub appearance: AppearanceConfig,
     pub update: UpdateConfig,
+    pub discover: DiscoverConfig,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -343,6 +344,96 @@ impl Default for UpdateConfig {
     }
 }
 
+/// Discover screens, backed by Jellyseerr/Overseerr. The password lives in
+/// the credential store, keyed by Jellyfin user.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(default)]
+pub struct DiscoverConfig {
+    /// e.g. `https://jellyseerr.example.com`; Discover is hidden until set.
+    pub seerr_url: Option<String>,
+    /// TMDb watch region for "only on my services", e.g. `BE`.
+    pub region: Option<String>,
+    /// The wizard's last answers, offered again next time.
+    pub last: DiscoverFilters,
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum DiscoverKind {
+    #[default]
+    Movies,
+    Shows,
+    Both,
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum RuntimeBucket {
+    #[default]
+    Any,
+    /// Under 100 minutes.
+    Short,
+    /// 100–130 minutes.
+    Medium,
+    /// Over 130 minutes.
+    Long,
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum LibraryFilter {
+    #[default]
+    Any,
+    /// Only titles already on the Jellyfin server.
+    Only,
+    /// Only titles not on the server yet.
+    Hide,
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum DiscoverSort {
+    #[default]
+    Popular,
+    Rating,
+    Newest,
+    Shuffle,
+}
+
+/// Every answer in the Discover wizard; 0 / empty means "any".
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct DiscoverFilters {
+    pub kind: DiscoverKind,
+    /// Genre names (TMDb movie and TV genres differ in ids, not names).
+    pub include_genres: Vec<String>,
+    pub exclude_genres: Vec<String>,
+    /// Included genres must all match rather than any.
+    pub all_genres: bool,
+    /// Decade start years (1990 = the 90s); 0 = before 1970.
+    pub decades: Vec<u16>,
+    pub runtime: RuntimeBucket,
+    pub tmdb_min: f32,
+    pub votes_min: u32,
+    pub imdb_min: f32,
+    pub rt_critics_min: u32,
+    pub rt_audience_min: u32,
+    /// ISO 639-1 original language.
+    pub language: Option<String>,
+    /// TMDb watch provider ids (needs `DiscoverConfig::region`).
+    pub providers: Vec<u32>,
+    pub hide_requested: bool,
+    pub library: LibraryFilter,
+    pub sort: DiscoverSort,
+}
+
+impl DiscoverFilters {
+    /// Filters that need a ratings lookup per title.
+    pub fn needs_ratings(&self) -> bool {
+        self.imdb_min > 0.0 || self.rt_critics_min > 0 || self.rt_audience_min > 0
+    }
+}
+
 pub fn dirs() -> Result<directories::ProjectDirs, ConfigError> {
     directories::ProjectDirs::from("", "", "redjelly").ok_or(ConfigError::NoHome)
 }
@@ -414,6 +505,23 @@ mod tests {
         assert_eq!(cfg.playback.intro, SegmentAction::Ask);
         assert!(!cfg.providers.opensubtitles);
         assert!(cfg.providers.subdl);
+        assert!(cfg.discover.seerr_url.is_none());
+    }
+
+    #[test]
+    fn discover_filters_round_trip() {
+        let mut cfg = Config::default();
+        cfg.discover.last = DiscoverFilters {
+            kind: DiscoverKind::Both,
+            include_genres: vec!["Science Fiction".into()],
+            decades: vec![1990, 0],
+            imdb_min: 7.5,
+            sort: DiscoverSort::Shuffle,
+            ..Default::default()
+        };
+        let back: Config = toml::from_str(&toml::to_string_pretty(&cfg).unwrap()).unwrap();
+        assert_eq!(back.discover.last, cfg.discover.last);
+        assert!(back.discover.last.needs_ratings());
     }
 
     #[test]

@@ -15,6 +15,7 @@ rj-player = { path = "crates/rj-player" }
 rj-subs = { path = "crates/rj-subs" }
 rj-ai = { path = "crates/rj-ai" }
 rj-input = { path = "crates/rj-input" }
+rj-seerr = { path = "crates/rj-seerr" }
 
 anyhow = "1"
 thiserror = "2"

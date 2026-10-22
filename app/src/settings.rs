@@ -51,6 +51,10 @@ pub enum Setting {
     ChangeServer,
     Update,
     AutoUpdate,
+    SeerrUrl,
+    SeerrPassword,
+    SeerrRegion,
+    SeerrTest,
 }
 
 const COUNTDOWNS: &[u32] = &[0, 5, 10, 15, 30];
@@ -108,6 +112,7 @@ impl App {
             image: None,
             progress: -1.0,
             played: false,
+            mark: 0,
             target: Target::Setting(s),
         };
         let row = |title: &str, cards: Vec<CardContent>| RowContent { title: title.into(), style: STYLE_SETTING, cards, start: 0, pinned: 0 };
@@ -116,6 +121,8 @@ impl App {
         let prov = &cfg.providers;
         let ai = &cfg.ai;
         let scale = cfg.appearance.ui_scale;
+        let disc = &cfg.discover;
+        let seerr_status = self.discover.status.borrow().clone();
         let rows = vec![
             row(
                 "Languages",
@@ -206,6 +213,19 @@ impl App {
                 ],
             ),
             row(
+                "Discover (Jellyseerr)",
+                vec![
+                    card("Jellyseerr address", disc.seerr_url.clone().unwrap_or_else(|| "Not set".into()), Setting::SeerrUrl),
+                    card("Your Jellyfin password", "Change…".into(), Setting::SeerrPassword),
+                    card("Streaming region", disc.region.clone().unwrap_or_else(|| "Not set".into()), Setting::SeerrRegion),
+                    card(
+                        "Connection",
+                        if seerr_status.is_empty() { "Enter to test".into() } else { seerr_status },
+                        Setting::SeerrTest,
+                    ),
+                ],
+            ),
+            row(
                 "Keyboard & controller",
                 vec![
                     card("Key bindings", "Edit…".into(), Setting::EditKeys),
@@ -293,6 +313,39 @@ impl App {
                 }
                 return self.open_prompt(s, "OpenSubtitles password", "Stored in Windows Credential Manager.", "", true);
             }
+            SeerrUrl => {
+                let cur = self.config.borrow().discover.seerr_url.clone().unwrap_or_default();
+                return self.open_prompt(
+                    s,
+                    "Jellyseerr address",
+                    "e.g. https://jellyseerr.example.com · leave empty to hide Discover",
+                    &cur,
+                    false,
+                );
+            }
+            SeerrPassword => {
+                if self.client.borrow().is_none() {
+                    return self.toast("Sign in to Jellyfin first");
+                }
+                return self.open_prompt(
+                    s,
+                    "Jellyfin password for Jellyseerr",
+                    "Jellyseerr signs you in with your Jellyfin account. Stored in Windows Credential Manager, per user.",
+                    "",
+                    true,
+                );
+            }
+            SeerrRegion => {
+                let cur = self.config.borrow().discover.region.clone().unwrap_or_default();
+                return self.open_prompt(
+                    s,
+                    "Streaming region",
+                    "Two-letter country code for \"streaming on\" filters, e.g. BE, NL, US.",
+                    &cur,
+                    false,
+                );
+            }
+            SeerrTest => return self.test_seerr(),
             EditKeys => return self.open_keymap_editor(),
             ResetKeys => {
                 *self.keymap.borrow_mut() = Keymap::defaults();
@@ -376,6 +429,10 @@ impl App {
             Setting::ProvOpenSubtitles | Setting::OsKey | Setting::OsUser | Setting::OsPassword => {
                 *self.opensubs.borrow_mut() = None;
             }
+            Setting::SeerrUrl | Setting::SeerrRegion => {
+                self.discover.reset();
+                self.discover.status.borrow_mut().clear();
+            }
             Setting::UiScale => self.toast("UI size changes after restarting redjelly"),
             Setting::VideoOutput => self.toast("Video output changes after restarting redjelly"),
             _ => {}
@@ -425,6 +482,21 @@ impl App {
                     if let Some(user) = cfg.providers.opensubtitles_username.clone() {
                         self.tokens.set_secret(&crate::secrets::provider_account("opensubtitles", &user), &value);
                     }
+                }
+                Setting::SeerrUrl => cfg.discover.seerr_url = opt(&value).map(|v| crate::login::normalise_url(&v)),
+                Setting::SeerrRegion => {
+                    if !value.is_empty() && (value.len() != 2 || !value.chars().all(|c| c.is_ascii_alphabetic())) {
+                        drop(cfg);
+                        self.toast("Use a two-letter country code, e.g. BE");
+                        return self.show_top();
+                    }
+                    cfg.discover.region = opt(&value.to_ascii_uppercase());
+                }
+                Setting::SeerrPassword => {
+                    drop(cfg);
+                    self.set_seerr_password(&value);
+                    self.show_top();
+                    return self.test_seerr();
                 }
                 _ => {}
             }

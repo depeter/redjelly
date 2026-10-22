@@ -311,6 +311,20 @@ Episode/Movie detail (versions, audio/sub info, "subs: nl missing" badge) → Pl
 users, Playback, Languages, Subtitles & providers, AI, Keybindings, Gamepad,
 Appearance) → Jobs (AI queue).
 
+**Discover** (Home toolbar, shown once a Jellyseerr address is set in Settings →
+Discover): a wizard (What → Genres include/exclude → Era → Length (movies) → Ratings →
+Extras (original language, library/requested, streaming services in a region) →
+Sort), remembering the last answers, then a poster grid of TMDb titles via
+Jellyseerr's discover API. TMDb score/votes filter server-side; IMDb and Rotten
+Tomatoes minimums are checked per title (`/movie/{id}/ratingscombined`,
+`/tv/{id}/ratings`; IMDb is movies only), with "checked N · M match" progress,
+stopping after 5 rounds without a match. Titles fully in the library open the
+Jellyfin page; others open a title page with Request (shows: season picker, unrequested
+seasons pre-selected). Jellyseerr sign-in uses the current Jellyfin user's name and
+their password from the credential store (one per Jellyfin user), so requests are
+attributed and quota-checked per person. Movie and series detail pages append IMDb /
+RT scores to the meta line once fetched.
+
 Performance targets: cold start to interactive Home < 1 s with warm cache; library
 grid scroll at display refresh rate with 10k items (virtualised list, async image
 decode); first frame < 1.5 s after Play on LAN.

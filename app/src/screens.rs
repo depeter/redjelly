@@ -21,6 +21,14 @@ pub enum Source {
     Jobs,
     /// Built locally too.
     Settings,
+    /// Discover wizard step (built locally, see `discover.rs`).
+    Discover { step: u8 },
+    /// Discover results; the filters live in the config.
+    DiscoverResults,
+    /// A TMDb title via Jellyseerr, in the library or not.
+    SeerrTitle { kind: rj_seerr::MediaKind, id: u32 },
+    /// Choose seasons of a show to request (built locally).
+    SeasonPicker { id: u32 },
 }
 
 /// What activating a card does.
@@ -43,6 +51,7 @@ pub enum Target {
     Quit,
     /// Asks for a second press, then powers the computer off.
     Shutdown,
+    Discover(crate::discover::DiscoverAction),
 }
 
 #[derive(Debug, Clone)]
@@ -52,6 +61,8 @@ pub struct CardContent {
     pub image: Option<ImageSrc>,
     pub progress: f32,
     pub played: bool,
+    /// Setting cards: 0 = plain, 1 = selected / included, 2 = excluded.
+    pub mark: i32,
     pub target: Target,
 }
 
@@ -73,12 +84,22 @@ pub struct HeaderContent {
     pub info: String,
     pub overview: String,
     pub backdrop: Option<ImageSrc>,
+    /// TMDb title whose IMDb/RT ratings get appended to `meta` once fetched.
+    pub ratings_for: Option<(rj_seerr::MediaKind, u32)>,
 }
 
-/// More library items to fetch as the user scrolls.
+/// Where more grid items come from.
+#[derive(Debug, Clone)]
+pub enum PageSource {
+    /// Jellyfin `Items` query.
+    Library(Vec<(String, String)>),
+    Discover(Box<crate::discover::Cursor>),
+}
+
+/// More grid items to fetch as the user scrolls.
 #[derive(Debug, Clone)]
 pub struct Paging {
-    pub query: Vec<(String, String)>,
+    pub source: PageSource,
     pub loaded: u32,
     pub total: u32,
     pub columns: usize,
@@ -141,16 +162,21 @@ pub fn item_card(c: &Client, item: &Item, style: i32, in_series: bool) -> CardCo
         image: img,
         progress: item.progress().map_or(-1.0, |p| p as f32),
         played: item.user_data.as_ref().is_some_and(|u| u.played),
+        mark: 0,
         target: item_target(item),
     }
 }
 
-fn button(title: impl Into<String>, target: Target) -> CardContent {
-    CardContent { title: title.into(), subtitle: String::new(), image: None, progress: -1.0, played: false, target }
+pub fn button(title: impl Into<String>, target: Target) -> CardContent {
+    CardContent { title: title.into(), subtitle: String::new(), image: None, progress: -1.0, played: false, mark: 0, target }
 }
 
-fn row(title: impl Into<String>, style: i32, cards: Vec<CardContent>) -> RowContent {
+pub fn row(title: impl Into<String>, style: i32, cards: Vec<CardContent>) -> RowContent {
     RowContent { title: title.into(), style, cards, start: 0, pinned: 0 }
+}
+
+fn tmdb_id(item: &Item) -> Option<u32> {
+    item.provider_ids.iter().find(|(k, _)| k.eq_ignore_ascii_case("tmdb")).and_then(|(_, v)| v.parse().ok())
 }
 
 fn runtime(item: &Item) -> Option<String> {
@@ -237,6 +263,7 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
         }),
         progress: -1.0,
         played: false,
+        mark: 0,
         target: Target::User { id: u.id.clone(), name: u.name.clone(), has_password: u.has_password },
     };
     let mut rows = Vec::new();
@@ -259,7 +286,8 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
     })
 }
 
-pub async fn home(c: &Client) -> anyhow::Result<Content> {
+/// `discover`: Jellyseerr is set up, so offer the Discover wizard.
+pub async fn home(c: &Client, discover: bool) -> anyhow::Result<Content> {
     let (resume, next_up, views) = tokio::try_join!(c.resume(24), c.next_up(24), c.user_views())?;
     let mut rows = vec![
         row("Continue watching", STYLE_WIDE, resume.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
@@ -304,12 +332,16 @@ pub async fn home(c: &Client) -> anyhow::Result<Content> {
     // The same buttons on top (press Up from the first row) and at the
     // bottom; focus still starts on the first content row.
     let toolbar = || {
-        vec![
-            button("Search · or just type", Target::Open(Source::Search { term: String::new() })),
+        let mut b = vec![button("Search · or just type", Target::Open(Source::Search { term: String::new() }))];
+        if discover {
+            b.push(button("Discover", Target::Open(Source::Discover { step: 0 })));
+        }
+        b.extend([
             button("Settings", Target::Open(Source::Settings)),
             button("AI subtitle jobs", Target::Open(Source::Jobs)),
             button("Switch user", Target::SwitchUser),
-        ]
+        ]);
+        b
     };
     rows.push(row("More", STYLE_BUTTON, toolbar()));
     let mut top = row("", STYLE_BUTTON, toolbar());
@@ -345,7 +377,8 @@ fn library_query(parent_id: &str, collection_type: Option<&str>) -> Vec<(String,
 pub async fn library_page(c: &Client, paging: &Paging) -> anyhow::Result<(Vec<CardContent>, u32)> {
     let start = paging.loaded.to_string();
     let limit = PAGE.to_string();
-    let mut q: Vec<(&str, &str)> = paging.query.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
+    let PageSource::Library(query) = &paging.source else { anyhow::bail!("not a library grid") };
+    let mut q: Vec<(&str, &str)> = query.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
     q.push(("startIndex", &start));
     q.push(("limit", &limit));
     let res = c.items(&q).await?;
@@ -369,7 +402,8 @@ pub async fn library(
     collection_type: Option<&str>,
     columns: usize,
 ) -> anyhow::Result<Content> {
-    let mut paging = Paging { query: library_query(parent_id, collection_type), loaded: 0, total: 0, columns };
+    let mut paging =
+        Paging { source: PageSource::Library(library_query(parent_id, collection_type)), loaded: 0, total: 0, columns };
     let (cards, total) = library_page(c, &paging).await?;
     paging.loaded = cards.len() as u32;
     paging.total = total;
@@ -441,6 +475,7 @@ pub async fn series(c: &Client, id: &str) -> anyhow::Result<Content> {
             info: String::new(),
             overview: series.overview.clone().unwrap_or_default(),
             backdrop: image(c, series.backdrop(), 1280),
+            ratings_for: tmdb_id(&series).map(|id| (rj_seerr::MediaKind::Tv, id)),
         }),
         rows,
         focus: (0, 0),
@@ -512,6 +547,7 @@ pub async fn detail(c: &Client, id: &str, preferred: &[rj_core::lang::Lang]) -> 
             info: media_line(&item, preferred),
             overview: item.overview.clone().unwrap_or_default(),
             backdrop: image(c, item.backdrop(), 1280),
+            ratings_for: tmdb_id(&item).filter(|_| item.kind == "Movie").map(|id| (rj_seerr::MediaKind::Movie, id)),
         }),
         rows,
         focus: (0, 0),

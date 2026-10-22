@@ -15,7 +15,7 @@ use crate::{App, SCREEN_LOGIN_FORM, SCREEN_QUICK_CONNECT};
 /// Bumped to cancel a running Quick Connect poll.
 pub type QcGeneration = Arc<AtomicU64>;
 
-fn normalise_url(url: &str) -> String {
+pub(crate) fn normalise_url(url: &str) -> String {
     let url = url.trim().trim_end_matches('/');
     if url.contains("://") { url.to_owned() } else { format!("https://{url}") }
 }

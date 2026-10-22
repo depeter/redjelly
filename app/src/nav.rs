@@ -9,7 +9,7 @@ use rj_jellyfin::Client;
 use slint::{ComponentHandle, Model, ModelRc, Rgb8Pixel, SharedPixelBuffer, VecModel};
 
 use crate::layout;
-use crate::screens::{self, CardContent, Content, Paging, Source, Target};
+use crate::screens::{self, CardContent, Content, PageSource, Paging, Source, Target};
 use crate::{App, Card, Header, Row, SCREEN_BROWSE};
 
 pub struct Screen {
@@ -52,11 +52,12 @@ fn to_card(c: &CardContent) -> Card {
         has_image: false,
         progress: c.progress,
         played: c.played,
+        mark: c.mark,
     }
 }
 
 impl App {
-    fn window_width(&self) -> f32 {
+    pub fn window_width(&self) -> f32 {
         let ui = self.ui();
         let w = ui.window();
         w.size().width as f32 / w.scale_factor()
@@ -81,12 +82,43 @@ impl App {
         match source {
             Source::Jobs => return self.present(self.jobs_content(), placement),
             Source::Settings => return self.present(self.settings_content(), placement),
+            Source::Discover { .. } | Source::DiscoverResults | Source::SeerrTitle { .. } | Source::SeasonPicker { .. } => {
+                return self.open_discover(source, placement);
+            }
             _ => {}
         }
         let Some(client) = self.browse_client() else {
             self.show_login_form(0);
             return;
         };
+        let columns = layout::grid_columns(self.window_width());
+        let prefs = self.config.borrow().track_preferences().languages;
+        let url = self.config.borrow().server.url.clone().unwrap_or_default();
+        let discover = self.config.borrow().discover.seerr_url.is_some();
+        let src = source.clone();
+        self.load(source, placement, async move {
+            match &src {
+                Source::Users => screens::users(&client, &url).await,
+                Source::Home => screens::home(&client, discover).await,
+                Source::Library { parent_id, title, collection_type } => {
+                    screens::library(&client, parent_id, title, collection_type.as_deref(), columns).await
+                }
+                Source::Series { id } => screens::series(&client, id).await,
+                Source::Detail { id } => screens::detail(&client, id, &prefs).await,
+                Source::Search { term } => screens::search(&client, term).await,
+                _ => unreachable!("built locally or by discover.rs"),
+            }
+        });
+    }
+
+    /// Shows `content` once it has loaded; a pushed screen shows "Loading…"
+    /// meanwhile and ignores further opens.
+    pub fn load(
+        &self,
+        source: Source,
+        placement: Placement,
+        content: impl Future<Output = anyhow::Result<Content>> + Send + 'static,
+    ) {
         if placement == Placement::Push {
             if self.busy.get() {
                 return;
@@ -94,24 +126,8 @@ impl App {
             self.busy.set(true);
             self.toast("Loading…");
         }
-        let columns = layout::grid_columns(self.window_width());
-        let prefs = self.config.borrow().track_preferences().languages;
-        let url = self.config.borrow().server.url.clone().unwrap_or_default();
-        let src = source.clone();
         self.spawn_ui(
-            async move {
-                match &src {
-                    Source::Users => screens::users(&client, &url).await,
-                    Source::Home => screens::home(&client).await,
-                    Source::Library { parent_id, title, collection_type } => {
-                        screens::library(&client, parent_id, title, collection_type.as_deref(), columns).await
-                    }
-                    Source::Series { id } => screens::series(&client, id).await,
-                    Source::Detail { id } => screens::detail(&client, id, &prefs).await,
-                    Source::Search { term } => screens::search(&client, term).await,
-                    Source::Jobs | Source::Settings => unreachable!("built locally"),
-                }
-            },
+            content,
             move |app, result| {
                 if placement == Placement::Push {
                     app.busy.set(false);
@@ -205,6 +221,9 @@ impl App {
                 if let Some(src) = h.backdrop.clone() {
                     self.load_image(generation, Slot::Backdrop, src);
                 }
+                if let Some((kind, id)) = h.ratings_for {
+                    self.load_header_ratings(generation, kind, id);
+                }
                 (
                     Header {
                         title: h.title.into(),
@@ -272,6 +291,29 @@ impl App {
         }
     }
 
+    /// Changes a screen's header if it still exists (async results).
+    pub fn update_header(&self, generation: u64, f: impl FnOnce(&mut crate::Header)) {
+        let mut nav = self.nav.borrow_mut();
+        let top_gen = nav.last().map(|s| s.generation);
+        let Some(screen) = nav.iter_mut().find(|s| s.generation == generation) else { return };
+        f(&mut screen.header);
+        if top_gen == Some(generation) {
+            self.ui().set_header(screen.header.clone());
+        }
+    }
+
+    /// Changes a screen's paging if it still exists (async results).
+    pub fn update_paging(&self, generation: u64, f: impl FnOnce(&mut Option<Paging>)) {
+        if let Some(s) = self.nav.borrow_mut().iter_mut().find(|s| s.generation == generation) {
+            f(&mut s.paging);
+        }
+    }
+
+    /// The top screen's generation, for matching async results to it.
+    pub fn top_generation(&self) -> Option<u64> {
+        self.nav.borrow().last().map(|s| s.generation)
+    }
+
     pub fn show_top(&self) {
         let ui = self.ui();
         {
@@ -332,7 +374,10 @@ impl App {
             if dr != 0 {
                 s.focus_row = (r as i32 + dr).clamp(0, s.cards.len() as i32 - 1) as usize;
                 // Grids keep the column; other rows return to where you were.
-                if s.paging.is_some() || matches!(s.source, Source::Library { .. }) {
+                if s.paging.is_some() || matches!(
+                    s.source,
+                    Source::Library { .. } | Source::DiscoverResults | Source::Discover { .. } | Source::SeasonPicker { .. }
+                ) {
                     let col = s.cols[r];
                     s.cols[s.focus_row] = col;
                 }
@@ -379,6 +424,7 @@ impl App {
                 let _ = slint::quit_event_loop();
             }
             Target::Shutdown => self.shutdown(),
+            Target::Discover(a) => self.discover_action(a),
         }
     }
 
@@ -449,7 +495,7 @@ impl App {
         });
     }
 
-    fn maybe_load_more(&self) {
+    pub fn maybe_load_more(&self) {
         let (paging, generation) = {
             let mut nav = self.nav.borrow_mut();
             let Some(s) = nav.last_mut() else { return };
@@ -460,10 +506,16 @@ impl App {
             s.loading_more = true;
             (p.clone(), s.generation)
         };
+        if let PageSource::Discover(cursor) = &paging.source {
+            return self.discover_more(generation, (**cursor).clone());
+        }
         let Some(client) = self.client.borrow().clone() else { return };
         let p = paging.clone();
         self.spawn_ui(async move { screens::library_page(&client, &p).await }, move |app, result| match result {
-            Ok((cards, total)) => app.append_grid(generation, cards, total),
+            Ok((cards, total)) => {
+                let done = paging.loaded + cards.len() as u32 >= total || cards.is_empty();
+                app.append_grid(generation, cards, done);
+            }
             Err(e) => {
                 app.toast(format!("Couldn't load more: {e:#}"));
                 if let Some(s) = app.nav.borrow_mut().iter_mut().find(|s| s.generation == generation) {
@@ -473,16 +525,15 @@ impl App {
         });
     }
 
-    fn append_grid(&self, generation: u64, cards: Vec<CardContent>, total: u32) {
+    /// Adds cards to a paged grid; `done` stops further loading.
+    pub fn append_grid(&self, generation: u64, cards: Vec<CardContent>, done: bool) {
         let mut loads = Vec::new();
         {
             let mut nav = self.nav.borrow_mut();
             let Some(s) = nav.iter_mut().find(|s| s.generation == generation) else { return };
             let Some(paging) = s.paging.as_mut() else { return };
             paging.loaded += cards.len() as u32;
-            paging.total = total;
             let columns = paging.columns.max(1);
-            let done = paging.loaded >= total || cards.is_empty();
             for card in cards {
                 let full = s.cards.last().is_none_or(|m| m.row_count() >= columns);
                 if full {

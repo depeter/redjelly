@@ -37,6 +37,7 @@ fn card(title: &str, sub: &str, img: Option<slint::Image>, progress: f32, played
         image: img.unwrap_or_default(),
         progress,
         played,
+        mark: 0,
     }
 }
 

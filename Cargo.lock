@@ -4961,6 +4961,7 @@ dependencies = [
  "rj-input",
  "rj-jellyfin",
  "rj-player",
+ "rj-seerr",
  "rj-subs",
  "serde_json",
  "slint",
@@ -5189,6 +5190,20 @@ dependencies = [
  "rj-input",
  "thiserror 2.0.21",
  "tracing",
+]
+
+[[package]]
+name = "rj-seerr"
+version = "0.1.3"
+dependencies = [
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.21",
+ "tokio",
+ "tracing",
+ "url",
+ "wiremock",
 ]
 
 [[package]]

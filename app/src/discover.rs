@@ -785,7 +785,7 @@ impl App {
             |c| async move { c.me().await },
             |app, r| {
                 let msg = match r {
-                    Ok(u) => format!("Signed in as {}", u.display_name.unwrap_or_else(|| "you".into())),
+                    Ok(u) => format!("Signed in as {}", u.name().unwrap_or("you")),
                     Err(e) => format!("{e:#}"),
                 };
                 app.toast(msg.clone());

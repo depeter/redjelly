@@ -287,7 +287,7 @@ mod tests {
             .respond_with(
                 ResponseTemplate::new(200)
                     .insert_header("set-cookie", "connect.sid=s%3Axyz; Path=/; HttpOnly")
-                    .set_body_json(json!({ "id": 3, "displayName": "Peter" })),
+                    .set_body_json(json!({ "id": 3, "displayName": "Peter", "jellyfinUsername": "peter" })),
             )
             .mount(&server)
             .await;
@@ -309,7 +309,7 @@ mod tests {
 
         let mut c = Client::new(&server.uri()).unwrap();
         let user = c.login_jellyfin("peter", "pw").await.unwrap();
-        assert_eq!(user.display_name.as_deref(), Some("Peter"));
+        assert_eq!(user.name(), Some("Peter"));
         assert!(c.has_session());
         let page = c.discover(MediaKind::Tv, &DiscoverQuery::default(), 1).await.unwrap();
         assert_eq!(page.total_pages, 7);

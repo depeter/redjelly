@@ -24,8 +24,16 @@ impl MediaKind {
 #[serde(rename_all = "camelCase")]
 pub struct User {
     pub id: u64,
-    #[serde(default, alias = "jellyfinUsername")]
+    #[serde(default)]
     pub display_name: Option<String>,
+    #[serde(default)]
+    pub jellyfin_username: Option<String>,
+}
+
+impl User {
+    pub fn name(&self) -> Option<&str> {
+        self.display_name.as_deref().or(self.jellyfin_username.as_deref()).filter(|n| !n.is_empty())
+    }
 }
 
 #[derive(Debug, Clone, Deserialize)]

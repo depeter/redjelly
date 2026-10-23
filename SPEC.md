@@ -32,7 +32,8 @@ Status: v1 spec, agreed 2026-10-15. All milestones are in scope for v1.
 | Servers | One server, multiple users (quick switch) |
 | Server | Jellyfin 10.10+ (user runs 10.11), user is admin |
 | Display | Laser projector on a large canvas. HDR is tone-mapped to SDR by mpv (no HDR passthrough) |
-| Out of v1 | Offline downloads, Live TV, music, trickplay, SyncPlay, Discord presence, multi-server |
+| Live TV | VRT MAX only (Belgian public broadcaster, §8), off by default |
+| Out of v1 | Offline downloads, Jellyfin Live TV, music, trickplay, SyncPlay, Discord presence, multi-server |
 
 ---
 
@@ -45,7 +46,9 @@ app (redjelly.exe, Slint UI, tokio runtime)
  ├── rj-player    libmpv wrapper: playback, tracks, OSD, render-API integration
  ├── rj-subs      subtitle providers, ranking, hashing, encoding fixups, alass sync, upload
  ├── rj-ai        audio extraction, whisper transcription, Opus-MT translation, job queue
- └── rj-input     Action model, keymaps, keyboard/gamepad/media-key sources
+ ├── rj-input     Action model, keymaps, keyboard/gamepad/media-key sources
+ ├── rj-seerr     Jellyseerr / Radarr / Sonarr clients (Discover, requests)
+ └── rj-vrt       VRT MAX GraphQL catalogue, TV guide, clear live streams
 ```
 
 Rules:
@@ -352,6 +355,29 @@ Jellyseerr's hostname, then the external URL; cached per server) and add:
   Partly downloaded shows only lose their requests.
 Home and title pages refresh silently every 30 s while on screen (no panel open),
 keeping already-loaded images.
+
+**VRT MAX** (Settings → VRT MAX, off by default; Home toolbar **VRT MAX** and a
+**Live on VRT** row after Continue watching): live channels with what's on now
+(guide from VRT's `tv-gids` pages), a guide per channel and day (7 days back), VRT
+MAX's own home lists, Continue watching and My list (with a VRT account), categories,
+programme pages (seasons; older seasons load on demand), "See all" grids and search
+(type on any VRT screen). Screens are native, built from VRT's GraphQL
+(`www.vrt.be/vrtnu-api/graphql/v1`).
+Playback: VRT 1, Canvas, Ketnet, Sporza and all VOD are DRM protected (Widevine /
+FairPlay), which mpv can't decrypt. On Windows they play in **VRT's own web player**:
+a WebView2 inside the video window, behind the see-through player screen. An injected
+script hides the page around the `<video>`, accepts the consent banner, and reports
+position, DVR window, volume and subtitles; redjelly's own bar, keys, controller and
+media keys drive it (Next = back to live, Previous = start of the current programme
+within the DVR window). VRT's page syncs resume points itself, so nothing is reported
+to Jellyfin. The VRT account (e-mail in config, password in the credential store) signs
+the hidden web player in on VRT's login page; the password is only ever filled into a
+top-level `login.vrt.be` document (checked through WebView2, not the page). The
+account token (`vrtnu-site_profile_at` cookie) is reused for redjelly's own API calls.
+VRT NWS and Ketnet Junior are clear HLS and play in mpv on every OS (anonymous
+`vrtPlayerToken` from a `playerInfo` JWT signed with the key in VRT's player script,
+cached for a day). Off Windows everything else shows dimmed as "Windows only" and
+VOD rows are hidden. VRT only streams to Belgian IP addresses.
 
 **Detail page**: tagline, full plot, About (release date, runtime, age/critic
 ratings, genres, director, writers, producers, studio, country), Cast & crew with

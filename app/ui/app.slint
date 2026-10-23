@@ -25,6 +25,7 @@ export struct Card {
     progress: float,
     played: bool,
     /// Setting cards: 0 = plain, 1 = selected / included, 2 = excluded.
+    /// Image cards: 2 = unavailable (dimmed), 3 = live.
     mark: int,
 }
 
@@ -170,6 +171,24 @@ component CardView inherits Rectangle {
                     commands: "M 2 7 L 6 11 L 12 3";
                     stroke: white;
                     stroke-width: 2.5px;
+                }
+            }
+            // Can't play here (DRM off Windows, not online): dimmed.
+            if root.card.mark == 2: Rectangle {
+                background: #000000a0;
+            }
+            if root.card.mark == 3: Rectangle {
+                x: 8px;
+                y: 8px;
+                width: live-text.preferred-width + 12px;
+                height: 20px;
+                border-radius: 4px;
+                background: #e5484d;
+                live-text := Text {
+                    text: "LIVE";
+                    color: white;
+                    font-size: 11px;
+                    font-weight: 700;
                 }
             }
             // Focus ring drawn last so it sits above the image.
@@ -519,6 +538,7 @@ component ControlButton inherits Rectangle {
     in property <string> label;
     in property <bool> focused;
     in property <length> icon-size: 26px;
+    in property <MouseCursor> cursor: MouseCursor.default;
     callback clicked();
     callback hovered();
 
@@ -554,6 +574,7 @@ component ControlButton inherits Rectangle {
     }
 
     touch := TouchArea {
+        mouse-cursor: root.cursor;
         clicked => { root.clicked(); }
         changed mouse-x => { root.hovered(); }
         changed mouse-y => { root.hovered(); }
@@ -569,6 +590,8 @@ component PlayerOverlay inherits Rectangle {
     in property <float> progress;
     in property <bool> paused;
     in property <bool> osd-visible;
+    /// The mouse hasn't moved for a while: hide the cursor, even over the bar.
+    in property <bool> pointer-idle;
     in property <string> stats;
     in property <string> skip-label;
     in property <string> next-label;
@@ -590,10 +613,11 @@ component PlayerOverlay inherits Rectangle {
     callback skip();
 
     property <bool> bar-visible: root.osd-visible || root.paused;
+    // Hide the cursor while watching (projector-friendly).
+    property <MouseCursor> cursor: root.bar-visible && !root.pointer-idle ? MouseCursor.default : MouseCursor.none;
 
     TouchArea {
-        // Hide the cursor while watching (projector-friendly).
-        mouse-cursor: root.bar-visible ? MouseCursor.default : MouseCursor.none;
+        mouse-cursor: root.cursor;
         clicked => { root.clicked(); }
         double-clicked => { root.double-clicked(); }
         changed mouse-x => { root.pointer-moved(); }
@@ -624,6 +648,7 @@ component PlayerOverlay inherits Rectangle {
 
         // Clicks that miss a button must not pause the video.
         TouchArea {
+            mouse-cursor: root.cursor;
             changed mouse-x => { root.pointer-moved(); }
             changed mouse-y => { root.pointer-moved(); }
         }
@@ -679,6 +704,7 @@ component PlayerOverlay inherits Rectangle {
                         border-color: Theme.accent;
                     }
                     seek-touch := TouchArea {
+                        mouse-cursor: root.cursor;
                         clicked => { root.seek(clamp(self.mouse-x / self.width, 0, 1)); }
                         moved => {
                             if (self.pressed) {
@@ -704,6 +730,7 @@ component PlayerOverlay inherits Rectangle {
                     focused: root.focused-control == Controls.stop;
                     icon-size: 22px;
                     clicked => { root.button(Controls.stop); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 Rectangle { horizontal-stretch: 1; }
@@ -712,6 +739,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Previous";
                     focused: root.focused-control == Controls.previous;
                     clicked => { root.button(Controls.previous); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 ControlButton {
@@ -719,6 +747,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Back 10s";
                     focused: root.focused-control == Controls.rewind;
                     clicked => { root.button(Controls.rewind); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 ControlButton {
@@ -727,6 +756,7 @@ component PlayerOverlay inherits Rectangle {
                     focused: root.focused-control == Controls.play;
                     icon-size: 32px;
                     clicked => { root.button(Controls.play); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 ControlButton {
@@ -734,6 +764,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Ahead 30s";
                     focused: root.focused-control == Controls.forward;
                     clicked => { root.button(Controls.forward); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 if root.has-next: ControlButton {
@@ -741,6 +772,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Next";
                     focused: root.focused-control == Controls.next;
                     clicked => { root.button(Controls.next); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 Rectangle { horizontal-stretch: 1; }
@@ -749,6 +781,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Subtitles";
                     focused: root.focused-control == Controls.subtitles;
                     clicked => { root.button(Controls.subtitles); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 ControlButton {
@@ -756,6 +789,7 @@ component PlayerOverlay inherits Rectangle {
                     label: "Audio";
                     focused: root.focused-control == Controls.audio;
                     clicked => { root.button(Controls.audio); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 ControlButton {
@@ -763,6 +797,7 @@ component PlayerOverlay inherits Rectangle {
                     label: root.muted ? "Muted" : "Volume";
                     focused: root.focused-control == Controls.volume;
                     clicked => { root.button(Controls.volume); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
                 // Mouse/touch only; keys use Up/Down while the bar is hidden.
@@ -781,6 +816,7 @@ component PlayerOverlay inherits Rectangle {
                         }
                     }
                     TouchArea {
+                        mouse-cursor: root.cursor;
                         clicked => { root.set-volume(clamp(self.mouse-x / self.width, 0, 1)); }
                         moved => {
                             if (self.pressed) {
@@ -796,6 +832,7 @@ component PlayerOverlay inherits Rectangle {
                     focused: root.focused-control == Controls.fullscreen;
                     icon-size: 22px;
                     clicked => { root.button(Controls.fullscreen); }
+                    cursor: root.cursor;
                     hovered => { root.pointer-moved(); }
                 }
             }
@@ -1074,6 +1111,7 @@ export component AppWindow inherits Window {
     in property <float> player-progress;
     in property <bool> player-paused;
     in property <bool> player-osd;
+    in property <bool> player-pointer-idle;
     in property <string> player-stats;
     in property <string> player-skip;
     in property <string> player-next;
@@ -1146,6 +1184,7 @@ export component AppWindow inherits Window {
             progress: root.player-progress;
             paused: root.player-paused;
             osd-visible: root.player-osd;
+            pointer-idle: root.player-pointer-idle;
             stats: root.player-stats;
             skip-label: root.player-skip;
             next-label: root.player-next;

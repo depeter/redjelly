@@ -31,6 +31,27 @@ pub enum Source {
     SeerrTitle { kind: rj_seerr::MediaKind, id: u32 },
     /// Choose seasons of a show to request (built locally).
     SeasonPicker { id: u32 },
+    /// VRT MAX (see `vrt.rs`): its main screen, any page by site path, a
+    /// whole list, search, and a channel's guide (`day` from today).
+    Vrt,
+    VrtPage { path: String },
+    VrtList { list_id: String, title: String },
+    VrtSearch { term: String },
+    VrtGuide { slug: String, day: i64 },
+}
+
+impl Source {
+    pub fn is_vrt(&self) -> bool {
+        matches!(self, Source::Vrt | Source::VrtPage { .. } | Source::VrtList { .. } | Source::VrtSearch { .. } | Source::VrtGuide { .. })
+    }
+
+    /// The search term while typing on a search screen.
+    pub fn search_term_mut(&mut self) -> Option<&mut String> {
+        match self {
+            Source::Search { term } | Source::VrtSearch { term } => Some(term),
+            _ => None,
+        }
+    }
 }
 
 /// What activating a card does.
@@ -56,6 +77,13 @@ pub enum Target {
     Discover(crate::discover::DiscoverAction),
     /// Server trailer file when `local`, else the web `remote` URL.
     Trailer { item_id: String, local: bool, remote: Option<String>, title: String },
+    /// A VRT live channel, by slug.
+    VrtLive { slug: String },
+    /// A VRT MAX page (episode, live event) in VRT's web player.
+    VrtPlay { path: String, title: String },
+    VrtFavorite { id: String, on: bool },
+    /// Explains why this can't play.
+    VrtUnavailable(String),
 }
 
 #[derive(Debug, Clone)]
@@ -66,6 +94,7 @@ pub struct CardContent {
     pub progress: f32,
     pub played: bool,
     /// Setting cards: 0 = plain, 1 = selected / included, 2 = excluded.
+    /// Image cards: 2 = unavailable (dimmed), 3 = live.
     pub mark: i32,
     pub target: Target,
 }
@@ -98,6 +127,18 @@ pub enum PageSource {
     /// Jellyfin `Items` query.
     Library(Vec<(String, String)>),
     Discover(Box<crate::discover::Cursor>),
+    /// A VRT MAX list, continuing after `cursor`.
+    Vrt { list_id: String, cursor: String },
+}
+
+impl PageSource {
+    /// Card style of the grid's rows.
+    pub fn style(&self) -> i32 {
+        match self {
+            PageSource::Vrt { .. } => STYLE_WIDE,
+            _ => STYLE_POSTER,
+        }
+    }
 }
 
 /// More grid items to fetch as the user scrolls.
@@ -418,21 +459,16 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
     })
 }
 
-/// `discover`: Jellyseerr is set up, so offer the Discover wizard.
-/// `seerr_rows`: Jellyseerr rows (Requests, Popular) loaded alongside, shown
-/// after "Continue watching".
+/// `discover`: Jellyseerr is set up, so offer the Discover wizard; `vrt`:
+/// VRT MAX is on. `extra_rows`: rows from elsewhere (Live on VRT, Jellyseerr
+/// requests and popular) loaded alongside, shown after "Continue watching".
 pub async fn home(
     c: &Client,
     discover: bool,
-    seerr_rows: Option<impl Future<Output = Vec<RowContent>>>,
+    vrt: bool,
+    extra_rows: impl Future<Output = Vec<RowContent>>,
 ) -> anyhow::Result<Content> {
-    let seerr_rows = async move {
-        match seerr_rows {
-            Some(f) => f.await,
-            None => Vec::new(),
-        }
-    };
-    let (server, seerr_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, seerr_rows);
+    let (server, seerr_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, extra_rows);
     let (resume, next_up, views) = server?;
     // One row: in-progress items first, then next episodes. Next Up also
     // returns half-watched episodes, so skip those already in Resume.
@@ -488,6 +524,9 @@ pub async fn home(
         let mut b = vec![button("Search · or just type", Target::Open(Source::Search { term: String::new() }))];
         if discover {
             b.push(button("Discover", Target::Open(Source::Discover { step: 0 })));
+        }
+        if vrt {
+            b.push(button("VRT MAX", Target::Open(Source::Vrt)));
         }
         b.extend([
             button("Settings", Target::Open(Source::Settings)),

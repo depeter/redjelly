@@ -1,0 +1,13 @@
+{
+ "data": {
+  "page": {
+   "__typename": "LivestreamPage",
+   "title": "VRT 1",
+   "components": [
+    {
+     "__typename": "MediaInfo"
+    }
+   ]
+  }
+ }
+}

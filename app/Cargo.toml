@@ -9,6 +9,7 @@ description = "Native Jellyfin client"
 rj-core.workspace = true
 rj-jellyfin.workspace = true
 rj-seerr.workspace = true
+rj-vrt.workspace = true
 rj-player.workspace = true
 rj-subs.workspace = true
 rj-ai = { workspace = true, features = ["translate"] }
@@ -23,6 +24,7 @@ glow = "0.18"
 raw-window-handle = "0.6"
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
 reqwest.workspace = true
+serde.workspace = true
 serde_json.workspace = true
 zip = { version = "9", default-features = false, features = ["deflate"] }
 ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
@@ -38,9 +40,12 @@ tar = "0.4"
 windows-sys = { version = "0.61", features = [
     "Win32_Foundation",
     "Win32_Graphics_Gdi",
+    "Win32_System_Com",
     "Win32_System_LibraryLoader",
     "Win32_UI_Shell",
     "Win32_UI_WindowsAndMessaging",
 ] }
 keyring-core = "1"
+# VRT MAX's DRM streams play in VRT's own web player (WebView2).
+wry = { version = "0.57", default-features = false, features = ["os-webview", "devtools"] }
 windows-native-keyring-store = "1"

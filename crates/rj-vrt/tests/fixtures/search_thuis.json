@@ -1,0 +1,1233 @@
+{
+ "data": {
+  "page": {
+   "__typename": "SearchResultPage",
+   "title": "Zoekresultaten voor \"thuis\"",
+   "components": [
+    {
+     "__typename": "Button"
+    },
+    {
+     "__typename": "ContainerNavigation",
+     "items": [
+      {
+       "title": "Alles",
+       "components": [
+        {
+         "__typename": "StaticTileList",
+         "title": "Collecties",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJjb2xsZWN0aW9uLWdlbmVyaWMiXX1dLCJyZXN1bHRUeXBlIjoiY29sbGVjdGlvbi1nZW5lcmljIn0=",
+         "items": [
+          {
+           "__typename": "BannerTile",
+           "componentId": "$byUyNnxiYW5uZXJ8MTU3NTk4MjUzNzYzOHx8fHx8fGJhbm5lcnx8fHxvJTU4fG8lMTZ8byU1N3x0JVNlYXJjaFBhZ2UlL3pvZWtlbi8/cT10aHVpc3xuYXZpZ2F0aW9uJXxhbGx8fHsicSI6InRodWlzIn18biUyNzU5NiV8Y29sbGVjdGlvbi1nZW5lcmljJXwxNTc1OTgyNTM3NjM4JQ==",
+           "title": "De Warmste Week",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/themas/de-warmste-week/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/05/20/df444875-0914-4f04-b3b9-8018113b48dc.jpg?gravity=smart"
+           }
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Kijk",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XSwicmVzdWx0VHlwZSI6InByZXZpZXd3YXRjaCJ9",
+         "items": [
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE0NTk5NTU4ODk5MDF8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNDU5OTU1ODg5OTAxJQ==",
+           "title": "Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/thuis/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/03/27/1c2ecf68-51f3-4c68-a2e8-d4aed5af9e2b.jpg"
+           },
+           "description": "Vlaanderens populairste dagelijkse fictiereeks."
+          },
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE3MjUyNzg4MzcyMjB8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNzI1Mjc4ODM3MjIwJQ==",
+           "title": "Welkom Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/welkom-thuis-/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/09/01/973ff7ff-4a24-4a86-b718-748da9092861.jpg"
+           },
+           "description": "In deze gezellige nababbel over de populairste dagelijkse fictiereeks van Vlaanderen bespreken Sander, Cato en een bekende Thuisfan de afgelopen week van Thuis."
+          },
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE3NTgwMzEwOTMwNzd8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNzU4MDMxMDkzMDc3JQ==",
+           "title": "Opera bij je thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/opera-bij-je-thuis/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/09/17/e3117ef0-390c-42ba-a46c-e530cb82deb1.png"
+           },
+           "description": "Opera's van wereldniveau kan je nu bekijken vanuit je zetel."
+          },
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE1ODg3NzQxODIwODN8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNTg4Nzc0MTgyMDgzJQ==",
+           "title": "Reizen Waes blijft thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/reizen-waes-blijft-thuis/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/10/03/b42ac631-e841-4161-8a2a-3c59550be335.jpg"
+           },
+           "description": "In deze eenmalige special skypet Tom Waes vanuit z'n loft in Antwerpen met een tiental mensen die hij doorheen de jaren met 'Reizen Waes' heeft bezocht."
+          },
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE3NjA2MDgwNDgyNTR8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNzYwNjA4MDQ4MjU0JQ==",
+           "title": "This is not fiction",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/this-is-not-fiction/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/10/16/49399162-953c-41b9-8fd2-d362f9a21da1.jpg"
+           },
+           "description": "Acteurs Geert Van Rampelberg, Pierre Gervais en Lauren Versnick vertellen samen met de makers welke elementen uit de fictiereeks géén fictie zijn."
+          },
+          {
+           "__typename": "ProgramTile",
+           "componentId": "$byUyNnxwcm9ncmFtfDE3NTgyMTU1NzkzMDZ8fHx8fHxwcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1wcm9ncmFtJXwxNzU4MjE1NTc5MzA2JQ==",
+           "title": "This is not a murder mystery",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/this-is-not-a-murder-mystery/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/02/08/6a23dab1-172a-4ced-b135-37d5c7f3e768.png"
+           },
+           "description": "De jonge René Magritte reist naar Engeland voor een kunstexpo, maar raakt verwikkeld in een moordmysterie wanneer een gast dood wordt gevonden."
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Podcasts",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJwb2RjYXN0LXByb2dyYW0iXX1dLCJyZXN1bHRUeXBlIjoicHJldmlld3BvZGNhc3QifQ==",
+         "items": [
+          {
+           "__typename": "PodcastProgramTile",
+           "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTc2MDg3N2MyLTE0MTgtNDA3Mi05N2UwLTc3ODViNWMyYzQxNXx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxwb2RjYXN0LXByb2dyYW0lfHByb2dyYW0tNzYwODc3YzItMTQxOC00MDcyLTk3ZTAtNzc4NWI1YzJjNDE1JQ==",
+           "title": "Welkom Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/09/05/a87f35ba-dfe7-4af5-b0a1-0a8a0dbebf8d.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastProgramTile",
+           "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWM1YTdhNmFhLWEzM2MtNDU4Yi05YzA3LTg3YzU4NmNkZGQyYnx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxwb2RjYXN0LXByb2dyYW0lfHByb2dyYW0tYzVhN2E2YWEtYTMzYy00NThiLTljMDctODdjNTg2Y2RkZDJiJQ==",
+           "title": "READ THIS!",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/mnm/r/read-this-/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/10/23/349af7f6-3888-4948-89fe-ebdc79324a53.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastProgramTile",
+           "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWUxNDE0YmRkLTg1OTEtNDllZi05NDdlLWU1OGFlZGFiYTcyNHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxwb2RjYXN0LXByb2dyYW0lfHByb2dyYW0tZTE0MTRiZGQtODU5MS00OWVmLTk0N2UtZTU4YWVkYWJhNzI0JQ==",
+           "title": "De Thuisploeg",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/d/de-thuisploeg/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2023/08/16/6d3e39b0-3c3d-11ee-91d7-02b7b76bf47f.png"
+           }
+          },
+          {
+           "__typename": "PodcastProgramTile",
+           "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTE3NTU4Y2UwLTEyMzAtNDAxNS1hOGJkLTZiZDM0Yjk0ZWU3M3x8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxwb2RjYXN0LXByb2dyYW0lfHByb2dyYW0tMTc1NThjZTAtMTIzMC00MDE1LWE4YmQtNmJkMzRiOTRlZTczJQ==",
+           "title": "Als de muren konden praten",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/radio2/a/als-de-muren-konden-praten/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/11/12/8164cd51-eca7-40e2-9ba1-3c86b4392e9c.jpeg"
+           }
+          },
+          {
+           "__typename": "PodcastProgramTile",
+           "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTZjNjE5MDQ0LTQyYTQtNGRjMC1iNTU3LTg5OTI5ODAwMTRjNHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxwb2RjYXN0LXByb2dyYW0lfHByb2dyYW0tNmM2MTkwNDQtNDJhNC00ZGMwLWI1NTctODk5Mjk4MDAxNGM0JQ==",
+           "title": "Laura Draait Door",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/mnm/l/laura-draait-door/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/05/24/8b1d5683-19e7-11ef-8fc9-02b7b76bf47f.jpg"
+           }
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Radio",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1wcm9ncmFtIl19XSwicmVzdWx0VHlwZSI6InByZXZpZXdyYWRpbyJ9",
+         "items": [
+          {
+           "__typename": "RadioProgramTile",
+           "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC00MS00Nzl8fHx8fHxyYWRpb1Byb2dyYW18fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLXByb2dyYW0lfHBsdXhib3gtNDEtNDc5JQ==",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+           }
+          },
+          {
+           "__typename": "RadioProgramTile",
+           "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC0yMC0zNzJ8fHx8fHxyYWRpb1Byb2dyYW18fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLXByb2dyYW0lfHBsdXhib3gtMjAtMzcyJQ==",
+           "title": "Als de muren konden praten",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/a/als-de-muren-konden-praten~20-372/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/06/05/4306248f-9fa5-4833-93c8-6c4eeeea4ae6.jpg"
+           }
+          },
+          {
+           "__typename": "RadioProgramTile",
+           "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC0zMS0yMjh8fHx8fHxyYWRpb1Byb2dyYW18fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLXByb2dyYW0lfHBsdXhib3gtMzEtMjI4JQ==",
+           "title": "Weg van accordeon",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/w/weg-van-accordeon~31-228/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/03/07/1e5e8f91-dc97-11ee-b483-02b7b76bf47f.jpg"
+           }
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Video-afleveringen",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XSwicmVzdWx0VHlwZSI6InByZXZpZXctdmlkZW8tZXBpc29kZSJ9",
+         "items": [
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE3NTUxNzAxMDY3OTN8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNzU1MTcwMTA2NzkzJQ==",
+           "title": null,
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/thuis/19/thuis-s19a3462/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/08/14/c588af98-e458-4be2-b1f1-dd149b32e52b.jpg"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Thuis",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "26 min"
+            }
+           ],
+           "progress": null
+          },
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE1NDIwMTYwODUwNTl8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNTQyMDE2MDg1MDU5JQ==",
+           "title": "Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/flikken/3/flikken-s3a5/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2018/11/12/7044db30-e69b-11e8-abcc-02b7b76bf47f.jpg"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Flikken",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "51 min"
+            }
+           ],
+           "progress": null
+          },
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE3ODEyMTU1MTAxNzh8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNzgxMjE1NTEwMTc4JQ==",
+           "title": "Seizoensfinale",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/thuis/31/thuis-s31a6109/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/06/17/13d979c7-4583-4178-9f6b-0630537a35fc.png"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Thuis",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "43 min"
+            }
+           ],
+           "progress": null
+          },
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE3Njk1NTUyMTAwNzl8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNzY5NTU1MjEwMDc5JQ==",
+           "title": "Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/said---anna/2/said---anna-s2a3/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/01/28/1d8084ed-7062-478c-bc1e-91c5cc4f5024.jpg"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Saïd & Anna",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "7 min"
+            }
+           ],
+           "progress": null
+          },
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE3NTg1Mzc5MTg0NzF8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNzU4NTM3OTE4NDcxJQ==",
+           "title": "Awel Awel Awel",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/welkom-thuis-/2/welkom-thuis--s2a32/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/04/09/4c95373a-f44f-4fa8-a3da-c273790a83d7.jpg"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Welkom Thuis",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "29 min"
+            }
+           ],
+           "progress": null
+          },
+          {
+           "__typename": "EpisodeTile",
+           "componentId": "$byUyNnxlcGlzb2RlfDE0ODExOTIzMTk4ODV8cG9zdGVyfHx8fHxlcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXx2aWRlby1lcGlzb2RlJXwxNDgxMTkyMzE5ODg1JQ==",
+           "title": "Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/a-z/olly-wannabe/1/olly-wannabe-s1a3/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/10/07/557d357c-e9b0-4efa-9f5e-6b4ab41fc534.jpg"
+           },
+           "description": null,
+           "available": true,
+           "primaryMeta": [
+            {
+             "value": "Olly Wannabe",
+             "shortValue": null
+            }
+           ],
+           "statusMeta": [
+            {
+             "value": "7 min"
+            }
+           ],
+           "progress": null
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Radio-fragmenten",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV0sInJlc3VsdFR5cGUiOiJwcmV2aWV3LXJhZGlvLWZyYWdtZW50In0=",
+         "items": [
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWI4NDAxZDFlLWExNDAtNDdiMC1hMGQ0LWMxODVmMzYxYTE1Nnx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy1iODQwMWQxZS1hMTQwLTQ3YjAtYTBkNC1jMTg1ZjM2MWExNTYl",
+           "title": "Stijn Baert over hoe jeugdbeweging je carrière een duwtje geeft: \"Je leert er initiatief nemen\"",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/r/radio-2-spits~20-238/radio-2-spits~20-42624-0/fragment~b8401d1e-a140-47b0-a0d4-c185f361a156/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/23/880e26b6-1b77-4130-8e4e-8794bc17d178.jpg"
+           }
+          },
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWEyNmM0MTVjLWRjMTYtNGQ2Ni04MzFmLWJhM2JmMzJmYTIwM3x8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy1hMjZjNDE1Yy1kYzE2LTRkNjYtODMxZi1iYTNiZjMyZmEyMDMl",
+           "title": "K.zia: \"Thuis is een gevoel, geen plaats\"",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/a/ayco~11-4/ayco~11-40074-0/fragment~a26c415c-dc16-4d66-831f-ba3bf32fa203/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/23/e7bdbefe-af1e-4131-8056-bf6271ad14a9.jpg"
+           }
+          },
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWIyZDNiODI0LTE2Y2QtNDA5YS1hNzhjLTMyM2YxNDdhOTY3M3x8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy1iMmQzYjgyNC0xNmNkLTQwOWEtYTc4Yy0zMjNmMTQ3YTk2NzMl",
+           "title": "Osama Abdulrasol over ‘Rumi the outsider’: Zijn we niet allemaal soms een buitenstaander?",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/m/music-matters~31-95/music-matters~31-32330-0/fragment~b2d3b824-16cd-409a-a78c-323f147a9673/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/20/d7663d6a-4ade-4e5b-b661-e55088b26e31.png"
+           }
+          },
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWZhY2FhZjU3LTI3YzEtNDg3Ny05NTRiLWFmNjYxOWM0MDlkZXx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy1mYWNhYWY1Ny0yN2MxLTQ4NzctOTU0Yi1hZjY2MTljNDA5ZGUl",
+           "title": "Aantal ziektemeldingen voor één dag met meer dan de helft gestegen: \"Geen impact op meerdaagse afwezigheden\"",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/d/de-ochtend~11-19/de-ochtend~11-39334-0/fragment~facaaf57-27c1-4877-954b-af6619c409de/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/20/1691d5cc-8f96-4f03-b03e-9c963f8d04aa.jpg"
+           }
+          },
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLTNiMmIxNjE4LThlMzAtNDYzZi1iODk3LTUxMTM1MDc5ZDhhMHx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy0zYjJiMTYxOC04ZTMwLTQ2M2YtYjg5Ny01MTEzNTA3OWQ4YTAl",
+           "title": "Natuurdocumentaire over kauwen in Herk-de-Stad: \"Samen met vriendin filmen en documenteren we ze 4 seizoenen lang\"",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/r/radio-2-middag-in-limburg~23-3/radio-2-middag-in-limburg~23-22888-0/fragment~3b2b1618-8e30-463f-b897-51135079d8a0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/19/8a06f432-d3fe-4a1e-b152-bb58508fffd7.jpg"
+           }
+          },
+          {
+           "__typename": "RadioFragmentTile",
+           "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLTQ4ZDY0YmVkLTVlZDAtNDg1Ny04MGE0LTAxMzcyNzIxZjhkZXx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHJhZGlvLWZyYWdtZW50JXxvbmQtYXVkLWZyZy00OGQ2NGJlZC01ZWQwLTQ4NTctODBhNC0wMTM3MjcyMWY4ZGUl",
+           "title": "\"Het is een ecocide\": bosbranden in Indonesië bedreigen miljoenen mensen en dieren",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/d/de-ochtend~11-19/de-ochtend~11-39684-0/fragment~48d64bed-5ed0-4857-80a4-01372721f8de/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/10/17/653afa8a-5f48-499f-aedd-1356d8e8a87f.png"
+           }
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Podcast-afleveringen",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJwb2RjYXN0LWVwaXNvZGUiXX1dLCJyZXN1bHRUeXBlIjoicHJldmlldy1wb2RjYXN0LWVwaXNvZGUifQ==",
+         "items": [
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtY2JhYzM4YmQtY2I4OS00YzMyLTlmNzktOGEwNzJmYzU1YmEyfHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWNiYWMzOGJkLWNiODktNGMzMi05Zjc5LThhMDcyZmM1NWJhMiU=",
+           "title": "#32 Awel Awel Awel",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-32-awel-awel-awel/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/04/09/0555f481-20d0-4d76-b634-dd1533efb7b5.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtY2RmYTZiYjYtYjM2Yy00NGRhLTg1MTktYjQ1ZTdiM2M2NjgyfHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWNkZmE2YmI2LWIzNmMtNDRkYS04NTE5LWI0NWU3YjNjNjY4MiU=",
+           "title": "Welkom Thuis",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/1/trailer---welkom-thuis/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/08/19/c32fce99-a3c5-43b9-9e4b-f6385011d5ee.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtMTQ1Y2RiYzItMmJhZS00NWU3LTkzZmEtYzM5NTAwMDA1MjIzfHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LTE0NWNkYmMyLTJiYWUtNDVlNy05M2ZhLWMzOTUwMDAwNTIyMyU=",
+           "title": "#2 Silly Thilly!",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-2-silly-thilly-/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/09/12/1e561c13-335f-4d35-aa8e-990d5fa083e3.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtYmUwMzY2NTktZGYzMS00MjRkLTljMzYtNTE1ZGZkZWI2YTE5fHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWJlMDM2NjU5LWRmMzEtNDI0ZC05YzM2LTUxNWRmZGViNmExOSU=",
+           "title": "#41 Masjoeeefffeeeelll",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-41-masjoeeefffeeeelll/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2026/06/12/a4f9f564-7936-47c5-a68b-c022668d4be3.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtYThhZWZkNTItNDc2Yi00YzU4LTkzNTItMzc5Y2I4NWM4N2FhfHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWE4YWVmZDUyLTQ3NmItNGM1OC05MzUyLTM3OWNiODVjODdhYSU=",
+           "title": "#29 Adieu Adil",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/1/-29-adieu-adil/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/03/21/8de3d0aa-f802-49ab-b3de-4a9c2f22673a.jpg"
+           }
+          },
+          {
+           "__typename": "PodcastEpisodeTile",
+           "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtMmE5MjdjOGMtY2Q4MC00YjljLWI4ODUtMDZiNzk4NWRkYmU1fHBvc3Rlcnx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byU1OHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8YWxsfHx7InEiOiJ0aHVpcyJ9fG4lMjc1OTYlfHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LTJhOTI3YzhjLWNkODAtNGI5Yy1iODg1LTA2Yjc5ODVkZGJlNSU=",
+           "title": "#11 - Scoop alert!",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/1/-11---scoop-alert-/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/11/15/fab7ff28-6e84-4977-af30-71eef74f7d8b.jpg"
+           }
+          }
+         ]
+        },
+        {
+         "__typename": "StaticTileList",
+         "title": "Radio-uitzendingen",
+         "listId": "searchdata:eyJxdWVyeVN0cmluZyI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XSwicmVzdWx0VHlwZSI6InByZXZpZXctcmFkaW8tZXBpc29kZSJ9",
+         "items": [
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODgzMS0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM4ODMxLTAl",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-38831-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+           }
+          },
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODc4Ny0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM4Nzg3LTAl",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-38787-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+           }
+          },
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODgzMC0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM4ODMwLTAl",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-38830-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+           }
+          },
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zNjY5Ni0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM2Njk2LTAl",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-36696-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/03/19/d936899c-e5e7-11ee-b483-02b7b76bf47f.jpg"
+           }
+          },
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zNjY5Ny0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM2Njk3LTAl",
+           "title": "Thaïs Van Burm",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-36697-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2024/03/19/d936899c-e5e7-11ee-b483-02b7b76bf47f.jpg"
+           }
+          },
+          {
+           "__typename": "RadioEpisodeTile",
+           "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODQ4MS0wfHBvc3Rlcnx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lNTh8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfGFsbHx8eyJxIjoidGh1aXMifXxuJTI3NTk2JXxyYWRpby1lcGlzb2RlJXxwbHV4Ym94LTQxLTM4NDgxLTAl",
+           "title": "De Festivalzender",
+           "action": {
+            "__typename": "LinkAction",
+            "link": "/vrtmax/luister/radio/d/de-festivalzender~41-499/de-festivalzender~41-38481-0/"
+           },
+           "image": {
+            "templateUrl": "https://images.vrt.be/orig/2025/06/25/4904e0ef-6aee-4dcb-b1b8-826190c7578d.jpg"
+           }
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "title": "Collecties (1)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Collecties",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8Y29sbGVjdGlvbi1nZW5lcmljfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsiY29sbGVjdGlvbi1nZW5lcmljIl19XX18biUxJXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJjb2xsZWN0aW9uLWdlbmVyaWMiXX1dfXxjb2xsZWN0aW9uLWdlbmVyaWMl",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": false,
+           "endCursor": "1575982537638"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8MTU3NTk4MjUzNzYzOHx8fHx8fGJhbm5lcnx8fHxvJTE0fG8lMTZ8byU1N3x0JVNlYXJjaFBhZ2UlL3pvZWtlbi8/cT10aHVpc3xuYXZpZ2F0aW9uJXxjb2xsZWN0aW9uLWdlbmVyaWN8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJjb2xsZWN0aW9uLWdlbmVyaWMiXX1dfXxuJTElfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbImNvbGxlY3Rpb24tZ2VuZXJpYyJdfV19fGNvbGxlY3Rpb24tZ2VuZXJpYyV8MTU3NTk4MjUzNzYzOCU=",
+             "title": "De Warmste Week",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/themas/de-warmste-week/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/05/20/df444875-0914-4f04-b3b9-8018113b48dc.jpg?gravity=smart"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Kijk (34)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Kijk",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8dmlkZW8tcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInZpZGVvLXByb2dyYW0iXX1dfXxuJTM0JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XX18d2F0Y2gl",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1588774182083"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE0NTk5NTU4ODk5MDF8fHx8fHxwcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLXByb2dyYW18fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XX18biUzNCV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsidmlkZW8tcHJvZ3JhbSJdfV19fHdhdGNoJXwxNDU5OTU1ODg5OTAxJQ==",
+             "title": "Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/03/27/1c2ecf68-51f3-4c68-a2e8-d4aed5af9e2b.jpg"
+             },
+             "description": "Vlaanderens populairste dagelijkse fictiereeks."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE3MjUyNzg4MzcyMjB8fHx8fHxwcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLXByb2dyYW18fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XX18biUzNCV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsidmlkZW8tcHJvZ3JhbSJdfV19fHdhdGNoJXwxNzI1Mjc4ODM3MjIwJQ==",
+             "title": "Welkom Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/welkom-thuis-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/01/973ff7ff-4a24-4a86-b718-748da9092861.jpg"
+             },
+             "description": "In deze gezellige nababbel over de populairste dagelijkse fictiereeks van Vlaanderen bespreken Sander, Cato en een bekende Thuisfan de afgelopen week van Thuis."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE3NTgwMzEwOTMwNzd8fHx8fHxwcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLXByb2dyYW18fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XX18biUzNCV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsidmlkZW8tcHJvZ3JhbSJdfV19fHdhdGNoJXwxNzU4MDMxMDkzMDc3JQ==",
+             "title": "Opera bij je thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/opera-bij-je-thuis/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/17/e3117ef0-390c-42ba-a46c-e530cb82deb1.png"
+             },
+             "description": "Opera's van wereldniveau kan je nu bekijken vanuit je zetel."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE1ODg3NzQxODIwODN8fHx8fHxwcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLXByb2dyYW18fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1wcm9ncmFtIl19XX18biUzNCV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsidmlkZW8tcHJvZ3JhbSJdfV19fHdhdGNoJXwxNTg4Nzc0MTgyMDgzJQ==",
+             "title": "Reizen Waes blijft thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/reizen-waes-blijft-thuis/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/10/03/b42ac631-e841-4161-8a2a-3c59550be335.jpg"
+             },
+             "description": "In deze eenmalige special skypet Tom Waes vanuit z'n loft in Antwerpen met een tiental mensen die hij doorheen de jaren met 'Reizen Waes' heeft bezocht."
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Podcasts (5)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Podcasts",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1wcm9ncmFtfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1wcm9ncmFtIl19XX18biU1JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJwb2RjYXN0LXByb2dyYW0iXX1dfXxwb2RjYXN0JQ==",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "program-17558ce0-1230-4015-a8bd-6bd34b94ee73"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "PodcastProgramTile",
+             "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTc2MDg3N2MyLTE0MTgtNDA3Mi05N2UwLTc3ODViNWMyYzQxNXx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHBvZGNhc3QtcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtcHJvZ3JhbSJdfV19fG4lNSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1wcm9ncmFtIl19XX18cG9kY2FzdCV8cHJvZ3JhbS03NjA4NzdjMi0xNDE4LTQwNzItOTdlMC03Nzg1YjVjMmM0MTUl",
+             "title": "Welkom Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/05/a87f35ba-dfe7-4af5-b0a1-0a8a0dbebf8d.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastProgramTile",
+             "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWM1YTdhNmFhLWEzM2MtNDU4Yi05YzA3LTg3YzU4NmNkZGQyYnx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHBvZGNhc3QtcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtcHJvZ3JhbSJdfV19fG4lNSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1wcm9ncmFtIl19XX18cG9kY2FzdCV8cHJvZ3JhbS1jNWE3YTZhYS1hMzNjLTQ1OGItOWMwNy04N2M1ODZjZGRkMmIl",
+             "title": "READ THIS!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/mnm/r/read-this-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/10/23/349af7f6-3888-4948-89fe-ebdc79324a53.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastProgramTile",
+             "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWUxNDE0YmRkLTg1OTEtNDllZi05NDdlLWU1OGFlZGFiYTcyNHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHBvZGNhc3QtcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtcHJvZ3JhbSJdfV19fG4lNSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1wcm9ncmFtIl19XX18cG9kY2FzdCV8cHJvZ3JhbS1lMTQxNGJkZC04NTkxLTQ5ZWYtOTQ3ZS1lNThhZWRhYmE3MjQl",
+             "title": "De Thuisploeg",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/d/de-thuisploeg/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2023/08/16/6d3e39b0-3c3d-11ee-91d7-02b7b76bf47f.png"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastProgramTile",
+             "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTE3NTU4Y2UwLTEyMzAtNDAxNS1hOGJkLTZiZDM0Yjk0ZWU3M3x8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHBvZGNhc3QtcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtcHJvZ3JhbSJdfV19fG4lNSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1wcm9ncmFtIl19XX18cG9kY2FzdCV8cHJvZ3JhbS0xNzU1OGNlMC0xMjMwLTQwMTUtYThiZC02YmQzNGI5NGVlNzMl",
+             "title": "Als de muren konden praten",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/radio2/a/als-de-muren-konden-praten/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/11/12/8164cd51-eca7-40e2-9ba1-3c86b4392e9c.jpeg"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Radio (3)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Radio",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxuJTMlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxyYWRpbyU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": false,
+           "endCursor": "pluxbox-31-228"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "RadioProgramTile",
+             "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC00MS00Nzl8fHx8fHxyYWRpb1Byb2dyYW18fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxuJTMlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxyYWRpbyV8cGx1eGJveC00MS00Nzkl",
+             "title": "Thaïs Van Burm",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioProgramTile",
+             "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC0yMC0zNzJ8fHx8fHxyYWRpb1Byb2dyYW18fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxuJTMlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxyYWRpbyV8cGx1eGJveC0yMC0zNzIl",
+             "title": "Als de muren konden praten",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/a/als-de-muren-konden-praten~20-372/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/06/05/4306248f-9fa5-4833-93c8-6c4eeeea4ae6.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioProgramTile",
+             "componentId": "$byUyNnxyYWRpb1Byb2dyYW18cGx1eGJveC0zMS0yMjh8fHx8fHxyYWRpb1Byb2dyYW18fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tcHJvZ3JhbXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxuJTMlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLXByb2dyYW0iXX1dfXxyYWRpbyV8cGx1eGJveC0zMS0yMjgl",
+             "title": "Weg van accordeon",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/w/weg-van-accordeon~31-228/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/03/07/1e5e8f91-dc97-11ee-b483-02b7b76bf47f.jpg"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Video-afleveringen (6794)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Video-afleveringen",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8dmlkZW8tZXBpc29kZXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInZpZGVvLWVwaXNvZGUiXX1dfXxuJTY3OTQlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInZpZGVvLWVwaXNvZGUiXX1dfXx2aWRlby1lcGlzb2RlJQ==",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1769555210079"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3NTUxNzAxMDY3OTN8fHx8fHxlcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18biU2Nzk0JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18dmlkZW8tZXBpc29kZSV8MTc1NTE3MDEwNjc5MyU=",
+             "title": null,
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/19/thuis-s19a3462/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/08/14/c588af98-e458-4be2-b1f1-dd149b32e52b.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "26 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE1NDIwMTYwODUwNTl8fHx8fHxlcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18biU2Nzk0JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18dmlkZW8tZXBpc29kZSV8MTU0MjAxNjA4NTA1OSU=",
+             "title": "Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/flikken/3/flikken-s3a5/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2018/11/12/7044db30-e69b-11e8-abcc-02b7b76bf47f.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Flikken",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "51 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3ODEyMTU1MTAxNzh8fHx8fHxlcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18biU2Nzk0JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18dmlkZW8tZXBpc29kZSV8MTc4MTIxNTUxMDE3OCU=",
+             "title": "Seizoensfinale",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/31/thuis-s31a6109/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/06/17/13d979c7-4583-4178-9f6b-0630537a35fc.png"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "43 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3Njk1NTUyMTAwNzl8fHx8fHxlcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHZpZGVvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18biU2Nzk0JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJ2aWRlby1lcGlzb2RlIl19XX18dmlkZW8tZXBpc29kZSV8MTc2OTU1NTIxMDA3OSU=",
+             "title": "Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/said---anna/2/said---anna-s2a3/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/01/28/1d8084ed-7062-478c-bc1e-91c5cc4f5024.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Saïd & Anna",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "7 min"
+              }
+             ],
+             "progress": null
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Radio-fragmenten (1585)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Radio-fragmenten",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZnJhZ21lbnR8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV19fG4lMTU4NSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZnJhZ21lbnQiXX1dfXxyYWRpby1mcmFnbWVudCU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "ond-aud-frg-facaaf57-27c1-4877-954b-af6619c409de"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "RadioFragmentTile",
+             "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWI4NDAxZDFlLWExNDAtNDdiMC1hMGQ0LWMxODVmMzYxYTE1Nnx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZnJhZ21lbnR8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV19fG4lMTU4NSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZnJhZ21lbnQiXX1dfXxyYWRpby1mcmFnbWVudCV8b25kLWF1ZC1mcmctYjg0MDFkMWUtYTE0MC00N2IwLWEwZDQtYzE4NWYzNjFhMTU2JQ==",
+             "title": "Stijn Baert over hoe jeugdbeweging je carrière een duwtje geeft: \"Je leert er initiatief nemen\"",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/r/radio-2-spits~20-238/radio-2-spits~20-42624-0/fragment~b8401d1e-a140-47b0-a0d4-c185f361a156/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/23/880e26b6-1b77-4130-8e4e-8794bc17d178.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioFragmentTile",
+             "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWEyNmM0MTVjLWRjMTYtNGQ2Ni04MzFmLWJhM2JmMzJmYTIwM3x8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZnJhZ21lbnR8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV19fG4lMTU4NSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZnJhZ21lbnQiXX1dfXxyYWRpby1mcmFnbWVudCV8b25kLWF1ZC1mcmctYTI2YzQxNWMtZGMxNi00ZDY2LTgzMWYtYmEzYmYzMmZhMjAzJQ==",
+             "title": "K.zia: \"Thuis is een gevoel, geen plaats\"",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/a/ayco~11-4/ayco~11-40074-0/fragment~a26c415c-dc16-4d66-831f-ba3bf32fa203/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/23/e7bdbefe-af1e-4131-8056-bf6271ad14a9.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioFragmentTile",
+             "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWIyZDNiODI0LTE2Y2QtNDA5YS1hNzhjLTMyM2YxNDdhOTY3M3x8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZnJhZ21lbnR8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV19fG4lMTU4NSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZnJhZ21lbnQiXX1dfXxyYWRpby1mcmFnbWVudCV8b25kLWF1ZC1mcmctYjJkM2I4MjQtMTZjZC00MDlhLWE3OGMtMzIzZjE0N2E5NjczJQ==",
+             "title": "Osama Abdulrasol over ‘Rumi the outsider’: Zijn we niet allemaal soms een buitenstaander?",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/m/music-matters~31-95/music-matters~31-32330-0/fragment~b2d3b824-16cd-409a-a78c-323f147a9673/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/20/d7663d6a-4ade-4e5b-b661-e55088b26e31.png"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioFragmentTile",
+             "componentId": "$byUyNnxyYWRpb0ZyYWdtZW50fG9uZC1hdWQtZnJnLWZhY2FhZjU3LTI3YzEtNDg3Ny05NTRiLWFmNjYxOWM0MDlkZXx8fHx8fHJhZGlvRnJhZ21lbnR8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZnJhZ21lbnR8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1mcmFnbWVudCJdfV19fG4lMTU4NSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZnJhZ21lbnQiXX1dfXxyYWRpby1mcmFnbWVudCV8b25kLWF1ZC1mcmctZmFjYWFmNTctMjdjMS00ODc3LTk1NGItYWY2NjE5YzQwOWRlJQ==",
+             "title": "Aantal ziektemeldingen voor één dag met meer dan de helft gestegen: \"Geen impact op meerdaagse afwezigheden\"",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/d/de-ochtend~11-19/de-ochtend~11-39334-0/fragment~facaaf57-27c1-4877-954b-af6619c409de/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/20/1691d5cc-8f96-4f03-b03e-9c963f8d04aa.jpg"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Podcast-afleveringen (345)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Podcast-afleveringen",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1lcGlzb2RlfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1lcGlzb2RlIl19XX18biUzNDUlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtZXBpc29kZSJdfV19fHBvZGNhc3QtZXBpc29kZSU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "broadcast-be036659-df31-424d-9c36-515dfdeb6a19"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtY2JhYzM4YmQtY2I4OS00YzMyLTlmNzktOGEwNzJmYzU1YmEyfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1lcGlzb2RlfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1lcGlzb2RlIl19XX18biUzNDUlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtZXBpc29kZSJdfV19fHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWNiYWMzOGJkLWNiODktNGMzMi05Zjc5LThhMDcyZmM1NWJhMiU=",
+             "title": "#32 Awel Awel Awel",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-32-awel-awel-awel/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/04/09/0555f481-20d0-4d76-b634-dd1533efb7b5.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtY2RmYTZiYjYtYjM2Yy00NGRhLTg1MTktYjQ1ZTdiM2M2NjgyfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1lcGlzb2RlfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1lcGlzb2RlIl19XX18biUzNDUlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtZXBpc29kZSJdfV19fHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWNkZmE2YmI2LWIzNmMtNDRkYS04NTE5LWI0NWU3YjNjNjY4MiU=",
+             "title": "Welkom Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/1/trailer---welkom-thuis/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/08/19/c32fce99-a3c5-43b9-9e4b-f6385011d5ee.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtMTQ1Y2RiYzItMmJhZS00NWU3LTkzZmEtYzM5NTAwMDA1MjIzfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1lcGlzb2RlfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1lcGlzb2RlIl19XX18biUzNDUlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtZXBpc29kZSJdfV19fHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LTE0NWNkYmMyLTJiYWUtNDVlNy05M2ZhLWMzOTUwMDAwNTIyMyU=",
+             "title": "#2 Silly Thilly!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-2-silly-thilly-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/12/1e561c13-335f-4d35-aa8e-990d5fa083e3.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtYmUwMzY2NTktZGYzMS00MjRkLTljMzYtNTE1ZGZkZWI2YTE5fHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cG9kY2FzdC1lcGlzb2RlfHx7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicG9kY2FzdC1lcGlzb2RlIl19XX18biUzNDUlfHJlc3VsdHN8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInBvZGNhc3QtZXBpc29kZSJdfV19fHBvZGNhc3QtZXBpc29kZSV8YnJvYWRjYXN0LWJlMDM2NjU5LWRmMzEtNDI0ZC05YzM2LTUxNWRmZGViNmExOSU=",
+             "title": "#41 Masjoeeefffeeeelll",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/2/-41-masjoeeefffeeeelll/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/06/12/a4f9f564-7936-47c5-a68b-c022668d4be3.jpg"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Radio-uitzendingen (99)",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Radio-uitzendingen",
+         "listId": "$byUxNHxvJTE2fG8lNTd8dCVTZWFyY2hQYWdlJS96b2VrZW4vP3E9dGh1aXN8bmF2aWdhdGlvbiV8cmFkaW8tZXBpc29kZXx8eyJxIjoidGh1aXMiLCJmYWNldHMiOlt7Im5hbWUiOiJlbnRpdHl0eXBlIiwidmFsdWVzIjpbInJhZGlvLWVwaXNvZGUiXX1dfXxuJTk5JXxyZXN1bHRzfHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XX18cmFkaW8tZXBpc29kZSU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "pluxbox-41-38787-0"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "RadioEpisodeTile",
+             "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zNjY5Ny0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHJhZGlvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XX18biU5OSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZXBpc29kZSJdfV19fHJhZGlvLWVwaXNvZGUlfHBsdXhib3gtNDEtMzY2OTctMCU=",
+             "title": "Thaïs Van Burm",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-36697-0/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/03/19/d936899c-e5e7-11ee-b483-02b7b76bf47f.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioEpisodeTile",
+             "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zNjY5Ni0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHJhZGlvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XX18biU5OSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZXBpc29kZSJdfV19fHJhZGlvLWVwaXNvZGUlfHBsdXhib3gtNDEtMzY2OTYtMCU=",
+             "title": "Thaïs Van Burm",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-36696-0/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/03/19/d936899c-e5e7-11ee-b483-02b7b76bf47f.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioEpisodeTile",
+             "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODgzMC0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHJhZGlvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XX18biU5OSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZXBpc29kZSJdfV19fHJhZGlvLWVwaXNvZGUlfHBsdXhib3gtNDEtMzg4MzAtMCU=",
+             "title": "Thaïs Van Burm",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-38830-0/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "RadioEpisodeTile",
+             "componentId": "$byUyNnxyYWRpb0VwaXNvZGV8cGx1eGJveC00MS0zODc4Ny0wfHx8fHx8cmFkaW9lcGlzb2RlfHx8fG8lMTR8byUxNnxvJTU3fHQlU2VhcmNoUGFnZSUvem9la2VuLz9xPXRodWlzfG5hdmlnYXRpb24lfHJhZGlvLWVwaXNvZGV8fHsicSI6InRodWlzIiwiZmFjZXRzIjpbeyJuYW1lIjoiZW50aXR5dHlwZSIsInZhbHVlcyI6WyJyYWRpby1lcGlzb2RlIl19XX18biU5OSV8cmVzdWx0c3x7InEiOiJ0aHVpcyIsImZhY2V0cyI6W3sibmFtZSI6ImVudGl0eXR5cGUiLCJ2YWx1ZXMiOlsicmFkaW8tZXBpc29kZSJdfV19fHJhZGlvLWVwaXNvZGUlfHBsdXhib3gtNDEtMzg3ODctMCU=",
+             "title": "Thaïs Van Burm",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/luister/radio/t/thais-van-burm~41-479/thais-van-burm~41-38787-0/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/08/28/2820a562-3552-41fa-8f48-df38d50b9dee.jpg"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

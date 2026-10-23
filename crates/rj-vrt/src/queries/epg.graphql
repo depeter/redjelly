@@ -1,0 +1,14 @@
+query Guide($pageId: ID!, $first: Int!) {
+  page(id: $pageId) {
+    __typename
+    ... on ElectronicProgramGuidePage {
+      current { ... on StandaloneTile { tile { ...tile } } }
+      previous { ...guideList }
+      next { ...guideList }
+    }
+  }
+}
+fragment guideList on PaginatedTileList {
+  listId
+  paginatedItems(first: $first) { pageInfo { hasNextPage endCursor } edges { node { ...tile } } }
+}

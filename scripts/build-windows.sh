@@ -40,6 +40,10 @@ cp "$root/scripts/README-windows.txt" "$dist/README.txt"
 for dll in libc++.dll libunwind.dll; do
   [ -f "$LLVM_MINGW/x86_64-w64-mingw32/bin/$dll" ] && cp "$LLVM_MINGW/x86_64-w64-mingw32/bin/$dll" "$dist/"
 done
+# WebView2 loader for VRT MAX's web player (wry/webview2-com ships it).
+loader=$(ls "${CARGO_HOME:-$HOME/.cargo}"/registry/src/*/webview2-com-sys-*/x64/WebView2Loader.dll 2>/dev/null | sort -V | tail -1)
+[ -n "$loader" ] || { echo "build-windows: WebView2Loader.dll not found in the cargo registry" >&2; exit 1; }
+cp "$loader" "$dist/"
 (cd "$root/dist" && rm -f redjelly-windows-x64.zip && python3 -c "import shutil; shutil.make_archive('redjelly-windows-x64', 'zip', '.', 'redjelly')")
 echo "built $root/dist/redjelly-windows-x64.zip"
 

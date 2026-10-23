@@ -1,0 +1,1332 @@
+{
+ "data": {
+  "page": {
+   "__typename": "ProgramPage",
+   "title": "Thuis",
+   "components": [
+    {
+     "__typename": "ContainerNavigation",
+     "items": [
+      {
+       "title": "Vandaag in Thuis",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Meest recente video",
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF9jb3B5X2NvcHl8YiUwfCU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1790260201672"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3OTEyMzc5MTEzMDR8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzEzODYzMjkyNzUlfGxpc3RfY29weV9jb3B5fGIlMHwlfDFfdGh1aXMtdHJhaWxlci1ncmFhZnQtZmVta2UtaGFhci1laWdlbi1ncmFmLSU=",
+             "title": "Thuis",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/trailers/thuis-trailer-graaft-femke-haar-eigen-graf-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/20/708bb1af-7ae0-468d-91b6-7133a791f26a.jpg"
+             },
+             "description": "Graaft Femke haar eigen graf?",
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Trailer",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "1 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3OTE0OTcxMDgwODZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzEzODYzMjkyNzUlfGxpc3RfY29weV9jb3B5fGIlMHwlfDJfdGh1aXMtczMyYTYxNDkl",
+             "title": "Cody neemt een zware beslissing",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/32/thuis-s32a6149/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/05/65707a6d-fdf9-4168-81fb-2f209b579af2.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "27 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3ODg0MjY5MTI1NjF8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzEzODYzMjkyNzUlfGxpc3RfY29weV9jb3B5fGIlMHwlfDNfd2Vsa29tLXRodWlzLS1zM2E4JQ==",
+             "title": "Alles naar de shit-hoeve!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/welkom-thuis-/3/welkom-thuis--s3a8/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/22/c456d368-3f1e-42de-b6a4-cb6d3cb00349.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Welkom Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "28 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3OTAyNjAyMDE2NzJ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzEzODYzMjkyNzUlfGxpc3RfY29weV9jb3B5fGIlMHwlfDRfdGh1aXMtYmxvb3BlcnMtc2VwdGVtYmVyJQ==",
+             "title": "Bloopers september 2026",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/bloopers-s32/thuis-bloopers-september/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/09/25/4c944568-20e7-4843-b6ff-d1fb21761737.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "2 min"
+              }
+             ],
+             "progress": null
+            }
+           }
+          ]
+         }
+        },
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Volg ons op social media",
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF82NzQ4OTkzMjNfY29weV98YiUwfCU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": false,
+           "endCursor": "ZSBTUCjNoZZ8rcNX/Isj/Jt7T4M="
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzEzODYzMjkyNzVfbGlzdF82NzQ4OTkzMjNfY29weV98MV9pdGVtMHxiYW5uZXJ8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF82NzQ4OTkzMjNfY29weV98YiUwfCV8MV9pdGVtMCU=",
+             "title": "Instagram",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.instagram.com/thuistv/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/11/26/0722cea7-84d9-434a-af33-99014fceeabb.jpg?gravity=51p%2C32p"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzEzODYzMjkyNzVfbGlzdF82NzQ4OTkzMjNfY29weV98Ml9pdGVtMXxiYW5uZXJ8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF82NzQ4OTkzMjNfY29weV98YiUwfCV8Ml9pdGVtMSU=",
+             "title": "TikTok",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.tiktok.com/@thuis.tok"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/10/29/731306ab-02a1-409e-990e-e84f96efa442.jpg?gravity=31p%2C32p"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzEzODYzMjkyNzVfbGlzdF82NzQ4OTkzMjNfY29weV98M19pdGVtMnxiYW5uZXJ8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF82NzQ4OTkzMjNfY29weV98YiUwfCV8M19pdGVtMiU=",
+             "title": "Facebook",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.facebook.com/thuisopeen"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2021/12/03/7da01f81-5452-11ec-b07d-02b7b76bf47f.jpg?gravity=50p%2C50p"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzEzODYzMjkyNzVfbGlzdF82NzQ4OTkzMjNfY29weV98NF9pdGVtM3xiYW5uZXJ8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTM4NjMyOTI3NSV8bGlzdF82NzQ4OTkzMjNfY29weV98YiUwfCV8NF9pdGVtMyU=",
+             "title": "Facebook community",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.facebook.com/groups/2464298423876896"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2021/12/03/e1592539-5452-11ec-b07d-02b7b76bf47f.jpg?gravity=50p%2C50p"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Alle seizoenen",
+       "components": [
+        {
+         "__typename": "ContainerNavigation",
+         "items": [
+          {
+           "title": "Seizoen 32 (40 afleveringen)",
+           "components": [
+            {
+             "__typename": "PaginatedTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MzIlfDMyfGIlMHwl",
+             "paginatedItems": {
+              "pageInfo": {
+               "hasNextPage": true,
+               "endCursor": "1791237906546"
+              },
+              "edges": [
+               {
+                "node": {
+                 "__typename": "EpisodeTile",
+                 "componentId": "$byUyNnxlcGlzb2RlfDE3OTE0OTcxMDgwODZ8c2ltaWxhcnx8fHx8ZXBpc29kZXx8fHxvJTM1fG8lMnxvJTQ3fG8lMnxvJTQ3fHQlVmlkZW9Qcm9ncmFtUGFnZSUvYS16L3RodWlzL3xjb250YWluZXIlfGJhbm5lciV8YmFubmVyJXwzMiV8MzJ8YiUwfCV8MV90aHVpcy1zMzJhNjE0OSU=",
+                 "title": "Cody neemt een zware beslissing",
+                 "action": {
+                  "__typename": "LinkAction",
+                  "link": "/vrtmax/a-z/thuis/32/thuis-s32a6149/"
+                 },
+                 "image": {
+                  "templateUrl": "https://images.vrt.be/orig/2026/10/05/65707a6d-fdf9-4168-81fb-2f209b579af2.jpg"
+                 },
+                 "description": null,
+                 "available": true,
+                 "primaryMeta": [
+                  {
+                   "value": "Vrijdag 23 oktober",
+                   "shortValue": "Vr 23/10"
+                  }
+                 ],
+                 "statusMeta": [
+                  {
+                   "value": "27 min"
+                  }
+                 ],
+                 "progress": null
+                }
+               },
+               {
+                "node": {
+                 "__typename": "EpisodeTile",
+                 "componentId": "$byUyNnxlcGlzb2RlfDE3OTE0MTA3MDYxMDV8c2ltaWxhcnx8fHx8ZXBpc29kZXx8fHxvJTM1fG8lMnxvJTQ3fG8lMnxvJTQ3fHQlVmlkZW9Qcm9ncmFtUGFnZSUvYS16L3RodWlzL3xjb250YWluZXIlfGJhbm5lciV8YmFubmVyJXwzMiV8MzJ8YiUwfCV8Ml90aHVpcy1zMzJhNjE0OCU=",
+                 "title": "Anna gaat de confrontatie aan met Femke",
+                 "action": {
+                  "__typename": "LinkAction",
+                  "link": "/vrtmax/a-z/thuis/32/thuis-s32a6148/"
+                 },
+                 "image": {
+                  "templateUrl": "https://images.vrt.be/orig/2026/10/05/ea2343a6-8e25-43fc-869b-04e4707ae021.jpg"
+                 },
+                 "description": null,
+                 "available": true,
+                 "primaryMeta": [
+                  {
+                   "value": "Donderdag 22 oktober",
+                   "shortValue": "Do 22/10"
+                  }
+                 ],
+                 "statusMeta": [
+                  {
+                   "value": "25 min"
+                  }
+                 ],
+                 "progress": null
+                }
+               },
+               {
+                "node": {
+                 "__typename": "EpisodeTile",
+                 "componentId": "$byUyNnxlcGlzb2RlfDE3OTEzMjY0MDU4Nzl8c2ltaWxhcnx8fHx8ZXBpc29kZXx8fHxvJTM1fG8lMnxvJTQ3fG8lMnxvJTQ3fHQlVmlkZW9Qcm9ncmFtUGFnZSUvYS16L3RodWlzL3xjb250YWluZXIlfGJhbm5lciV8YmFubmVyJXwzMiV8MzJ8YiUwfCV8M190aHVpcy1zMzJhNjE0NyU=",
+                 "title": "Simonne is ongerust omdat Kaat niet is thuisgekomen",
+                 "action": {
+                  "__typename": "LinkAction",
+                  "link": "/vrtmax/a-z/thuis/32/thuis-s32a6147/"
+                 },
+                 "image": {
+                  "templateUrl": "https://images.vrt.be/orig/2026/10/05/dcf32e36-1abb-4d0f-93f8-54fd412d6b70.jpg"
+                 },
+                 "description": null,
+                 "available": true,
+                 "primaryMeta": [
+                  {
+                   "value": "Woensdag 21 oktober",
+                   "shortValue": "Wo 21/10"
+                  }
+                 ],
+                 "statusMeta": [
+                  {
+                   "value": "25 min"
+                  }
+                 ],
+                 "progress": null
+                }
+               },
+               {
+                "node": {
+                 "__typename": "EpisodeTile",
+                 "componentId": "$byUyNnxlcGlzb2RlfDE3OTEyMzc5MDY1NDZ8c2ltaWxhcnx8fHx8ZXBpc29kZXx8fHxvJTM1fG8lMnxvJTQ3fG8lMnxvJTQ3fHQlVmlkZW9Qcm9ncmFtUGFnZSUvYS16L3RodWlzL3xjb250YWluZXIlfGJhbm5lciV8YmFubmVyJXwzMiV8MzJ8YiUwfCV8NF90aHVpcy1zMzJhNjE0NiU=",
+                 "title": "Kaat is helemaal in shock na een vondst die ze doet",
+                 "action": {
+                  "__typename": "LinkAction",
+                  "link": "/vrtmax/a-z/thuis/32/thuis-s32a6146/"
+                 },
+                 "image": {
+                  "templateUrl": "https://images.vrt.be/orig/2026/10/05/b589d82e-94bd-4ffa-9e34-5e2123fc6c13.jpg"
+                 },
+                 "description": null,
+                 "available": true,
+                 "primaryMeta": [
+                  {
+                   "value": "Dinsdag 20 oktober",
+                   "shortValue": "Di 20/10"
+                  }
+                 ],
+                 "statusMeta": [
+                  {
+                   "value": "26 min"
+                  }
+                 ],
+                 "progress": null
+                }
+               }
+              ]
+             }
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 31 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MzElfDMxfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 30 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MzAlfDMwfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 29 (204 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjklfDI5fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 28 (220 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjglfDI4fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 27 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjclfDI3fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 26 (205 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjYlfDI2fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 25 (170 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjUlfDI1fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 24 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjQlfDI0fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 23 (207 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjMlfDIzfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 22 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjIlfDIyfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 21 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjElfDIxfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 20 (215 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MjAlfDIwfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 19 (193 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTklfDE5fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 18 (200 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8c2Vpem9lbi0xOCV8c2Vpem9lbi0xOHxiJTF8JQ=="
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 17 (200 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTclfDE3fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 16 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTYlfDE2fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 15 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTUlfDE1fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 14 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTQlfDE0fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 13 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTMlfDEzfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 12 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTIlfDEyfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 11 (200 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTElfDExfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 10 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MTAlfDEwfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 9 (158 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDklfDA5fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 8 (174 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDglfDA4fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 7 (194 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDclfDA3fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 6 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDYlfDA2fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 5 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDUlfDA1fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 4 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDQlfDA0fGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 3 (195 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDMlfDAzfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 2 (175 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDIlfDAyfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Seizoen 1 (90 afleveringen)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8MDElfDAxfGIlMXwl"
+            }
+           ]
+          },
+          {
+           "title": "Bloopers seizoen 32 (1 aflevering)",
+           "components": [
+            {
+             "__typename": "LazyTileList",
+             "title": null,
+             "listId": "$byUzNXxvJTJ8byU0N3xvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxiYW5uZXIlfGJhbm5lciV8Ymxvb3BlcnMtczMyJXxibG9vcGVycy1zMzJ8YiUxfCU="
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "title": "Podcast: Welkom Thuis",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": null,
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfY29weXxiJTB8JQ==",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "broadcast-eb0bde4b-eeb3-471a-b27f-07a4e5a41d9e"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtODIxNGI1ZWQtMTI4Ni00ZWUyLWE4ZDMtNDdiYmI0NGU0NGZkfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfY29weXxiJTB8JXwxXy04LWFsbGVzLW5hYXItZGUtc2hpdC1ob2V2ZS0l",
+             "title": "#8 Alles naar de shit-hoeve!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/3/-8-alles-naar-de-shit-hoeve-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/05/a87f35ba-dfe7-4af5-b0a1-0a8a0dbebf8d.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtMTAyNWI0YTUtYjhlZC00YWRjLTljMmYtNWJhMzVlMjhhMWVmfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfY29weXxiJTB8JXwyXy03LW5ld2JpZS1tYXVyYW5lLXdvcnN0ZWx0LW1ldC1lZW4tZmFtaWxpZS10cmF1bWEl",
+             "title": "#7 Newbie Maurane worstelt met een Familie-trauma",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/3/-7-newbie-maurane-worstelt-met-een-familie-trauma/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/15/8ef26aa7-4fc4-4232-a85b-1644a48a97c1.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtZDU5OGNiYTQtOTM1NC00OTY1LWExN2EtOGRlNjVjNmI4NDYyfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfY29weXxiJTB8JXwzXy02LS1lZW4td2Vsa29tLXRodWlzLW1ldC1zZWl6b2Vuc2ZpbmFsZS12aWJlcy0l",
+             "title": "#6  Een Welkom Thuis met seizoensfinale-vibes!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/3/-6--een-welkom-thuis-met-seizoensfinale-vibes-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/08/ad4b28fa-3e51-4ab7-8356-7d695e96095a.jpg"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "PodcastEpisodeTile",
+             "componentId": "$byUyNnxwb2RjYXN0RXBpc29kZXxicm9hZGNhc3QtZWIwYmRlNGItZWViMy00NzFhLWIyN2YtMDdhNGU1YTQxZDllfHx8fHx8cG9kY2FzdEVwaXNvZGV8fHx8byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfY29weXxiJTB8JXw0Xy01LW1vb3JhLXZhbmRlci12ZWtlbi13aWwtaGFhci1rYW1lci10ZXJ1Zy0l",
+             "title": "#5 Moora Vander Veken wil haar kamer terug!",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/w/welkom-thuis/3/-5-moora-vander-veken-wil-haar-kamer-terug-/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/01/14db8a46-08db-4404-93e9-341e35b96576.jpg"
+             }
+            }
+           }
+          ]
+         }
+        },
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Meer Thuis-podcasts",
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXIlfGxpc3RfOTkzNTQ3MjQxfGIlMHwl",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": false,
+           "endCursor": "program-e1414bdd-8591-49ef-947e-e58aedaba724"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "PodcastProgramTile",
+             "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWUxNDE0YmRkLTg1OTEtNDllZi05NDdlLWU1OGFlZGFiYTcyNHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyJXxsaXN0Xzk5MzU0NzI0MXxiJTB8JXwxX2RlLXRodWlzcGxvZWcl",
+             "title": "De Thuisploeg",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/podcasts/vrt1/d/de-thuisploeg/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2023/08/16/6d3e39b0-3c3d-11ee-91d7-02b7b76bf47f.png"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Bloopers",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": null,
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxsaXN0XzQ5MjU3NTc2OSV8bGlzdF80OTI1NzU3Njl8YiUwfCU=",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1779798300982"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3OTAyNjAyMDE2NzJ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8bGlzdF80OTI1NzU3NjklfGxpc3RfNDkyNTc1NzY5fGIlMHwlfDFfdGh1aXMtYmxvb3BlcnMtc2VwdGVtYmVyJQ==",
+             "title": "Bloopers september 2026",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/bloopers-s32/thuis-bloopers-september/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/09/25/4c944568-20e7-4843-b6ff-d1fb21761737.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Thuis",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "2 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3ODY5NTA2MDE0ODl8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8bGlzdF80OTI1NzU3NjklfGxpc3RfNDkyNTc1NzY5fGIlMHwlfDJfdGh1aXMtYmxvb3BlcnMtYmVzdC1vZmYtc2Vpem9lbi0zMSU=",
+             "title": "Beste bloopers van seizoen 31",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/bloopers-s31/thuis-bloopers-best-off-seizoen-31/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/08/17/b9492d5b-15e4-4602-b1a4-5c6b299b06fb.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Bloopers seizoen 31",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "4 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3ODI3NDYxMDIzMzl8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8bGlzdF80OTI1NzU3NjklfGxpc3RfNDkyNTc1NzY5fGIlMHwlfDNfdGh1aXMtYmxvb3BlcnMtanVuaSU=",
+             "title": "Bloopers juni 2026",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/bloopers-s31/thuis-bloopers-juni/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/06/29/d8a710ea-95f3-4dde-a7ce-dba5a3a649d0.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Bloopers seizoen 31",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "4 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3Nzk3OTgzMDA5ODJ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8bGlzdF80OTI1NzU3NjklfGxpc3RfNDkyNTc1NzY5fGIlMHwlfDRfdGh1aXMtYmxvb3BlcnMtbWVpJQ==",
+             "title": "Bloopers mei 2026",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/bloopers-s31/thuis-bloopers-mei/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/06/01/3b0ffba4-5c60-476a-a5b1-81ad8035b170.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Bloopers seizoen 31",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "4 min"
+              }
+             ],
+             "progress": null
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Achter de schermen",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": null,
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMTkzMTMzNzQyOSV8bGlzdHxiJTB8JQ==",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1762955403629"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3NjU4OTY2MzAzODl8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzE5MzEzMzc0MjklfGxpc3R8YiUwfCV8MV90aHVpcy1wcmV0LW9wLWRlLXNldC1hcG9sbG9uaWEtZW4tcmFmLXpvZWtlbi1jYWRlYXV0amVzJQ==",
+             "title": "Pret op de set: Raf en Apollonia gaan kerstshoppen in het Thuis-archief",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/extra-s/thuis-pret-op-de-set-apollonia-en-raf-zoeken-cadeautjes/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/12/23/a5a9fc34-24a1-4a1e-98d6-9c1b22cfb383.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Extra's",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "11 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3NjMwMjE3MDExNTZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzE5MzEzMzc0MjklfGxpc3R8YiUwfCV8Ml9zbmFjay1hdHRhY2stczFhMSU=",
+             "title": "Dara en Kobe van Thuis vechten over kroketten",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/snack-attack/1/snack-attack-s1a1/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/11/18/4642cf41-5399-42f3-bafc-a5db68797faa.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Snack Attack",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "9 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3NjI5NTU0MDI4MDF8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzE5MzEzMzc0MjklfGxpc3R8YiUwfCV8M190aHVpcy1hbHMtZGUtbXVyZW4ta29uZGVuLXByYXRlbi1qZXJvZW4tbGVuYWVydHMl",
+             "title": "Als de muren konden praten: Jeroen Lenaerts",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/extra-s/thuis-als-de-muren-konden-praten-jeroen-lenaerts/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/11/13/3664f4b2-343a-42e4-b90d-c6f7d002ce75.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Extra's",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "26 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE3NjI5NTU0MDM2Mjl8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzE5MzEzMzc0MjklfGxpc3R8YiUwfCV8NF90aHVpcy1hbHMtZGUtbXVyZW4ta29uZGVuLXByYXRlbi1sYXVyZW4tbXVsbGVyJQ==",
+             "title": "Als de muren konden praten: Lauren Müller",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/extra-s/thuis-als-de-muren-konden-praten-lauren-muller/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/11/13/1e7f1096-5756-4227-8961-c0fd1c852af4.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Extra's",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "34 min"
+              }
+             ],
+             "progress": null
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Haal Thuis in huis",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Haal Thuis in huis",
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfOTI4MDMxNTIzJXxsaXN0Xzc4NTgyMDExMl9jb3B5fGIlMHwl",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": false,
+           "endCursor": "ardkewtRsVZAsM53aqdKkHQEFTg="
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzkyODAzMTUyM19saXN0Xzc4NTgyMDExMl9jb3B5fDFfaXRlbTB8YmFubmVyfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzkyODAzMTUyMyV8bGlzdF83ODU4MjAxMTJfY29weXxiJTB8JXwxX2l0ZW0wJQ==",
+             "title": "Thuis-deurmat",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.mistert.be/Thuis-Fococo-mat-Bij-jou-voel-ik-me-thuis"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/10/41015546-94e3-4d97-921a-2acc700e9ccc.jpg?gravity=58p%2C78p"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzkyODAzMTUyM19saXN0Xzc4NTgyMDExMl9jb3B5fDJfaXRlbTF8YmFubmVyfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzkyODAzMTUyMyV8bGlzdF83ODU4MjAxMTJfY29weXxiJTB8JXwyX2l0ZW0xJQ==",
+             "title": "T-shirt, sweater of badjas",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.mistert.be/Thuis"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2025/09/08/ffdbc39e-b667-4dc2-aee7-585c314388fc.jpg?gravity=50p%2C50p"
+             }
+            }
+           },
+           {
+            "node": {
+             "__typename": "BannerTile",
+             "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51L2Etei90aHVpcy5tb2RlbC5qc29ufHBhcnN5c19jb250YWluZXJfY29udGFpbmVyXzkyODAzMTUyM19saXN0Xzc4NTgyMDExMl9jb3B5fDNfaXRlbTJ8YmFubmVyfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzkyODAzMTUyMyV8bGlzdF83ODU4MjAxMTJfY29weXxiJTB8JXwzX2l0ZW0yJQ==",
+             "title": "Suske en Baby-spullen",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "https://www.mistert.be/Thuis"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2024/12/12/fbf850b2-e2df-4d78-a733-38265d34ca96.jpg?gravity=48p%2C42p"
+             }
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "#throwbackthuis",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "#ThrowbackThuis",
+         "listId": "$byUzNXxvJTJ8byU0N3x0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98Y29udGFpbmVyJXxjb250YWluZXJfMjA5MTI3MDU2OCV8bGlzdF8xMjk2MDY4OTAzfGIlMHwl",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1662126747654"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE2OTQ0MzYzMDk2OTJ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzIwOTEyNzA1NjglfGxpc3RfMTI5NjA2ODkwM3xiJTB8JXwxX3RodWlzLWxlZ2VuZGFyaXNjaGUtc2NlbmVzLWEyNiU=",
+             "title": "Nancy kiepert een emmer water over Marianne uit",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/legendarische-scenes/thuis-legendarische-scenes-a26/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2023/09/11/cf0e1889-50a4-11ee-91d7-02b7b76bf47f.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Legendarische scènes",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "2 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE2NzU3NzcxODYzMTJ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzIwOTEyNzA1NjglfGxpc3RfMTI5NjA2ODkwM3xiJTB8JXwyX3RodWlzLWxlZ2VuZGFyaXNjaGUtc2NlbmVzLWEyNSU=",
+             "title": "Véronique verdwijnt in de woestijn",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/legendarische-scenes/thuis-legendarische-scenes-a25/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/02/20/b4d53931-d5b7-454e-9b45-e18cc63a6412.jpg?gravity=50p%2C50p"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Legendarische scènes",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "3 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE2NzIyMzM0MjUyMDN8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzIwOTEyNzA1NjglfGxpc3RfMTI5NjA2ODkwM3xiJTB8JXwzX3RodWlzLWxlZ2VuZGFyaXNjaGUtc2NlbmVzLWEyNCU=",
+             "title": "Viv en Lowie gaan in tranen uit elkaar",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/legendarische-scenes/thuis-legendarische-scenes-a24/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2022/12/20/9103226c-8064-11ed-b07d-02b7b76bf47f.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Legendarische scènes",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "3 min"
+              }
+             ],
+             "progress": null
+            }
+           },
+           {
+            "node": {
+             "__typename": "EpisodeTile",
+             "componentId": "$byUyNnxlcGlzb2RlfDE2NjIxMjY3NDc2NTR8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byUyfG8lNDd8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfGNvbnRhaW5lciV8Y29udGFpbmVyXzIwOTEyNzA1NjglfGxpc3RfMTI5NjA2ODkwM3xiJTB8JXw0X3RodWlzLWxlZ2VuZGFyaXNjaGUtc2NlbmVzLWEyMyU=",
+             "title": "Olivia protesteert tegen huwelijk Bob en Christine",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/thuis/legendarische-scenes/thuis-legendarische-scenes-a23/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2022/09/05/e061e4e1-2ce8-11ed-b07d-02b7b76bf47f.jpg"
+             },
+             "description": null,
+             "available": true,
+             "primaryMeta": [
+              {
+               "value": "Legendarische scènes",
+               "shortValue": null
+              }
+             ],
+             "statusMeta": [
+              {
+               "value": "2 min"
+              }
+             ],
+             "progress": null
+            }
+           }
+          ]
+         }
+        }
+       ]
+      },
+      {
+       "title": "Aanbevolen",
+       "components": [
+        {
+         "__typename": "PaginatedTileList",
+         "title": "Moet je nu zien",
+         "listId": "$byU1Nnx0JVZpZGVvUHJvZ3JhbVBhZ2UlL2Etei90aHVpcy98bW9ldGplbnV6aWVuLXByb2dyYW0tcmVjb21tZW5kZXJ8bGl2ZS92cnRtYXgvbW9ldGplbnV6aWVufHByb2dyYW18c2xpZGVyJQ==",
+         "paginatedItems": {
+          "pageInfo": {
+           "hasNextPage": true,
+           "endCursor": "1487952624830"
+          },
+          "edges": [
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2OTIwMDY4ODV8fHx8fHxwcm9ncmFtfHx8fG8lNTZ8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfG1vZXRqZW51emllbi1wcm9ncmFtLXJlY29tbWVuZGVyfGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnxwcm9ncmFtfHNsaWRlciV8MTc5MDY5MjAwNjg4NSU=",
+             "title": "Devil in disguise",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/devil-in-disguise/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/09/29/f9104fd7-c246-4303-91ce-242ec4b1ed8f.jpg"
+             },
+             "description": "Wanneer een tiener verdwijnt, wordt duidelijk dat veel jonge mannen en jongens zijn verdwenen door toedoen van John Wayne Gacy."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fHx8fHxwcm9ncmFtfHx8fG8lNTZ8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfG1vZXRqZW51emllbi1wcm9ncmFtLXJlY29tbWVuZGVyfGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnxwcm9ncmFtfHNsaWRlciV8MTc5MTIwNDQ5Njc1NCU=",
+             "title": "F*ck you, flik",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/f-ck-you-flik/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+             },
+             "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE3OTE0NjA1MjU5MTB8fHx8fHxwcm9ncmFtfHx8fG8lNTZ8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfG1vZXRqZW51emllbi1wcm9ncmFtLXJlY29tbWVuZGVyfGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnxwcm9ncmFtfHNsaWRlciV8MTc5MTQ2MDUyNTkxMCU=",
+             "title": "Amadeus",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/amadeus0/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/15/7f0bc172-7b16-453c-909d-66c0073f4309.png"
+             },
+             "description": "Wanneer de jonge Mozart naar Wenen trekt om zijn geluk te beproeven, maakt hij kennis met de gerespecteerde hofcomponist Antonio Salieri."
+            }
+           },
+           {
+            "node": {
+             "__typename": "ProgramTile",
+             "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MjQ4MzB8fHx8fHxwcm9ncmFtfHx8fG8lNTZ8dCVWaWRlb1Byb2dyYW1QYWdlJS9hLXovdGh1aXMvfG1vZXRqZW51emllbi1wcm9ncmFtLXJlY29tbWVuZGVyfGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnxwcm9ncmFtfHNsaWRlciV8MTQ4Nzk1MjYyNDgzMCU=",
+             "title": "VRT NWS Pano",
+             "action": {
+              "__typename": "LinkAction",
+              "link": "/vrtmax/a-z/pano/"
+             },
+             "image": {
+              "templateUrl": "https://images.vrt.be/orig/2026/10/16/91f8ffba-0a47-47bd-9112-adf633970e9b.jpg"
+             },
+             "description": "VRT NWS Pano brengt diepgravende journalistiek op televisie en online."
+            }
+           }
+          ]
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "header": {
+    "description": null,
+    "image": {
+     "templateUrl": "https://images.vrt.be/orig/2025/08/28/f6a2f188-fb53-430a-b773-5f9dce863ece.jpg?gravity=49p%2C0p"
+    },
+    "actionItems": [
+     {
+      "title": "Kijk nu",
+      "action": {
+       "__typename": "LinkAction",
+       "link": "/vrtmax/a-z/thuis/32/thuis-s32a6149/"
+      }
+     },
+     {
+      "title": "Mijn lijst",
+      "action": {
+       "__typename": "FavoriteAction",
+       "id": "o%FavoriteAction|1459955889901|video-program|btn|b%0%",
+       "favorite": false
+      }
+     },
+     {
+      "title": "Delen",
+      "action": {
+       "__typename": "ShareAction"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

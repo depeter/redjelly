@@ -1,0 +1,22 @@
+fragment tile on Tile {
+  __typename
+  ... on ITile {
+    componentId
+    title
+    action { __typename ... on LinkAction { link } }
+    image { templateUrl }
+  }
+  ... on EpisodeTile {
+    description
+    available
+    primaryMeta { value shortValue }
+    statusMeta { value }
+    progress { durationInSeconds progressInSeconds completed }
+  }
+  ... on ProgramTile { description }
+  ... on LivestreamTile {
+    description
+    status { text { small default } }
+    progress { durationInSeconds progressInSeconds completed }
+  }
+}

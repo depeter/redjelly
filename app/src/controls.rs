@@ -28,6 +28,9 @@ pub const SEEK_BAR: i32 = 10;
 /// The button row, left to right.
 const ROW: [i32; 10] = [STOP, PREVIOUS, REWIND, PLAY, FORWARD, NEXT, SUBTITLES, AUDIO, VOLUME, FULLSCREEN];
 
+/// Hide the cursor once the mouse has rested this long.
+pub const POINTER_IDLE: Duration = Duration::from_secs(2);
+
 /// After Esc hides the bar, pointer events this soon are side effects.
 const HIDE_GRACE: Duration = Duration::from_millis(500);
 
@@ -89,6 +92,8 @@ impl App {
         if self.osd_hidden_at.get().is_some_and(|t| t.elapsed() < HIDE_GRACE) {
             return;
         }
+        self.pointer_at.set(Instant::now());
+        self.ui().set_player_pointer_idle(false);
         self.show_osd();
     }
 
@@ -154,6 +159,7 @@ impl App {
                 self.release_controls();
                 self.handle_player(Action::SubtitlePanel);
             }
+            AUDIO if self.web_active() => self.toast("VRT's player has one audio track"),
             AUDIO => {
                 self.release_controls();
                 self.open_audio_panel();
@@ -182,12 +188,18 @@ impl App {
     }
 
     pub fn seek_to_fraction(&self, fraction: f32) {
+        if self.web_active() {
+            return self.web_seek_fraction(fraction);
+        }
         self.show_osd();
         let pct = (f64::from(fraction) * 100.0).clamp(0.0, 100.0);
         let _ = self.player.mpv().command("seek", &[&pct.to_string(), "absolute-percent"]);
     }
 
     pub fn set_volume_fraction(&self, fraction: f32) {
+        if self.web_active() {
+            return self.web_set_volume(fraction);
+        }
         self.show_osd();
         let mpv = self.player.mpv();
         let _ = mpv.set_property("mute", false);

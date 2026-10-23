@@ -30,6 +30,7 @@ pub struct Config {
     pub appearance: AppearanceConfig,
     pub update: UpdateConfig,
     pub discover: DiscoverConfig,
+    pub vrt: VrtConfig,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -355,6 +356,16 @@ pub struct DiscoverConfig {
     pub region: Option<String>,
     /// The wizard's last answers, offered again next time.
     pub last: DiscoverFilters,
+}
+
+/// VRT MAX (Belgian public broadcaster). Off by default; the password
+/// lives in the credential store.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(default)]
+pub struct VrtConfig {
+    pub enabled: bool,
+    /// VRT account e-mail, for signing VRT's web player in.
+    pub username: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]

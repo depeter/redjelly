@@ -120,6 +120,7 @@ impl App {
             Source::Discover { .. } | Source::DiscoverResults | Source::SeerrTitle { .. } | Source::SeasonPicker { .. } => {
                 return self.open_discover(source, placement);
             }
+            _ if source.is_vrt() => return self.open_vrt(source, placement),
             _ => {}
         }
         let Some(client) = self.browse_client() else {
@@ -130,12 +131,25 @@ impl App {
         let prefs = self.config.borrow().track_preferences().languages;
         let url = self.config.borrow().server.url.clone().unwrap_or_default();
         let discover = self.config.borrow().discover.seerr_url.is_some();
-        let seerr_rows = if source == Source::Home { self.home_seerr_rows() } else { None };
+        let vrt = self.vrt_enabled();
+        let (seerr_rows, vrt_rows) =
+            if source == Source::Home { (self.home_seerr_rows(), self.home_vrt_rows()) } else { (None, None) };
+        let extra_rows = async move {
+            async fn some(f: Option<impl Future<Output = Vec<screens::RowContent>>>) -> Vec<screens::RowContent> {
+                match f {
+                    Some(f) => f.await,
+                    None => Vec::new(),
+                }
+            }
+            let (mut vrt, seerr) = tokio::join!(some(vrt_rows), some(seerr_rows));
+            vrt.extend(seerr);
+            vrt
+        };
         let src = source.clone();
         self.load(source, placement, async move {
             match &src {
                 Source::Users => screens::users(&client, &url).await,
-                Source::Home => screens::home(&client, discover, seerr_rows).await,
+                Source::Home => screens::home(&client, discover, vrt, extra_rows).await,
                 Source::Library { parent_id, title, collection_type } => {
                     screens::library(&client, parent_id, title, collection_type.as_deref(), columns).await
                 }
@@ -434,7 +448,13 @@ impl App {
                 // Grids keep the column; other rows return to where you were.
                 if s.paging.is_some() || matches!(
                     s.source,
-                    Source::Library { .. } | Source::Person { .. } | Source::DiscoverResults | Source::Discover { .. } | Source::SeasonPicker { .. }
+                    Source::Library { .. }
+                        | Source::Person { .. }
+                        | Source::DiscoverResults
+                        | Source::Discover { .. }
+                        | Source::SeasonPicker { .. }
+                        | Source::VrtList { .. }
+                        | Source::VrtGuide { .. }
                 ) {
                     let col = s.cols[r];
                     s.cols[s.focus_row] = col;
@@ -484,6 +504,10 @@ impl App {
             Target::Shutdown => self.shutdown(),
             Target::Discover(a) => self.discover_action(a),
             Target::Trailer { item_id, local, remote, title } => self.play_trailer(item_id, local, remote, title),
+            Target::VrtLive { slug } => self.vrt_live(&slug),
+            Target::VrtPlay { path, title } => self.vrt_play(&path, title),
+            Target::VrtFavorite { id, on } => self.vrt_favorite(id, on),
+            Target::VrtUnavailable(why) => self.toast(why),
         }
     }
 
@@ -529,7 +553,7 @@ impl App {
         let term = {
             let mut nav = self.nav.borrow_mut();
             let Some(s) = nav.last_mut() else { return };
-            let Source::Search { term } = &mut s.source else { return };
+            let Some(term) = s.source.search_term_mut() else { return };
             match ch {
                 Some(c) => term.push(c),
                 None if term.is_empty() => {
@@ -568,6 +592,9 @@ impl App {
         if let PageSource::Discover(cursor) = &paging.source {
             return self.discover_more(generation, (**cursor).clone());
         }
+        if let PageSource::Vrt { list_id, cursor } = &paging.source {
+            return self.vrt_more(generation, list_id.clone(), cursor.clone());
+        }
         let Some(client) = self.client.borrow().clone() else { return };
         let p = paging.clone();
         self.spawn_ui(async move { screens::library_page(&client, &p).await }, move |app, result| match result {
@@ -593,20 +620,21 @@ impl App {
             let Some(paging) = s.paging.as_mut() else { return };
             paging.loaded += cards.len() as u32;
             let columns = paging.columns.max(1);
+            let style = paging.source.style();
             for card in cards {
                 let full = s.cards.last().is_none_or(|m| m.row_count() >= columns);
                 if full {
                     let model = Rc::new(VecModel::default());
                     s.rows.push(Row {
                         title: Default::default(),
-                        style: layout::STYLE_POSTER,
+                        style,
                         cards: ModelRc::from(model.clone()),
                         scroll: 0,
                         pinned: 0,
                     });
                     s.cards.push(model);
                     s.targets.push(Vec::new());
-                    s.shapes.push((layout::STYLE_POSTER, false));
+                    s.shapes.push((style, false));
                     s.cols.push(0);
                 }
                 let r = s.cards.len() - 1;

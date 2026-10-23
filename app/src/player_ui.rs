@@ -483,6 +483,9 @@ impl App {
                 self.release_controls();
             }
         }
+        if now.duration_since(self.pointer_at.get()) >= crate::controls::POINTER_IDLE {
+            ui.set_player_pointer_idle(true);
+        }
         self.update_controls();
         self.raise_subtitles(ui.get_player_osd() || paused);
         if self.stats.get() {
@@ -511,6 +514,9 @@ impl App {
     }
 
     pub fn handle_player(&self, action: Action) {
+        if self.web_active() {
+            return self.web_handle(action);
+        }
         let ui = self.ui();
         // Esc in two steps: first hide the bar, then leave. (While paused
         // the bar can't hide, so Esc leaves straight away.)
@@ -633,7 +639,7 @@ impl App {
 
     /// Media keys / SMTC. Only meaningful while something is playing.
     pub fn media_key(&self, action: Action) {
-        if self.session.borrow().is_some() {
+        if self.session.borrow().is_some() || self.web_active() {
             self.handle_player(action);
         }
     }

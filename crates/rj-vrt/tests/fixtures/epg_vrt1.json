@@ -1,0 +1,1101 @@
+{
+ "data": {
+  "page": {
+   "__typename": "ElectronicProgramGuidePage",
+   "current": {
+    "tile": {
+     "__typename": "LivestreamTile",
+     "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2Mzk2NTUxMzk1MzN8fHx8fHxsaXZlc3RyZWFtfHx8fHwl",
+     "title": "Switch",
+     "action": {
+      "__typename": "LinkAction",
+      "link": "/vrtmax/livestream/video/vrt1/"
+     },
+     "image": {
+      "templateUrl": "https://screenshots.vrt.be/orig/vrtnu-static/screenshots/een_auto.jpg"
+     },
+     "description": "Wie wint de prijzenpot op vrijdag 23 oktober?",
+     "status": {
+      "text": {
+       "small": "19:48 - 20:22",
+       "default": "19:48 tot 20:22"
+      }
+     },
+     "progress": {
+      "durationInSeconds": 2019,
+      "progressInSeconds": 38,
+      "completed": false
+     }
+    }
+   },
+   "previous": {
+    "listId": "$byUzMXxzY2hlZHVsZVByZXZpb3VzfE84fDIwMjYtMTAtMjN8fHwl",
+    "paginatedItems": {
+     "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "o%0|n%4|n%0|o#349#0O8#0d#31792774800040#0#0#3%"
+     },
+     "edges": [
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MjgwMDgwMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Mr. Magoo",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/mr-magoo/2/mr-magoo-apenstreken/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/12/07/def1c550-ccb1-4fd7-9d2f-9cb50bbfc506.jpg"
+        },
+        "description": "Apenstreken",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 2",
+          "shortValue": "S2"
+         },
+         {
+          "value": "Afl.61",
+          "shortValue": "Afl.61"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "8 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3Mjg0NjU3MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Monster shaker",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/monster-shaker/1/monster-shaker-s1a51/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2025/11/23/22c4acea-77da-4770-8402-d22287801aba.jpg"
+        },
+        "description": "De Verjaardagsschat",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.51",
+          "shortValue": "Afl.51"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "22 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3Mjk4MDYwMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Lou",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/lou/1/lou-s1a24/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/01/23/ff49fb58-ba07-11ee-b483-02b7b76bf47f.jpg"
+        },
+        "description": "Op de verkeerde piste",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.24",
+          "shortValue": "Afl.24"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "13 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzA1NTQyODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Dodo",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/dodo/1/dodo-s1a6/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/01/27/167fa533-bc9f-11ee-b483-02b7b76bf47f.jpg"
+        },
+        "description": "Aflevering 6",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.6",
+          "shortValue": "Afl.6"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "11 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzExODI1NjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Zotte dieren",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/zotte-dieren/1/zotte-dieren-s1a8/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2023/06/17/1ef0898f-0c93-11ee-91d7-02b7b76bf47f.jpg"
+        },
+        "description": "Dierenmode",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.8",
+          "shortValue": "Afl.8"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "6 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzE1Mzc4ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Karrewiet met VGT",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/karrewiet-met-vgt/2026/karrewiet-vgt-d20261022/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/22/a44f1a78-618f-48ce-be15-ca05751da5dd.jpg"
+        },
+        "description": "Het nieuws van 22 oktober met Vlaamse Gebarentaal",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Donderdag 22 oktober",
+          "shortValue": "Do 22/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "9 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzIwNzYwODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "HALLO KROKET!",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/hallo-kroket/2/hallo-kroket-d20261022-a211/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/22/eba7594e-b128-4191-8262-94867311abcd.jpg"
+        },
+        "description": "Mag je met een ezel in bad gaan?!",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Donderdag 22 oktober",
+          "shortValue": "Do 22/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "15 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzI5ODE1MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Grizzy & the Lemmings",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/grizzy---the-lemmings/3/grizzy---the-lemmings-s3a60-jelly-world/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2025/08/18/651826e0-5037-4eaa-98da-a959b2deb096.jpg"
+        },
+        "description": "Drilwereld",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 3",
+          "shortValue": "S3"
+         },
+         {
+          "value": "Afl.60",
+          "shortValue": "Afl.60"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "7 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzM0MjY1NjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Ket & Doc",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/ket---doc/1/ket---doc-s1a5/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2020/02/12/ec140e13-4d93-11ea-aae0-02b7b76bf47f.jpg"
+        },
+        "description": "Bertha en de Wolfram",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.5",
+          "shortValue": "Afl.5"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "16 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzQzNzk3MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Skate",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/hilly-skate/3-compilatie-/hilly-skate-s3-compilatie-a1/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/09/05/80fde7c9-fcbe-44e8-97c4-d33fc64d358c.jpg"
+        },
+        "description": "Het skatepark van de vrienden sluit voor twee maanden",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Otis-Skate compilatie",
+          "shortValue": null
+         },
+         {
+          "value": "Afl.1",
+          "shortValue": "Afl.1"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "21 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzU2MDQ2ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "De camping",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/de-camping/1/de-camping-s1a21/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/07/05/dc47274b-3a50-11ef-92ff-02b7b76bf47f.jpg"
+        },
+        "description": "Een nieuwkomer",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.21",
+          "shortValue": "Afl.21"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "6 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzU5NzA3NjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Hoe moeilijk kan het zijn?",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/hoe-moeilijk-kan-het-zijn-/2/hoe-moeilijk-kan-het-zijn--s2a11/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2025/09/26/d3471757-0a00-47d0-8fd3-3fb306b4bb5b.jpg"
+        },
+        "description": "Een game maken in 1 dag",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 2",
+          "shortValue": "S2"
+         },
+         {
+          "value": "Afl.11",
+          "shortValue": "Afl.11"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "12 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3MzY3MDA2ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "De Raad van Soekie",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/de-raad-van-soekie/1/de-raad-van-soekie-s1a1/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2024/03/06/6679c77b-db44-11ee-b483-02b7b76bf47f.jpg"
+        },
+        "description": "Pedro aan de macht",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.1",
+          "shortValue": "Afl.1"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "15 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3Mzc1OTUwNDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "De Hoppers",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/de-hoppers/2/de-hoppers-s2a4/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2021/11/18/e2b2a874-4852-11ec-b07d-02b7b76bf47f.jpg?gravity=50p%2C50p"
+        },
+        "description": "Kapitein Frigo",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 2",
+          "shortValue": "S2"
+         },
+         {
+          "value": "Afl.4",
+          "shortValue": "Afl.4"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "16 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3Mzg1Nzk2MDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Sander tegen de tijd",
+        "action": null,
+        "image": null,
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "191 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTAwNTcyMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Dagelijkse kost",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/dagelijkse-kost/17/dagelijkse-kost-d20261022/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/06/cc111a56-230b-4751-bcf7-c05c6f80cb40.jpg"
+        },
+        "description": "Wilde eend met gebakken appel, rode kool en kroketjes.",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Donderdag 22 oktober",
+          "shortValue": "Do 22/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "16 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTEyNTk0MDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Blokken",
+        "action": null,
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/04/20/1cbfa8c3-63d3-4031-b079-676176750066.jpg"
+        },
+        "description": "Aflevering 6808",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "2025-2026",
+          "shortValue": null
+         },
+         {
+          "value": "Afl.6808",
+          "shortValue": "Afl.6808"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "29 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTMyMDAwMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "VRT NWS journaal",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/vrt-nws-journaal/2026/vrt-nws-journaal-vrt-nws-journaal-13u-20261023/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/08/31/075df53c-6d3d-444f-a19b-ca67c0569a82.jpg"
+        },
+        "description": "VRT NWS journaal 13u",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "30 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTUwNDEyODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Het weer",
+        "action": null,
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/464d2249-1d2f-4004-b495-ec994569c060.jpg"
+        },
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "4 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTU1MzMzMjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Switch",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/switch/18/switch-d20261022/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/6120c104-c95d-4de6-8c4e-b83864518be6.jpg"
+        },
+        "description": "Wie wint de prijzenpot op donderdag 22 oktober?",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Donderdag 22 oktober",
+          "shortValue": "Do 22/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "33 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NTc3Mjc2ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Sporza: tennis",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/sporza--tennis/2026/sporza--tennis-d20261023-s2026-european-open--kwartfinales--deel-1-/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/08/dea655da-30a2-43fb-92d9-1dfe1dd37f40.jpg"
+        },
+        "description": "European Open: kwartfinales (deel 1)",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "225 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NzEyNDE2MDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Het weer",
+        "action": null,
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/1b146fd0-3eff-4ef2-8dab-d3d2e1c6dd19.jpg"
+        },
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "3 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NzE2ODIxMjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Dagelijkse kost",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/dagelijkse-kost/17/dagelijkse-kost-d20261023/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/06/0bf516a7-2b16-41e7-a841-abce206b1b4a.jpg"
+        },
+        "description": "Palak paneer met pilav",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "16 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NzI4NDM1MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Blokken",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/blokken/2026-2027/blokken-d20261023/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/08/19/dff47900-99a9-4413-a349-3c7d9ea143fd.jpg"
+        },
+        "description": "Aflevering 6883",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "29 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3NzQ4MDAwNDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "VRT NWS journaal",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/vrt-nws-journaal/2026/vrt-nws-journaal-vrt-nws-journaal-19u-20261023/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/09/07/41c86537-cfbe-44f9-8bbb-a4bbfdadb17a.jpg"
+        },
+        "description": "VRT NWS journaal 19u",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "45 min"
+         }
+        ],
+        "progress": null
+       }
+      }
+     ]
+    }
+   },
+   "next": {
+    "listId": "$byUzMXxzY2hlZHVsZU5leHR8Tzh8MjAyNi0xMC0yM3x8fCU=",
+    "paginatedItems": {
+     "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "o%0|n%4|n%0|o#349#0O8#0d#31792794032080#0#0#3%"
+     },
+     "edges": [
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3Nzk4NjY4MDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Het weer",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/het-weer/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/f069bdaa-ce94-44d2-aac0-e494403ff1af.jpg"
+        },
+        "description": "Het weerbericht van vrijdag 23 oktober",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "3 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3ODAzMjA0NDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Thuis",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/thuis/32/thuis-s32a6149/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/65707a6d-fdf9-4168-81fb-2f209b579af2.jpg"
+        },
+        "description": "Cody neemt een zware beslissing",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "27 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3ODIwNjc5MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Cargo",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/event/byUwfG4lNHxuJTB8byMzNDkjME84IzBkIzMxNzkyNzgyMDY3OTIwIzAjMCMzJQ==/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2022/02/22/438d67a1-93ca-11ec-b07d-02b7b76bf47f.jpg?gravity=48p%2C1p"
+        },
+        "description": "Drie broers richten zich tot de criminaliteit om hun familiebedrijf te redden",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 2017",
+          "shortValue": "S2017"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "88 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3ODc1NzUzMjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "VRT NWS journaal",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/vrt-nws-journaal/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/09/07/01337f42-3536-46f8-868c-11e2dbad6a00.jpg?gravity=50p%2C21p"
+        },
+        "description": "VRT NWS journaal laat",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "15 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3ODg2MjY1MjAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Het weer",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/het-weer/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/f069bdaa-ce94-44d2-aac0-e494403ff1af.jpg"
+        },
+        "description": "Het weerbericht van vrijdag 23 oktober",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "3 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3ODkwMzI4ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "F*ck you, flik",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/f-ck-you-flik/1/f-ck-you-flik-s1a1/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/06/a0b47f11-51e6-4d86-91b2-9e5f34da23e0.jpg"
+        },
+        "description": "Jan Verheyen praat met agenten in geweldssituaties",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Seizoen 1",
+          "shortValue": "S1"
+         },
+         {
+          "value": "Afl.1",
+          "shortValue": "Afl.1"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "42 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTE1NTA2NDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Keno",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/event/byUwfG4lNHxuJTB8byMzNDkjME84IzBkIzMxNzkyNzkxNTUwNjQwIzAjMCMzJQ==/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/6d9fb918-c52c-45b7-895a-77ccee1d851a.jpg"
+        },
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "1 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTE1OTY2NDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Euromillions",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/event/byUwfG4lNHxuJTB8byMzNDkjME84IzBkIzMxNzkyNzkxNTk2NjQwIzAjMCMzJQ==/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/8332e552-3b70-46ad-87c8-5ad68be5392e.jpg"
+        },
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "3 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTE5NzM0ODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Dagelijkse kost",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/dagelijkse-kost/17/dagelijkse-kost-d20261023/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/06/0bf516a7-2b16-41e7-a841-abce206b1b4a.jpg"
+        },
+        "description": "Palak paneer met pilav",
+        "available": true,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "16 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTI5MTcyMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "VRT NWS journaal",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/vrt-nws-journaal/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/09/07/01337f42-3536-46f8-868c-11e2dbad6a00.jpg?gravity=50p%2C21p"
+        },
+        "description": "VRT NWS journaal laat",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "15 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTM4MzYyMDAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Het weer",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/a-z/het-weer/"
+        },
+        "image": {
+         "templateUrl": "https://images.vrt.be/orig/2026/10/05/f069bdaa-ce94-44d2-aac0-e494403ff1af.jpg"
+        },
+        "description": "Het weerbericht van vrijdag 23 oktober",
+        "available": false,
+        "primaryMeta": [
+         {
+          "value": "Vrijdag 23 oktober",
+          "shortValue": "Vr 23/10"
+         }
+        ],
+        "statusMeta": [
+         {
+          "value": "3 min"
+         }
+        ],
+        "progress": null
+       }
+      },
+      {
+       "node": {
+        "__typename": "EpisodeTile",
+        "componentId": "$byUyNnxlcGlzb2RlfG8jMzAjMG4jMzQjMG4jMzAjMG8jMTM0OSMxME84IzEwZCMxMzE3OTI3OTQwMzIwODAjMTAjMTAjMTMjM3xlcGd8fHx8fGVwaXNvZGV8fHx8fCU=",
+        "title": "Sander tegen de tijd",
+        "action": {
+         "__typename": "LinkAction",
+         "link": "/vrtmax/event/byUwfG4lNHxuJTB8byMzNDkjME84IzBkIzMxNzkyNzk0MDMyMDgwIzAjMCMzJQ==/"
+        },
+        "image": null,
+        "description": "",
+        "available": false,
+        "primaryMeta": null,
+        "statusMeta": [
+         {
+          "value": "342 min"
+         }
+        ],
+        "progress": null
+       }
+      }
+     ]
+    }
+   }
+  }
+ }
+}

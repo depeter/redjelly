@@ -55,6 +55,10 @@ pub enum Setting {
     SeerrPassword,
     SeerrRegion,
     SeerrTest,
+    VrtEnabled,
+    VrtUser,
+    VrtPassword,
+    VrtSignIn,
 }
 
 const COUNTDOWNS: &[u32] = &[0, 5, 10, 15, 30];
@@ -122,6 +126,7 @@ impl App {
         let ai = &cfg.ai;
         let scale = cfg.appearance.ui_scale;
         let disc = &cfg.discover;
+        let vrt = &cfg.vrt;
         let seerr_status = self.discover.status.borrow().clone();
         let rows = vec![
             row(
@@ -229,6 +234,25 @@ impl App {
                         "Connection",
                         if seerr_status.is_empty() { "Enter to test".into() } else { seerr_status },
                         Setting::SeerrTest,
+                    ),
+                ],
+            ),
+            row(
+                "VRT MAX (Belgium)",
+                vec![
+                    card("VRT MAX", on_off(vrt.enabled), Setting::VrtEnabled),
+                    card("VRT account e-mail", vrt.username.clone().unwrap_or_else(|| "Not set".into()), Setting::VrtUser),
+                    card("VRT account password", "Change…".into(), Setting::VrtPassword),
+                    card(
+                        "Account",
+                        if !crate::web_player::available() {
+                            "Only used on Windows".into()
+                        } else if self.vrt_caps().signed_in {
+                            "Signed in".into()
+                        } else {
+                            "Enter to sign in".into()
+                        },
+                        Setting::VrtSignIn,
                     ),
                 ],
             ),
@@ -346,6 +370,23 @@ impl App {
                 );
             }
             SeerrTest => return self.test_seerr(),
+            VrtUser => {
+                let cur = self.config.borrow().vrt.username.clone().unwrap_or_default();
+                return self.open_prompt(
+                    s,
+                    "VRT account e-mail",
+                    "The account you use on vrt.be/vrtmax. redjelly signs VRT's player in with it.",
+                    &cur,
+                    false,
+                );
+            }
+            VrtPassword => {
+                if self.config.borrow().vrt.username.is_none() {
+                    return self.toast("Set the VRT account e-mail first");
+                }
+                return self.open_prompt(s, "VRT account password", "Stored in Windows Credential Manager.", "", true);
+            }
+            VrtSignIn => return self.vrt_sign_in_again(),
             EditKeys => return self.open_keymap_editor(),
             ResetKeys => {
                 *self.keymap.borrow_mut() = Keymap::defaults();
@@ -406,6 +447,7 @@ impl App {
                 AiVad => cfg.ai.vad ^= true,
                 UiScale => cfg.appearance.ui_scale = next_in(UI_SCALES, cfg.appearance.ui_scale),
                 AutoUpdate => cfg.update.auto_check ^= true,
+                VrtEnabled => cfg.vrt.enabled ^= true,
                 _ => {}
             }
         }
@@ -433,6 +475,7 @@ impl App {
                 self.discover.reset();
                 self.discover.status.borrow_mut().clear();
             }
+            Setting::VrtUser | Setting::VrtPassword => self.vrt_sign_in_again(),
             Setting::UiScale => self.toast("UI size changes after restarting redjelly"),
             Setting::VideoOutput => self.toast("Video output changes after restarting redjelly"),
             _ => {}
@@ -491,6 +534,12 @@ impl App {
                         return self.show_top();
                     }
                     cfg.discover.region = opt(&value.to_ascii_uppercase());
+                }
+                Setting::VrtUser => cfg.vrt.username = opt(&value),
+                Setting::VrtPassword => {
+                    if let Some(user) = cfg.vrt.username.clone() {
+                        self.tokens.set_secret(&crate::secrets::provider_account("vrtmax", &user), &value);
+                    }
                 }
                 Setting::SeerrPassword => {
                     drop(cfg);

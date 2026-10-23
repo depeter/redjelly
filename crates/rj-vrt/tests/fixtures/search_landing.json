@@ -1,0 +1,1049 @@
+{
+ "data": {
+  "page": {
+   "__typename": "SearchResultPage",
+   "title": "Zoeken",
+   "components": [
+    {
+     "__typename": "StaticTileList",
+     "title": "Zoek in aanbod",
+     "listId": "initialsearchcontenttypes",
+     "items": [
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Docu",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22contenttype%22%2C%22values%22%3A%5B%22docu%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Films",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22contenttype%22%2C%22values%22%3A%5B%22films%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Series",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22contenttype%22%2C%22values%22%3A%5B%22series%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Talkshows",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22contenttype%22%2C%22values%22%3A%5B%22talkshows%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Podcasts",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22contenttype%22%2C%22values%22%3A%5B%22podcast%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Radio",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22entitytype%22%2C%22values%22%3A%5B%22radio-program%22%5D%7D%5D"
+       },
+       "image": null
+      }
+     ]
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Meest bekeken programma's",
+     "listId": "$byUzNXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF9jb3B5X2NvcHl8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": false,
+       "endCursor": "1786708397522"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NTk5NTU4ODk5MDF8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0NTk5NTU4ODk5MDEl",
+         "title": "Thuis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/thuis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/03/27/1c2ecf68-51f3-4c68-a2e8-d4aed5af9e2b.jpg"
+         },
+         "description": "Vlaanderens populairste dagelijkse fictiereeks."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjA5ODc2NTQyNzR8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0NjA5ODc2NTQyNzQl",
+         "title": "FC De Kampioenen",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/fc-de-kampioenen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/02/03/90ae484b-84e9-11ec-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "De belevenissen van een slecht presterende voetbalploeg: FC De Kampioenen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg1NDc2Mzh8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0NjAwMTg1NDc2Mzgl",
+         "title": "VRT NWS journaal",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vrt-nws-journaal/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/fd748d84-c1f2-4358-8322-88430b2e3fcb.jpg"
+         },
+         "description": "De actualiteit van de dag."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MjQ4MzB8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0ODc5NTI2MjQ4MzAl",
+         "title": "VRT NWS Pano",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/pano/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/16/91f8ffba-0a47-47bd-9112-adf633970e9b.jpg"
+         },
+         "description": "VRT NWS Pano brengt diepgravende journalistiek op televisie en online."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MTI1NTg5MDZ8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE3ODY3MTI1NTg5MDYl",
+         "title": "Is 't gelukt?",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/is--t-gelukt-/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/067b099c-de2f-43d5-a322-7edb8d0b25ce.jpg"
+         },
+         "description": "Kunnen de BV's de uitdagingen tot een goed einde brengen?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NzEyMjI4NjcyMTZ8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE1NzEyMjI4NjcyMTYl",
+         "title": "De twaalf",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-twaalf/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/02/3a04be2d-d1b3-4f61-a708-c07afe325c29.jpg"
+         },
+         "description": "Twaalf gewone burgers worden opgeroepen als volksjury van een ophefmakende moordzaak."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTkzNTExNDJ8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0NjAwMTkzNTExNDIl",
+         "title": "Karrewiet",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/karrewiet/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/02/09/3bec6d6d-2422-46e9-b482-b4d1ef9f87d8.jpg"
+         },
+         "description": "Het nieuws van de dag op jouw maat."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE3OTEyMDQ0OTY3NTQl",
+         "title": "F*ck you, flik",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/f-ck-you-flik/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+         },
+         "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg1MTcyMzV8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE0NjAwMTg1MTcyMzUl",
+         "title": "VRT NWS Terzake",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/terzake/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/cbaa6b28-0a76-4df4-b8f4-56adc8f02fba.jpg"
+         },
+         "description": "Kathleen Cools, Annelies Beck en Pieterjan De Smedt kaderen de actualiteit aan de hand van kritische en verhelderende interviews."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgzOTc1MjJ8fCRieVV6Tlh4MEpWTmxZWEpqYUZCaFoyVWxMM3B2Wld0bGJpOThiR2x6ZEY5amIzQjVYMk52Y0hsOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTB8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfY29weV9jb3B5fGIlMHwlfDE3ODY3MDgzOTc1MjIl",
+         "title": "Dwars door de Pyreneeën",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/dwars-door-de-pyreneeen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/fb188522-b430-4333-8d6a-200647f33bca.jpg"
+         },
+         "description": "Arnout Hauben trekt dwars door de Pyreneeën en portretteert in zijn herkenbare, warme stijl het gebergte en de mensen die er leven."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "StaticTileList",
+     "title": "Zoek in genre",
+     "listId": "initialsearchgenres",
+     "items": [
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Audiodescriptie",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22met-audiodescriptie%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Cultuur",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22cultuur%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Entertainment",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22entertainment%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Human interest",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22human-interest%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Humor",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22humor%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Kinderen en jongeren",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22voor-kinderen%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Koken",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22koken%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Levensbeschouwing",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22levensbeschouwing%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Lifestyle",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22lifestyle%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Muziek",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22muziek%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Nieuws en actua",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22nieuws-en-actua%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Nostalgie",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22nostalgie%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Sport",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22sport%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Vlaamse Gebarentaal",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22met-gebarentaal%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ButtonTile",
+       "componentId": null,
+       "title": "Wetenschap en natuur",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22genre%22%2C%22values%22%3A%5B%22wetenschap-en-natuur%22%5D%7D%5D"
+       },
+       "image": null
+      }
+     ]
+    },
+    {
+     "__typename": "StaticTileList",
+     "title": "Zoek in kanaal",
+     "listId": "initialsearchchannels",
+     "items": [
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "VRT 1",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22een%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "VRT CANVAS",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22canvas%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Radio 1",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22radio1%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Radio 2",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22radio2%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Studio Brussel",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22stubru%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "MNM",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22mnm%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Klara",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22klara%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "De Tijdloze",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22de-tijdloze%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Radio Bene",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22radio-2-bene-bene%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Ketnet",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22ketnet%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Ketnet Junior",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22ketnet-jr%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "VRT NWS",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22vrtnws%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "Sporza",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22sporza%22%5D%7D%5D"
+       },
+       "image": null
+      },
+      {
+       "__typename": "ContentTile",
+       "componentId": null,
+       "title": "nws.nws.nws",
+       "action": {
+        "__typename": "LinkAction",
+        "link": "/vrtmax/zoeken/?facets=%5B%7B%22name%22%3A%22brand%22%2C%22values%22%3A%5B%22nws.nws.nws%22%5D%7D%5D"
+       },
+       "image": null
+      }
+     ]
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Kijk live",
+     "listId": "$byUzNXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xNTc3NDE0NzI3X2NvcHl8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": false,
+       "endCursor": "1725024124215"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2Mzk2NTUxMzk1MzN8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDFfdnJ0MSU=",
+         "title": "Switch",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/vrt1/"
+         },
+         "image": {
+          "templateUrl": "https://screenshots.vrt.be/orig/vrtnu-static/screenshots/een_auto.jpg"
+         },
+         "description": "Wie wint de prijzenpot op vrijdag 23 oktober?",
+         "status": {
+          "text": {
+           "small": "19:51 - 20:25",
+           "default": "19:51 tot 20:25"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 2019,
+          "progressInSeconds": 233,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDI0MTQyNDI1NjF8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDNfdnJ0LWNhbnZhcyU=",
+         "title": "Sporza: gymnastiek",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/vrt-canvas/"
+         },
+         "image": {
+          "templateUrl": "https://screenshots.vrt.be/orig/vrtnu-static/screenshots/canvas_auto.jpg"
+         },
+         "description": "WK gymnastiek: all-around finale vrouwen (deel 1)",
+         "status": {
+          "text": {
+           "small": "19:29 - 19:56",
+           "default": "19:29 tot 19:56"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 1655,
+          "progressInSeconds": 1560,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE3NjU5MDA4NTkyODF8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDhfc3BvcnphLWVwZyU=",
+         "title": "European Open",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/sporza-epg/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/09/f3a7b308-6f31-4969-97fb-d21b351099d6.jpg"
+         },
+         "description": "kwartfinales",
+         "status": {
+          "text": {
+           "small": "14:00 - 20:30",
+           "default": "14:00 tot 20:30"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 23400,
+          "progressInSeconds": 21325,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE3NjU5ODE2NjMwNDd8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDlfc3BvcnphLWVwZzEl",
+         "title": "WK Rotterdam",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/sporza-epg1/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/09/27c3a8cb-d072-4b75-8b93-77897fbc415a.jpg"
+         },
+         "description": "Allroundfinale vrouwen",
+         "status": {
+          "text": {
+           "small": "19:30 - 22:00",
+           "default": "19:30 tot 22:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 9000,
+          "progressInSeconds": 1525,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDI0MTQyNjY4NTN8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI0X2tldG5ldCU=",
+         "title": "Karrewiet",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/ketnet/"
+         },
+         "image": {
+          "templateUrl": "https://screenshots.vrt.be/orig/vrtnu-static/screenshots/ketnet_auto.jpg"
+         },
+         "description": "Het nieuws van vrijdag 23 oktober",
+         "status": {
+          "text": {
+           "small": "19:47 - 19:56",
+           "default": "19:47 tot 19:56"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 513,
+          "progressInSeconds": 477,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDY3Mjk4NTgwOTB8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI1X2tldG5ldC1qciU=",
+         "title": "Ketnet Junior",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/ketnet-jr/"
+         },
+         "image": {
+          "templateUrl": "https://screenshots.vrt.be/orig/vrtnu-static/screenshots/ketnet_jr.jpg"
+         },
+         "description": "",
+         "status": {
+          "text": null
+         },
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDMyMTI0MjE2MTd8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI2X3N0dWRpby1icnVzc2VsJQ==",
+         "title": "DoeMaarDave",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/studio-brussel/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2023/11/13/26971f2c-8240-11ee-91d7-02b7b76bf47f.png?gravity=50p%2C50p"
+         },
+         "description": "met Dave Peters",
+         "status": {
+          "text": {
+           "small": "18:00 - 20:00",
+           "default": "18:00 tot 20:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 7200,
+          "progressInSeconds": 6925,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDI0MTQzNTg0NTd8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI3X21ubSU=",
+         "title": "Sander Tegen De Tijd",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/mnm/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/08/20/837a4199-016c-4d4f-ad51-7e267a0c8cab.png?gravity=50p%2C50p"
+         },
+         "description": "met Sander Gillis",
+         "status": {
+          "text": {
+           "small": "18:00 - 00:00",
+           "default": "18:00 tot 00:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 21600,
+          "progressInSeconds": 6925,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDMyMTMxMzU4NDR8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI4X3JhZGlvMSU=",
+         "title": "Radio 1 special 'We zijn goed bezig'",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/radio1/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/02/11/3e477077-beeb-4cb6-bb90-a9d4ff864dc7.jpg?gravity=50p%2C50p"
+         },
+         "description": "met Kobe Ilsen",
+         "status": {
+          "text": {
+           "small": "18:30 - 20:00",
+           "default": "18:30 tot 20:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 5400,
+          "progressInSeconds": 5125,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDMyMTMxODU4Njh8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDI5X3JhZGlvMiU=",
+         "title": "Radio 2 80, 90 & nillies",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/radio2/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/06/09/a0a93e38-178e-4c6b-a3d3-df22756d373b.jpg?gravity=50p%2C50p"
+         },
+         "description": "met Dirk Ghijs",
+         "status": {
+          "text": {
+           "small": "18:00 - 22:00",
+           "default": "18:00 tot 22:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 14400,
+          "progressInSeconds": 6925,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE2NDMyMTMyMTc3ODh8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDMwX2tsYXJhJQ==",
+         "title": "So What?!",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/klara/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/06/12/845302a3-711f-45d4-b3d0-1738d10697b9.jpg?gravity=50p%2C50p"
+         },
+         "description": "met Lies Steppe",
+         "status": {
+          "text": {
+           "small": "18:00 - 20:00",
+           "default": "18:00 tot 20:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 7200,
+          "progressInSeconds": 6925,
+          "completed": false
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "LivestreamTile",
+         "componentId": "$byUyNnxsaXZlc3RyZWFtfDE3MjUwMjQxMjQyMTV8fHx8fHxsaXZlc3RyZWFtfHx8fG8lMzV8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTU3NzQxNDcyN19jb3B5fGIlMHwlfDMxX3RpamRsb3plJQ==",
+         "title": "Tijd voor 80 - Beat It",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/video/tijdloze/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/11/24/47bd0ad3-6bfe-11ed-b07d-02b7b76bf47f.jpg?gravity=50p%2C50p"
+         },
+         "description": "",
+         "status": {
+          "text": {
+           "small": "18:00 - 22:00",
+           "default": "18:00 tot 22:00"
+          }
+         },
+         "progress": {
+          "durationInSeconds": 14400,
+          "progressInSeconds": 6925,
+          "completed": false
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Luister live",
+     "listId": "$byU0fGF1ZGlvfHxzbGlkZXJ8fEx1aXN0ZXIgbGl2ZXxwYXJfbGlzdF8xMjI1MjMwNjIyX2NvcHl8dCVTZWFyY2hQYWdlJS96b2VrZW4vfGxpc3RfMTIyNTIzMDYyMl9jb3B5JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1652437970224"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY2MjI4NTM5NHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2NjIyODUzOTQl",
+         "title": "Radio 1 special",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/radio1/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/07/02/5f46debe-8e0a-4226-892e-ff05d077738f.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY4MTk5MjcxNHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2ODE5OTI3MTQl",
+         "title": "Radio 2 80, 90 & nillies",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/radio2/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/06/10/Radio2_Rebranding_Dirk%20Ghijs_1920x1080.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY4MjUxODkzOHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2ODI1MTg5Mzgl",
+         "title": "DoeMaarDave",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/studio-brussel/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/01/58285a26-7945-4e78-a498-683bd7be3d94.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY2Mjg0MDU2Nnx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2NjI4NDA1NjYl",
+         "title": "Sander Tegen De Tijd",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/mnm/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/21/MNM_STDT_PROGRAMMA__VRTMAX%20KANAALHEADER.png"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY4MjY1NjYxNnx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2ODI2NTY2MTYl",
+         "title": "So What?!",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/klara/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/07/157cf3aa-dc62-11ee-b483-02b7b76bf47f.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MTY4MjI5NjQyMHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTE2ODIyOTY0MjAl",
+         "title": "Tijd voor 80 - Beat It",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/tijdloze/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/19/DTL_BeatIt_VRTMAX_3840x2160_LEEG.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzOTYyMDM3OXx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0Mzk2MjAzNzkl",
+         "title": "Radio Bene Feesthits",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/radio-bene/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/06/26/91c127da-33a5-11ef-92ff-02b7b76bf47f.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzOTc2MjI4Mnx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0Mzk3NjIyODIl",
+         "title": "Klara Continuo",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/klaracontinuo/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/01/12/7424721f-211c-4eb6-bd65-df4bd0828b6a.png"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzODI5NjgyMXx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0MzgyOTY4MjEl",
+         "title": "MNM Hits",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/mnmhits/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/09/02/8e4b1418-a57a-4c21-9a6d-ddc2e01176d5.png"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzNzg5MjIyM3x8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0Mzc4OTIyMjMl",
+         "title": "Studio Brussel UNTZ",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/untz/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/26/1689abe7-eb56-11ee-8fc9-02b7b76bf47f.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzNzkzNDg0OHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0Mzc5MzQ4NDgl",
+         "title": "Studio Brussel Zware Gitaren",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/studio-brussel-zware-gitaren/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/26/165ccf86-eb56-11ee-8fc9-02b7b76bf47f.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "AudioLivestreamTile",
+         "componentId": "$byUyNnxhdWRpb0xpdmVzdHJlYW18MTY1MjQzNzk3MDIyNHx8fHx8fGF1ZGlvbGl2ZXN0cmVhbXx8fHxvJTR8YXVkaW98fHNsaWRlcnx8THVpc3RlciBsaXZlfHBhcl9saXN0XzEyMjUyMzA2MjJfY29weXx0JVNlYXJjaFBhZ2UlL3pvZWtlbi98bGlzdF8xMjI1MjMwNjIyX2NvcHklfDE2NTI0Mzc5NzAyMjQl",
+         "title": "Studio Brussel Vuurland",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/livestream/audio/vuurland/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/26/1610f974-eb56-11ee-8fc9-02b7b76bf47f.jpg"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "Banner"
+    },
+    {
+     "__typename": "Banner"
+    }
+   ]
+  }
+ }
+}

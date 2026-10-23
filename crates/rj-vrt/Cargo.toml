@@ -1,0 +1,21 @@
+[package]
+name = "rj-vrt"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+reqwest.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+base64.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+hmac = "0.12"
+sha2 = "0.10"
+regex = "1"
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

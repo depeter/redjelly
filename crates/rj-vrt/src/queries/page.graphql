@@ -1,0 +1,39 @@
+query Page($pageId: ID!, $first: Int!) {
+  page(id: $pageId) {
+    __typename
+    ... on IPage {
+      title
+      components {
+        ...component
+        ... on ContainerNavigation {
+          items {
+            title
+            components {
+              ...component
+              ... on ContainerNavigation { items { title components { ...component } } }
+            }
+          }
+        }
+      }
+    }
+    ... on ProgramPage {
+      header {
+        ... on PageHeader {
+          description
+          image { templateUrl }
+          actionItems { title action { __typename ... on FavoriteAction { id favorite } ... on LinkAction { link } } }
+        }
+      }
+    }
+  }
+}
+fragment component on IComponent {
+  __typename
+  ... on PaginatedTileList {
+    title
+    listId
+    paginatedItems(first: $first) { pageInfo { hasNextPage endCursor } edges { node { ...tile } } }
+  }
+  ... on StaticTileList { title listId items { ...tile } }
+  ... on LazyTileList { title listId }
+}

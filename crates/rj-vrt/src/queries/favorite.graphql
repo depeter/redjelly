@@ -1,0 +1,5 @@
+mutation setFavorite($input: FavoriteActionInput!) {
+  setFavorite(input: $input) {
+    actionItem { action { __typename ... on FavoriteAction { id favorite } } }
+  }
+}

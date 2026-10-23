@@ -1,0 +1,10 @@
+query List($listId: ID!, $first: Int!, $after: ID) {
+  list(listId: $listId) {
+    __typename
+    ... on PaginatedTileList {
+      title
+      paginatedItems(first: $first, after: $after) { pageInfo { hasNextPage endCursor } edges { node { ...tile } } }
+    }
+    ... on StaticTileList { title items { ...tile } }
+  }
+}

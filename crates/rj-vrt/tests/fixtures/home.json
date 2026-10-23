@@ -1,0 +1,2486 @@
+{
+ "data": {
+  "page": {
+   "__typename": "HomePage",
+   "title": "Kijk en luister naar het strafste aanbod van VRT op VRT MAX",
+   "components": [
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Moet je nu zien",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1790602474302"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2OTIwMDY4ODV8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3OTA2OTIwMDY4ODUl",
+         "title": "Devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/f9104fd7-c246-4303-91ce-242ec4b1ed8f.jpg"
+         },
+         "description": "Wanneer een tiener verdwijnt, wordt duidelijk dat veel jonge mannen en jongens zijn verdwenen door toedoen van John Wayne Gacy."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3OTEyMDQ0OTY3NTQl",
+         "title": "F*ck you, flik",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/f-ck-you-flik/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+         },
+         "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTE0NjA1MjU5MTB8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3OTE0NjA1MjU5MTAl",
+         "title": "Amadeus",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/amadeus0/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/7f0bc172-7b16-453c-909d-66c0073f4309.png"
+         },
+         "description": "Wanneer de jonge Mozart naar Wenen trekt om zijn geluk te beproeven, maakt hij kennis met de gerespecteerde hofcomponist Antonio Salieri."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MjQ4MzB8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE0ODc5NTI2MjQ4MzAl",
+         "title": "VRT NWS Pano",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/pano/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/16/91f8ffba-0a47-47bd-9112-adf633970e9b.jpg"
+         },
+         "description": "VRT NWS Pano brengt diepgravende journalistiek op televisie en online."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NjA5NDE5OTM0NTF8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3NjA5NDE5OTM0NTEl",
+         "title": "Sander tegen de tijd",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/sander-tegen-de-tijd/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/21/0ca708d1-8e01-41fc-b0b9-2d93d37f4b6f.png"
+         },
+         "description": "Sander Gillis daagt zichzelf opnieuw uit! Hij leeft, slaapt en maakt een week radio zonder enig besef van tijd. Hoe goed kan hij de tijd inschatten zonder klok?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NDg1OTQwNTE1NDl8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3NDg1OTQwNTE1NDkl",
+         "title": "Hacks",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/hacks/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/09d5a3d1-27b1-48e5-aa50-2aae637d535f.png"
+         },
+         "description": "Een doorgewinterde comédienne krijgt hulp van een jonge, ambitieuze schrijfster om haar carrière nieuw leven in te blazen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NzEyMjI4NjcyMTZ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE1NzEyMjI4NjcyMTYl",
+         "title": "De twaalf",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-twaalf/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/02/3a04be2d-d1b3-4f61-a708-c07afe325c29.jpg"
+         },
+         "description": "Twaalf gewone burgers worden opgeroepen als volksjury van een ophefmakende moordzaak."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2MDI0NzQzMDJ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6YzRPVFEzTURnek5WOWpiM0I1WDE4eE56TTBORGc0TlRrd2ZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vZXRqZW51emllbnx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzc4OTQ3MDgzNV9jb3B5X18xNzM0NDg4NTkwfGIlMHwlfDE3OTA2MDI0NzQzMDIl",
+         "title": "John Wayne Gacy: devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/john-wayne-gacy--devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/3cecb980-c71f-4af9-b1ec-d1f37a62c613.jpg"
+         },
+         "description": "Het gruwelijke verhaal van een van de beruchtste seriemoordenaars ter wereld, verteld door Gacy zelf en degenen die door zijn daden werden getroffen."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "Banner"
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Meest bekeken series",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1748594051549"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NTk5NTU4ODk5MDF8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNDU5OTU1ODg5OTAxJQ==",
+         "title": "Thuis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/thuis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/03/27/1c2ecf68-51f3-4c68-a2e8-d4aed5af9e2b.jpg"
+         },
+         "description": "Vlaanderens populairste dagelijkse fictiereeks."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjA5ODc2NTQyNzR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNDYwOTg3NjU0Mjc0JQ==",
+         "title": "FC De Kampioenen",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/fc-de-kampioenen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/02/03/90ae484b-84e9-11ec-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "De belevenissen van een slecht presterende voetbalploeg: FC De Kampioenen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NzEyMjI4NjcyMTZ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNTcxMjIyODY3MjE2JQ==",
+         "title": "De twaalf",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-twaalf/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/02/3a04be2d-d1b3-4f61-a708-c07afe325c29.jpg"
+         },
+         "description": "Twaalf gewone burgers worden opgeroepen als volksjury van een ophefmakende moordzaak."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTE0NjA1MjU5MTB8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNzkxNDYwNTI1OTEwJQ==",
+         "title": "Amadeus",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/amadeus0/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/7f0bc172-7b16-453c-909d-66c0073f4309.png"
+         },
+         "description": "Wanneer de jonge Mozart naar Wenen trekt om zijn geluk te beproeven, maakt hij kennis met de gerespecteerde hofcomponist Antonio Salieri."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2OTIwMDY4ODV8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNzkwNjkyMDA2ODg1JQ==",
+         "title": "Devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/f9104fd7-c246-4303-91ce-242ec4b1ed8f.jpg"
+         },
+         "description": "Wanneer een tiener verdwijnt, wordt duidelijk dat veel jonge mannen en jongens zijn verdwenen door toedoen van John Wayne Gacy."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTIzOTUzOTIzMDd8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNzkyMzk1MzkyMzA3JQ==",
+         "title": "Breendonk",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/breendonk/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/19/6e522d17-96f6-4550-a46c-600929e2f71c.jpg"
+         },
+         "description": "In bezet Antwerpen raken een gevangene, zijn geliefde, en een Vlaamse SS'er verstrikt in een alliantie waarbij elke keuze een leven kan redden of verraden."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1MTY3OTQ1MjM2MTF8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNTE2Nzk0NTIzNjExJQ==",
+         "title": "Witse",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/witse/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/02/03/e80c8860-84e7-11ec-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Witse is een eigenzinnige en gedreven speurder bij de Federale Recherche in Halle."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NDg1OTQwNTE1NDl8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWODNNekE0T1h4aUpUQjhKUT09fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9U2VyaWVzJnJlcXVlc3RlZE1heE51bWJlcj0xMHx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV83MzA4OXxiJTB8JXwxNzQ4NTk0MDUxNTQ5JQ==",
+         "title": "Hacks",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/hacks/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/09d5a3d1-27b1-48e5-aa50-2aae637d535f.png"
+         },
+         "description": "Een doorgewinterde comédienne krijgt hulp van een jonge, ambitieuze schrijfster om haar carrière nieuw leven in te blazen."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "Banner"
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Meest bekeken programma's",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0fGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1487952600824"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MTI1NTg5MDZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXwxX2lzLS10LWdlbHVrdC0l",
+         "title": "Is 't gelukt?",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/is--t-gelukt-/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/067b099c-de2f-43d5-a322-7edb8d0b25ce.jpg"
+         },
+         "description": "Kunnen de BV's de uitdagingen tot een goed einde brengen?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgzOTc1MjJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXwyX2R3YXJzLWRvb3ItZGUtcHlyZW5lZWVuJQ==",
+         "title": "Dwars door de Pyreneeën",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/dwars-door-de-pyreneeen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/fb188522-b430-4333-8d6a-200647f33bca.jpg"
+         },
+         "description": "Arnout Hauben trekt dwars door de Pyreneeën en portretteert in zijn herkenbare, warme stijl het gebergte en de mensen die er leven."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgyNjcxMTl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXwzX2tyaXN0ZWwl",
+         "title": "Kristel",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/kristel/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/76830dfd-ae10-4de6-bcf1-cbe24afcd472.jpg"
+         },
+         "description": "Hoe blijf je mama als het leven je uitdaagt? Kristel Verbeke ontmoet moedige vrouwen met een verhaal dat binnenkomt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NTI1NzE1ODM2NDN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXw0X3RoZXJhcGllJQ==",
+         "title": "Therapie",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/therapie/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/04/10/646344d4-e91b-4e5d-9a9d-20c4114f42f8.jpg"
+         },
+         "description": "Kijk binnen in de intimiteit van de spreekkamer van therapeuten en hun cliënten."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAxMjA4MzE5NzB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXw1X2RlLW5vb2RjZW50cmFsZSU=",
+         "title": "De noodcentrale",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-noodcentrale/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/19/8695b791-eb67-4fcf-8961-03e456420a36.jpg"
+         },
+         "description": "Een exclusieve inkijk in de werking van de noodcentrales 101 en 112 in Brussel, Antwerpen, West-Vlaanderen en Vlaams-Brabant."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODk0NzQ5NzE2NDh8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXw2X3NvdXMteCU=",
+         "title": "Sous X",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/sous-x/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/ec9b8788-b4e0-4cef-953a-7cf4253b9f22.jpg"
+         },
+         "description": "Fatma Taspinar ontmoet moeders die in Frankrijk anoniem of ‘sous X’ gingen bevallen, en kinderen die al een leven lang op zoek zijn naar hun afkomst."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2MDI0NzQzMDJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXw3X2pvaG4td2F5bmUtZ2FjeS0tZGV2aWwtaW4tZGlzZ3Vpc2Ul",
+         "title": "John Wayne Gacy: devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/john-wayne-gacy--devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/3cecb980-c71f-4af9-b1ec-d1f37a62c613.jpg"
+         },
+         "description": "Het gruwelijke verhaal van een van de beruchtste seriemoordenaars ter wereld, verteld door Gacy zelf en degenen die door zijn daden werden getroffen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MDA4MjR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdHxiJTB8JXw4X2RlLWlkZWFsZS13ZXJlbGQl",
+         "title": "De ideale wereld",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-ideale-wereld/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/01/93c61b3a-b12d-408e-a7c7-e4d1617f5582.jpg"
+         },
+         "description": "Ella Leyers surft samen met haar gasten op de deiningen van de actualiteit."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "Banner"
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Binnenkort op VRT MAX",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzIwNzI2MDg5ODB8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1791902907746"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTEyMzc5MTEzMDR8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDFfdGh1aXMtdHJhaWxlci1ncmFhZnQtZmVta2UtaGFhci1laWdlbi1ncmFmLSU=",
+         "title": "Thuis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/thuis/trailers/thuis-trailer-graaft-femke-haar-eigen-graf-/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/20/708bb1af-7ae0-468d-91b6-7133a791f26a.jpg"
+         },
+         "description": "Graaft Femke haar eigen graf?",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTEwNjUxMTkxMzZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDJfaGV0LWh1aXMtdHJhaWxlci1zMTIl",
+         "title": "Het huis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/het-huis/trailer/het-huis-trailer-s12/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/24/9cdac235-0ae4-4cd0-a1fb-a72f906e1440.png"
+         },
+         "description": "Nieuw seizoen vanaf 27 oktober",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTE4MTA3MTQzNTd8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDNfZGUtbGFhdHN0ZS1sYWNoLXRyYWlsZXIl",
+         "title": "De laatste lach",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-laatste-lach/trailer/de-laatste-lach-trailer/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/12/9c3503be-5801-40b0-95bf-ac0c75fe3ba9.jpg"
+         },
+         "description": "Nieuwe reeks vanaf 29 oktober",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTE0MTA3MTE0ODZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDRfcGFuby10cmFpbGVyLW5hamFhci0yMDI2LWEzJQ==",
+         "title": "VRT NWS Pano",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/pano/trailer/pano-trailer-najaar-2026-a3/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/23/3df8d844-598f-450b-826d-4f9abfe7400e.jpg"
+         },
+         "description": "Nieuwe aflevering vanaf 28 oktober",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTI2NjU5MDA5NDZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDVfYWxsZWVuLWVsdmlzLWJsaWpmdC1iZXN0YWFuLXRyYWlsZXItMS1zMTMl",
+         "title": "Alleen Elvis blijft bestaan",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/alleen-elvis-blijft-bestaan/trailer/alleen-elvis-blijft-bestaan-trailer-1-s13/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/22/a8fe7d90-12e2-4a52-93b7-c4b87e6e23ba.jpg"
+         },
+         "description": "Nieuw seizoen vanaf 30 oktober",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTE4MTE4MDQ5Mjd8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDZfdGhvbWFzLXNtaXRoLS0tcmViZWwtdHJhaWxlciU=",
+         "title": "Thomas Smith - Rebel",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/thomas-smith---rebel/trailer/thomas-smith---rebel-trailer/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/11/14/7a6b3882-468d-4e51-bab0-e4d3e236b36e.jpg?gravity=53p%2C0p"
+         },
+         "description": "Nieuwe comedyshow vanaf 31 oktober",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTI1OTMzMDk3ODh8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDdfa2FtcC1mbHktdHJhaWxlciU=",
+         "title": "Kamp Fly",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/kamp-fly/trailer/kamp-fly-trailer/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/21/c1ec7608-4d08-4348-b52e-d05ad208c640.jpg"
+         },
+         "description": "Nieuwe reeks vanaf 1 november",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       },
+       {
+        "node": {
+         "__typename": "EpisodeTile",
+         "componentId": "$byUyNnxlcGlzb2RlfDE3OTE5MDI5MDc3NDZ8fHx8fHxlcGlzb2RlfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMDcyNjA4OTgwfGIlMHwlfDhfc3RhcnQtdG8tcmFjZS10cmFpbGVyJQ==",
+         "title": "Start to race",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/start-to-race/trailer/start-to-race-trailer/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/13/16bc11e0-66ce-406a-aceb-dc37fd8cd141.jpg"
+         },
+         "description": "Nieuwe reeks vanaf 2 november",
+         "available": true,
+         "primaryMeta": [
+          {
+           "value": "Trailer",
+           "shortValue": null
+          }
+         ],
+         "statusMeta": [
+          {
+           "value": "1 min"
+          }
+         ],
+         "progress": null
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": null,
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzczMjI3NDA5OF9jb3B5X184NzU0NjE5OTR8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1788870102219"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODE2ODM4OTc4MzB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDFfMTAtdGhpbmdzLWktaGF0ZS1hYm91dC15b3Ul",
+         "title": "10 things I hate about you",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/10-things-i-hate-about-you/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/22/e097a15f-ad9b-41e8-91e6-60d77e3bf44f.jpg"
+         },
+         "description": "Cameron valt voor Bianca, het prachtige meisje van zijn dromen. Het enige probleem is dat Bianca niet mag daten tot haar humeurige, niet datebare, oudere zus Kat ook uitgaat."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NTM3MDA5MTM3NjF8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDJfbGljb3JpY2UtcGl6emEl",
+         "title": "Licorice pizza",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/licorice-pizza/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/07/28/50edc98a-f397-4e58-bb81-6645727ddc4a.jpg"
+         },
+         "description": "Alana en Gary groeien in de jaren 70 op in San Fernando Valley en worden verliefd op elkaar."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NDQ2MTIyNDIzNjN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDNfdmluY2VudCU=",
+         "title": "Vincent",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vincent/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/3c271620-418e-4bf8-938b-d4a1baa7ef82.jpg"
+         },
+         "description": "De 17-jarige Vincent wil een radicaal statement maken tegen de wereldproblemen. Kan zijn tante Nikki hem de zonnige kant van het leven laten zien in Frankrijk?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2MDQ1MDMzNzQyMzN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDRfdmVsZS1oZW1lbHMtYm92ZW4tZGUtemV2ZW5kZSU=",
+         "title": "Vele hemels boven de zevende",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vele-hemels-boven-de-zevende/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/95469c3f-96e0-4b11-ad8b-84e967c03bf4.jpg"
+         },
+         "description": "Eva staat altijd klaar om de wereld te redden. Achter haar brede glimlach en overdosis begrip, groeit een knagende eenzaamheid."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3MDk5MDc2NzY5MDZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDVfbm93aGVyZS1zcGVjaWFsJQ==",
+         "title": "Nowhere special",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/nowhere-special/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/14/c61e696a-e1eb-11ee-b483-02b7b76bf47f.jpg"
+         },
+         "description": "Een ongeneeslijk zieke vader moet een belangrijke keuze moet maken voor de toekomst van zijn zoontje."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2OTgyMjUyODAxMTl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDZfYWZ0ZXIteWFuZyU=",
+         "title": "After Yang",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/after-yang/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2023/10/25/64f956a8-733f-11ee-91d7-02b7b76bf47f.jpg"
+         },
+         "description": "Wanneer de robot van zijn dochter het begeeft, doet Jack er alles aan om hem te herstellen. Zo herontdekt hij het leven dat zich voor hem afspeelt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODIxMjY0MTUyNzJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDdfcHJpZGUtLS1wcmVqdWRpY2Ul",
+         "title": "Pride & prejudice",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/pride---prejudice/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/22/800cd3c1-c6ac-4783-893c-9db6d096d2d7.jpg"
+         },
+         "description": "Wanneer Elizabeth Bennet de trotse Mr. Darcy ontmoet, is hij de laatste man met wie ze ooit zou willen trouwen. Tot er barsten komen in haar vooroordelen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODg4NzAxMDIyMTl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF83MzIyNzQwOThfY29weV9fODc1NDYxOTk0fGIlMHwlfDhfdGF0YW1pJQ==",
+         "title": "Tatami",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/tatami/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/08/238c4bcc-47e0-4978-bad0-8eb59966fab7.jpg"
+         },
+         "description": "De Iraanse judoka Leila gaat op het wereldkampioenschap voor goud. Halverwege de wedstrijd krijgt ze een ultimatum van het Iraanse regime."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "De beste stand-up comedy",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2NTEzMDAxMDZfY29weXxiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": false,
+       "endCursor": "QhFO2Bi8QcI1u77sWf7RyRFuvus="
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMTY1MTMwMDEwNl9jb3B5fDJfaXRlbTF8YmFubmVyfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNjUxMzAwMTA2X2NvcHl8YiUwfCV8Ml9pdGVtMSU=",
+         "title": "Soundos - Witte ruis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/soundos---witte-ruis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/bfb1e7ee-32bc-4b2a-b1d9-312bb6f0d2ce.jpg?gravity=50p%2C29p"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMTY1MTMwMDEwNl9jb3B5fDNfaXRlbTJ8YmFubmVyfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNjUxMzAwMTA2X2NvcHl8YiUwfCV8M19pdGVtMiU=",
+         "title": "Kamal Kharmach: Mag ik even?",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/kamal-kharmach--mag-ik-even-/2025/kamal-kharmach--mag-ik-even--s2025/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/12/22/8ce8de2f-cb7a-446d-831a-e50bf545bf27.jpg?gravity=50p%2C24p"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMTY1MTMwMDEwNl9jb3B5fDRfaXRlbTN8YmFubmVyfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNjUxMzAwMTA2X2NvcHl8YiUwfCV8NF9pdGVtMyU=",
+         "title": "Geubels gaat in bad",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/geubels-gaat-in-bad/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/01/11/4170571e-b08e-11ee-b483-02b7b76bf47f.jpg?gravity=37p%2C37p"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMTY1MTMwMDEwNl9jb3B5fDVfaXRlbTR8YmFubmVyfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNjUxMzAwMTA2X2NvcHl8YiUwfCV8NV9pdGVtNCU=",
+         "title": "Liefde voor publiek",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/liefde-voor-publiek/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/11/26/46c6796e-183b-47de-af5f-98c3eadfac9b.jpg?gravity=49p%2C31p"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMTY1MTMwMDEwNl9jb3B5fDZfaXRlbTV8YmFubmVyfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNjUxMzAwMTA2X2NvcHl8YiUwfCV8Nl9pdGVtNSU=",
+         "title": "Xander De Rycke houdt het voor bekeken",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/xander-de-rycke-houdt-het-voor-bekeken/2025/xander-de-rycke-houdt-het-voor-bekeken/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/12/22/8465e469-fc9f-4a04-94d1-cb23e46d5b1a.jpg?gravity=smart"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "True crime en misdaadverhalen",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzQ4NDMxMTY2Nl9jb3B5X3xiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1787585107962"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8MV9mLWNrLXlvdS1mbGlrJQ==",
+         "title": "F*ck you, flik",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/f-ck-you-flik/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+         },
+         "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2MDI0NzQzMDJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8Ml9qb2huLXdheW5lLWdhY3ktLWRldmlsLWluLWRpc2d1aXNlJQ==",
+         "title": "John Wayne Gacy: devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/john-wayne-gacy--devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/3cecb980-c71f-4af9-b1ec-d1f37a62c613.jpg"
+         },
+         "description": "Het gruwelijke verhaal van een van de beruchtste seriemoordenaars ter wereld, verteld door Gacy zelf en degenen die door zijn daden werden getroffen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2MjI3ODk2Nzd8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8M19hbXN0ZXJkYW0tbmFyY29zJQ==",
+         "title": "Amsterdam narcos",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/amsterdam-narcos/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/b6427999-ac4b-45c8-b225-d45695578735.jpg"
+         },
+         "description": "Hoe transformeerde Amsterdam tussen de jaren 70 en de vroege jaren 2000 van een tolerante cultuurhaven tot de drugshoofdstad van Europa?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgyMzIwNjd8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8NF9kcnVnc2RlbHRhJQ==",
+         "title": "Drugsdelta",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/drugsdelta/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/9ea86a37-60af-420a-b209-a3c6cb6eadbb.jpg"
+         },
+         "description": "Rudi Vranckx en Sinan Can onderzoeken of België en Nederland afglijden richting een narcostaat."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODk1NjU3NzM1MzJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8NV9raWxsaW5nLWFubmEl",
+         "title": "Killing Anna",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/killing-anna/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/16/61607ea3-ac2c-456b-902d-dbaa6899ca8e.jpg"
+         },
+         "description": "Een vrouw riskeert alles om een van de meest meedogenloze regimes ter wereld te ontmaskeren."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODg4NjkzNjM4Nzl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8Nl9sb3Zlci0tbGlhci0tcHJlZGF0b3Il",
+         "title": "Lover, liar, predator",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/lover--liar--predator/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/08/51bcf844-cf85-4646-b38f-ac7a764389e1.jpg"
+         },
+         "description": "Vier vrouwen die het slachtoffer werden van dezelfde manipulatieve dader bundelen hun krachten en brengen hem voor de rechter."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODcwNjA0NjQyMTN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8N19sb3V2cmUtaGVpc3Ql",
+         "title": "Louvre heist",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/louvre-heist/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/18/0872c7d9-505c-461f-b0c4-9925d0472ea9.jpg"
+         },
+         "description": "Op 19 oktober 2025 werd in het Louvre in Parijs één van de meest geruchtmakende kunstroven ooit gepleegd. Hoe kon het museum zo makkelijk worden leeggeroofd?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODc1ODUxMDc5NjJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF80ODQzMTE2NjZfY29weV98YiUwfCV8OF90aGUtZGFya2VzdC13ZWIl",
+         "title": "The darkest web",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-darkest-web/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/24/7d342652-2c52-43b0-9c51-5f5e1b655097.jpg"
+         },
+         "description": "Een internationaal team van undercoveragenten infiltreert het dark web om kinderen te redden uit netwerken van zedendelinquenten."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": null,
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE3NjI2NTQ3NTBfY29weV80NjYzMzg5NTF8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1786974373635"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2OTIwMDY4ODV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDFfZGV2aWwtaW4tZGlzZ3Vpc2Ul",
+         "title": "Devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/f9104fd7-c246-4303-91ce-242ec4b1ed8f.jpg"
+         },
+         "description": "Wanneer een tiener verdwijnt, wordt duidelijk dat veel jonge mannen en jongens zijn verdwenen door toedoen van John Wayne Gacy."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1ODczNzIwNzAwOTJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDJfbGluZS1vZi1kdXR5JQ==",
+         "title": "Line of duty",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/line-of-duty/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/08/18/e890c2bf-1f02-11ed-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Een speciale eenheid bij de Britse politie is belast met het opsporen van de interne corruptie."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MTM0MTF8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDNfbWlkc29tZXItbXVyZGVycyU=",
+         "title": "Midsomer murders",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/midsomer-murders/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/28/4fcd7e0b-99ac-492c-90cb-403514d45f96.jpg"
+         },
+         "description": "Detective John Barnaby wordt geconfronteerd met moord en doodslag in Midsomer, een stukje platteland in het Engelse Somerset."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2NDk1MDgyMzI4Mzl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDRfdGhlLXRvdXJpc3Ql",
+         "title": "The tourist",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-tourist/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/10/22/dc05dc08-a36c-41eb-a79e-0247c49ef26f.jpg"
+         },
+         "description": "Een man met geheugenverlies reist van Australië naar Ierland, op zoek naar zijn identiteit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3MDk1NTIzODM2MDV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDVfdGhlLW5pZ2h0LWNhbGxlciU=",
+         "title": "The night caller",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-night-caller/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/04/d0ca31e8-da1e-11ee-b483-02b7b76bf47f.jpg"
+         },
+         "description": "Een eenzame taxichauffeur raakt geobsedeerd door een late night radio-dj."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NzEyMjI4NjcyMTZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDZfZGUtdHdhYWxmJQ==",
+         "title": "De twaalf",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-twaalf/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/02/3a04be2d-d1b3-4f61-a708-c07afe325c29.jpg"
+         },
+         "description": "Twaalf gewone burgers worden opgeroepen als volksjury van een ophefmakende moordzaak."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODc2NjI2MjU3Nzd8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDdfY29vcGVyLS0tZnJ5JQ==",
+         "title": "Cooper & Fry",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/cooper---fry/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/26/2d380329-478d-4a31-9b29-a8733ccbb943.jpg"
+         },
+         "description": "Twee tegenpolen binnen de politie in het Peak District onderzoeken complexe moordzaken."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY5NzQzNzM2MzV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNzYyNjU0NzUwX2NvcHlfNDY2MzM4OTUxfGIlMHwlfDhfdGhlLXNpeHRoLWNvbW1hbmRtZW50JQ==",
+         "title": "The Sixth Commandment",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-sixth-commandment/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/17/1b62efe3-4662-4321-9860-4c53a40108a1.jpg"
+         },
+         "description": "Twee eenzame ouderen vallen ten prooi aan de charmante maar moordzuchtige jongeman."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Internationale topreeksen om te bingen",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfNzU3NTMwNTU0X3xiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1487952613411"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTE0NjA1MjU5MTB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8MV9hbWFkZXVzMCU=",
+         "title": "Amadeus",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/amadeus0/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/7f0bc172-7b16-453c-909d-66c0073f4309.png"
+         },
+         "description": "Wanneer de jonge Mozart naar Wenen trekt om zijn geluk te beproeven, maakt hij kennis met de gerespecteerde hofcomponist Antonio Salieri."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMTMxNzUwNDZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8Ml9hZHVsdHMl",
+         "title": "Adults",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/adults/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/06/f0647080-6c12-42eb-bf2d-d37b1c30a966.png"
+         },
+         "description": "Vijf twintigers wonen samen in New York. Met wisselend succes proberen ze uit te zoeken hoe je een verantwoordelijke volwassene wordt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2OTIwMDY4ODV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8M19kZXZpbC1pbi1kaXNndWlzZSU=",
+         "title": "Devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/f9104fd7-c246-4303-91ce-242ec4b1ed8f.jpg"
+         },
+         "description": "Wanneer een tiener verdwijnt, wordt duidelijk dat veel jonge mannen en jongens zijn verdwenen door toedoen van John Wayne Gacy."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NDg1OTQwNTE1NDl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8NF9oYWNrcyU=",
+         "title": "Hacks",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/hacks/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/09d5a3d1-27b1-48e5-aa50-2aae637d535f.png"
+         },
+         "description": "Een doorgewinterde comédienne krijgt hulp van een jonge, ambitieuze schrijfster om haar carrière nieuw leven in te blazen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA1ODU3NTUzNzl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8NV9zYXktbm90aGluZyU=",
+         "title": "Say nothing",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/say-nothing/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/28/7e2c5968-b3e6-4f8c-b49f-1768f9345690.jpg"
+         },
+         "description": "Wanneer het geweld in Belfast escaleert, raakt de jonge Dolours Price steeds dieper betrokken bij de IRA."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1ODczNzIwNzAwOTJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8Nl9saW5lLW9mLWR1dHkl",
+         "title": "Line of duty",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/line-of-duty/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/08/18/e890c2bf-1f02-11ed-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Een speciale eenheid bij de Britse politie is belast met het opsporen van de interne corruptie."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2NDk1MDgyMzI4Mzl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8N190aGUtdG91cmlzdCU=",
+         "title": "The tourist",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-tourist/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/10/22/dc05dc08-a36c-41eb-a79e-0247c49ef26f.jpg"
+         },
+         "description": "Een man met geheugenverlies reist van Australië naar Ierland, op zoek naar zijn identiteit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MTM0MTF8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5Xzc1NzUzMDU1NF98YiUwfCV8OF9taWRzb21lci1tdXJkZXJzJQ==",
+         "title": "Midsomer murders",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/midsomer-murders/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/28/4fcd7e0b-99ac-492c-90cb-403514d45f96.jpg"
+         },
+         "description": "Detective John Barnaby wordt geconfronteerd met moord en doodslag in Midsomer, een stukje platteland in het Engelse Somerset."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Straffe series van bij ons",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE1MTIwNDI2MzFfY29weXxiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1790245521936"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NzEyMjI4NjcyMTZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8MV9kZS10d2FhbGYl",
+         "title": "De twaalf",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-twaalf/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/02/3a04be2d-d1b3-4f61-a708-c07afe325c29.jpg"
+         },
+         "description": "Twaalf gewone burgers worden opgeroepen als volksjury van een ophefmakende moordzaak."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODAzMTUxMjcxMjN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8Ml90aW1lLW91dCU=",
+         "title": "Time:out",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/time-out/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/01/6b6300d7-2b22-4af7-8e37-13991d71e76a.jpg"
+         },
+         "description": "Ellis en Brecht lijken een droomkoppel. Tot Brecht plots beslist om een time-out te nemen. Eén maand zonder relatie en job om uit te zoeken wat hij wil."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2ODMwMTM3ODI2Mzh8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8M19rbm9ra2Utb2ZmJQ==",
+         "title": "Knokke off",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/knokke-off/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/03/27/a3f31594-0a2b-4024-9c60-eef295765c22.jpg"
+         },
+         "description": "Enkele jonge twintigers beleven een schijnbaar onbezonnen zomer in het weelderige Knokke."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NTczMDM4Mzc5OTl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8NF9maXNrZXBhcmsl",
+         "title": "Fiskepark",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/fiskepark/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/11/10/4bb3c826-6104-11ed-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Vlaamse 'fake true crime'-reeks waarin het onderzoek naar de moord op muzikant en mediafiguur Bent Van Looy van dichterbij bekeken wordt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NTA3NDY3NjU0NTd8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8NV91bmRlcmNvdmVyJQ==",
+         "title": "Undercover",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/undercover/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/02/03/0507dfdc-84e2-11ec-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Twee agenten gaan undercover in het drugsmilieu om één van de grootste XTC-producenten ter wereld te ontmaskeren."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NTI1MDY3MTQ5NjJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8Nl9leWVjYXRjaGVycyU=",
+         "title": "Eyecatchers",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/eyecatchers/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/07/16/c8573d27-fc8a-43fc-8094-398ad6782531.jpg"
+         },
+         "description": "Volg het turbulente leven van vijf vrouwen die dromen van een plek aan de top in de interieurwereld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NjE4MTkxOTQyNTZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8N19iYWRnYXN0JQ==",
+         "title": "Badgast",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/badgast/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/01/19/340f37d4-77a4-47b2-88ee-52a89cdc2dcb.jpg"
+         },
+         "description": "Vince trekt met zijn dochter Zoë naar Terschelling voor een vader-dochtervakantie. Maar hij is met een duistere missie naar het Nederlandse eiland gekomen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTAyNDU1MjE5MzZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xNTEyMDQyNjMxX2NvcHl8YiUwfCV8OF93b2x2ZW4l",
+         "title": "Wolven",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/wolven/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/24/fa45531e-1f06-4a71-b44c-5ad84ad76a94.jpg"
+         },
+         "description": "De fraudecel van de Federale Gerechtelijke Politie Antwerpen rekent af met moeilijke kwesties."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Lachen is gezond",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzEwMTcxNTU3NDR8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1755610452800"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTExMTE5MDYzNDB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDFfc291bmRvcy0tLXdpdHRlLXJ1aXMl",
+         "title": "Soundos - Witte ruis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/soundos---witte-ruis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/5ecf06d3-76a3-4de6-81ec-025f7a8b0069.jpg"
+         },
+         "description": "Soundos rekent in haar nieuwste comedyshow af met alle ruis om haar heen en wordt vrijer, brutaler en zelfverzekerder dan ooit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MDA4MjR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDJfZGUtaWRlYWxlLXdlcmVsZCU=",
+         "title": "De ideale wereld",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-ideale-wereld/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/01/93c61b3a-b12d-408e-a7c7-e4d1617f5582.jpg"
+         },
+         "description": "Ella Leyers surft samen met haar gasten op de deiningen van de actualiteit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODg3ODAzMDU2Njl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDNfZm9yLXRoZS1naXJscy0tLXRoZS1nYXlzJQ==",
+         "title": "For the girls & the gays",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/for-the-girls---the-gays/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/1ef360b6-a99f-4a94-be90-e209c5cf776d.jpg"
+         },
+         "description": "Nona 't Jolle en Mathis Mavuela spillen elke week voor jou de heetste tea. Alles wat je wil weten over pop culture, rode lopers, dating drama en zoveel meer."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2OTU5OTcxMjc2ODR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDRfbWFrZXVwZGF0ZSU=",
+         "title": "MakeUpDate",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/makeupdate/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/21/4de3e19b-a970-4dda-89e5-e2eed5ff0ad3.jpg"
+         },
+         "description": "Bert De Kock gaat op date met bekende gezichten. Ze toveren zich met make-up om tot nieuwe wezens en geven zich tegelijk helemaal bloot."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NDg1OTQwNTE1NDl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDVfaGFja3Ml",
+         "title": "Hacks",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/hacks/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/15/09d5a3d1-27b1-48e5-aa50-2aae637d535f.png"
+         },
+         "description": "Een doorgewinterde comédienne krijgt hulp van een jonge, ambitieuze schrijfster om haar carrière nieuw leven in te blazen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1Nzk4NzQwNDM1NDR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDZfY2xpbmNoJQ==",
+         "title": "Clinch",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/clinch/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/05/26/f2cba476-3a08-402c-896b-321508d9090e.jpg"
+         },
+         "description": "Het noodlot brengt drie mannen telkens opnieuw samen in een penibele situatie. Ze hebben enkel elkaar en dat maakt de zaak alleen maar erger."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MTM5MzB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDdfdmFuLXZsZWVzLWVuLWJsb2VkJQ==",
+         "title": "Van vlees en bloed",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/van-vlees-en-bloed/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/04/07/ccab9269-b65e-11ec-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "De familie Vangenechten baat al decennia een succesvolle slagerij uit. Wanneer kleinzoon Rudy na jaren afwezigheid terug opduikt, gaan de poppen aan het dansen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NTU2MTA0NTI4MDB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8xMDE3MTU1NzQ0fGIlMHwlfDhfZ2lqLXdlZXQl",
+         "title": "Gij weet",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/gij-weet/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/02/18/9791be59-e5c2-4fea-805b-bc4fb3f2986d.jpg"
+         },
+         "description": "Soukaïna Bennani en Hakim Chatar duiken met hun gast in alles wat TikTok, YouTube en Instagram deze week liet opvallen."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Uit het leven gegrepen",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV9jb3B5X183NzY3OTU4NTN8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1487952616784"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNzkxMjA0NDk2NzU0JQ==",
+         "title": "F*ck you, flik",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/f-ck-you-flik/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+         },
+         "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgzOTc1MjJ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNzg2NzA4Mzk3NTIyJQ==",
+         "title": "Dwars door de Pyreneeën",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/dwars-door-de-pyreneeen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/fb188522-b430-4333-8d6a-200647f33bca.jpg"
+         },
+         "description": "Arnout Hauben trekt dwars door de Pyreneeën en portretteert in zijn herkenbare, warme stijl het gebergte en de mensen die er leven."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAxMjA4MzE5NzB8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNDYwMTIwODMxOTcwJQ==",
+         "title": "De noodcentrale",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-noodcentrale/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/19/8695b791-eb67-4fcf-8961-03e456420a36.jpg"
+         },
+         "description": "Een exclusieve inkijk in de werking van de noodcentrales 101 en 112 in Brussel, Antwerpen, West-Vlaanderen en Vlaams-Brabant."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTExODkwMjM4NTh8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNzkxMTg5MDIzODU4JQ==",
+         "title": "On ira tous au paradis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/on-ira-tous-au-paradis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/05/fe11b670-2952-4894-8ad8-67624ecdd9b7.jpg"
+         },
+         "description": "Lidewij Nuitten volgt meer dan tien jaar lang een alleenstaande moeder met drie opgroeiende kinderen in Brussel."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NTI1NzE1ODM2NDN8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNTUyNTcxNTgzNjQzJQ==",
+         "title": "Therapie",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/therapie/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/04/10/646344d4-e91b-4e5d-9a9d-20c4114f42f8.jpg"
+         },
+         "description": "Kijk binnen in de intimiteit van de spreekkamer van therapeuten en hun cliënten."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MTIyNDM3Nzl8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNzg2NzEyMjQzNzc5JQ==",
+         "title": "Home sweet home: Vlamingen in Amerika",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/home-sweet-home--vlamingen-in-amerika/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/6f23cc64-f51a-46d8-a15e-f61e7db39f82.jpg"
+         },
+         "description": "Karine Claassen logeert bij Vlamingen die van de Verenigde Staten hun thuis hebben gemaakt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MDgyNjcxMTl8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNzg2NzA4MjY3MTE5JQ==",
+         "title": "Kristel",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/kristel/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/76830dfd-ae10-4de6-bcf1-cbe24afcd472.jpg"
+         },
+         "description": "Hoe blijf je mama als het leven je uitdaagt? Kristel Verbeke ontmoet moedige vrouwen met een verhaal dat binnenkomt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MTY3ODR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4M056WTNPVFU0TlROOFlpVXdmQ1U9fHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9SHVtYW4gSW50ZXJlc3QmcmVxdWVzdGVkTWF4TnVtYmVyPTE1fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfY29weV9jb3B5X2NvcHlfXzc3Njc5NTg1M3xiJTB8JXwxNDg3OTUyNjE2Nzg0JQ==",
+         "title": "Het huis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/het-huis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/09/30/e0962741-6721-4a4b-8c6d-d95c27ffc91f.jpg"
+         },
+         "description": "Eric Goens graaft 24 uur lang in de ziel van bekende en intrigerende Vlamingen."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Boeiende documentaires",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV9jb3B5X18xOTc1MzI5ODY5fGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1789474971648"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MjQ4MzB8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNDg3OTUyNjI0ODMwJQ==",
+         "title": "VRT NWS Pano",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/pano/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/16/91f8ffba-0a47-47bd-9112-adf633970e9b.jpg"
+         },
+         "description": "VRT NWS Pano brengt diepgravende journalistiek op televisie en online."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTEyMDQ0OTY3NTR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNzkxMjA0NDk2NzU0JQ==",
+         "title": "F*ck you, flik",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/f-ck-you-flik/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/ef6ccc38-a4e0-4814-bfac-46a2511c433b.jpg"
+         },
+         "description": "Jan Verheyen praat met politiemensen wiens leven een dramatische wending heeft genomen nadat ze in aanraking kwamen met agressie en geweld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTExODkwMjM4NTh8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNzkxMTg5MDIzODU4JQ==",
+         "title": "On ira tous au paradis",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/on-ira-tous-au-paradis/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/05/fe11b670-2952-4894-8ad8-67624ecdd9b7.jpg"
+         },
+         "description": "Lidewij Nuitten volgt meer dan tien jaar lang een alleenstaande moeder met drie opgroeiende kinderen in Brussel."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NTI1NzE1ODM2NDN8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNTUyNTcxNTgzNjQzJQ==",
+         "title": "Therapie",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/therapie/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/04/10/646344d4-e91b-4e5d-9a9d-20c4114f42f8.jpg"
+         },
+         "description": "Kijk binnen in de intimiteit van de spreekkamer van therapeuten en hun cliënten."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODY3MTIyNDM3Nzl8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNzg2NzEyMjQzNzc5JQ==",
+         "title": "Home sweet home: Vlamingen in Amerika",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/home-sweet-home--vlamingen-in-amerika/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/14/6f23cc64-f51a-46d8-a15e-f61e7db39f82.jpg"
+         },
+         "description": "Karine Claassen logeert bij Vlamingen die van de Verenigde Staten hun thuis hebben gemaakt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTA2MDI0NzQzMDJ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNzkwNjAyNDc0MzAyJQ==",
+         "title": "John Wayne Gacy: devil in disguise",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/john-wayne-gacy--devil-in-disguise/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/3cecb980-c71f-4af9-b1ec-d1f37a62c613.jpg"
+         },
+         "description": "Het gruwelijke verhaal van een van de beruchtste seriemoordenaars ter wereld, verteld door Gacy zelf en degenen die door zijn daden werden getroffen."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MzA0NzR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNDg3OTUyNjMwNDc0JQ==",
+         "title": "Belga sport",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/belga-sport/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/22/fe281682-85bb-418b-a235-71200ad3c8a2.jpg"
+         },
+         "description": "Memorabele momenten uit de Belgische sportgeschiedenis"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODk0NzQ5NzE2NDh8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFgyTnZjSGxmWTI5d2VWOWpiM0I1WDE4eE9UYzFNekk1T0RZNWZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L21vc3Rwb3B1bGFyP2NvbnRlbnRUeXBlPXZpZGVvJm91dHB1dFR5cGU9cHJvZ3JhbSZlZGl0b3JpYWxUYWc9RG9jdSZyZXF1ZXN0ZWRNYXhOdW1iZXI9MTV8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTk3NTMyOTg2OXxiJTB8JXwxNzg5NDc0OTcxNjQ4JQ==",
+         "title": "Sous X",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/sous-x/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/29/ec9b8788-b4e0-4cef-953a-7cf4253b9f22.jpg"
+         },
+         "description": "Fatma Taspinar ontmoet moeders die in Frankrijk anoniem of ‘sous X’ gingen bevallen, en kinderen die al een leven lang op zoek zijn naar hun afkomst."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Populaire podcasts",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0X2NvcHlfY29weV9jb3B5X18xNzgyOTgzMzk0fGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "program-009f6bab-d840-4a20-a8f1-60758c96b32b"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTdmMTkyZTc4LWQwN2QtNGQ1Mi05ZTVlLTFlOWViOGMwMmIyOHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXwxXy13ZWV0aWt2ZWVsJQ==",
+         "title": "Weetikveel",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio-1/-/-weetikveel/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/30/31b50e1c-dd0b-4f93-8ab7-05c8b8c78833.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWU4NDJhMzcxLTgxZTEtNGU2ZS1iNjViLTUyOTkyYjdhNjE2Mnx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXwyX2RlLXZlcnJla2lqa2VycyU=",
+         "title": "De verrekijkers",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio-1/d/de-verrekijkers/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/b4dae28e-5964-4dc8-8708-24c0deefb1de.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLWRlMzQyNjdjLTQ1MjAtNGFiOS1hZWQwLTgzZjMwOGVkYzFkMXx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXwzX3RvdWNoZSU=",
+         "title": "Touché",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio-1/t/touche/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/08/28/708a4522-b502-4b0c-a796-f8a3ec177f27.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTE3NTU4Y2UwLTEyMzAtNDAxNS1hOGJkLTZiZDM0Yjk0ZWU3M3x8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXw0X2Fscy1kZS1tdXJlbi1rb25kZW4tcHJhdGVuJQ==",
+         "title": "Als de muren konden praten",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio2/a/als-de-muren-konden-praten/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/11/12/8164cd51-eca7-40e2-9ba1-3c86b4392e9c.jpeg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLThlODczNjQ2LWQ1MTMtNDg4MC1hYjYyLWYxOWYzMTk5MGQ3OHx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXw1X2RlLXdlcmVsZC12YW4tc29maWUl",
+         "title": "De Wereld van Sofie",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio-1/d/de-wereld-van-sofie/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/02/28/a90a10e2-acc4-457b-ad73-8f992ee4abe7.png"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTljMDViNjQ4LTg3MWItNDRmZS04OWRiLTZjOWI1NzZiMDg2N3x8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXw2X29uZGVyLW9ucy0tY3JpbWkl",
+         "title": "Onder ons: crimi",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/vrt-nws/o/onder-ons--crimi/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/773f1c3f-512a-4d69-923b-25ca9bcbb881.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTBlYzNjOTI1LTE2NDUtNGQxYS1iYmNhLWIxZGQ0ODA4YTcwMXx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXw3X21lbnMtZXJnZXItamUtbmlldCU=",
+         "title": "Mens erger je niet",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/radio2/m/mens-erger-je-niet/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/01/28/074cccdc-f0e8-4263-9519-b0687b8e3b91.jpg"
+         }
+        }
+       },
+       {
+        "node": {
+         "__typename": "PodcastProgramTile",
+         "componentId": "$byUyNnxwb2RjYXN0UHJvZ3JhbXxwcm9ncmFtLTAwOWY2YmFiLWQ4NDAtNGEyMC1hOGYxLTYwNzU4Yzk2YjMyYnx8fHx8fHBvZGNhc3RQcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF9jb3B5X2NvcHlfY29weV9fMTc4Mjk4MzM5NHxiJTB8JXw4XzIyLW1pbnV0ZW4tc3RvbW1lLXZyYWdlbi0l",
+         "title": "22 Minuten Stomme Vragen",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/podcasts/mnm/0/22-minuten-stomme-vragen-/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/25/c819777d-36a2-4c29-8d36-c27a0e55971d.png"
+         }
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Blijf op de hoogte",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0Xzg2MTYxNTQxOF9jb3B5X3xiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1515762315530"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg1NDc2Mzh8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8MV92cnQtbndzLWpvdXJuYWFsJQ==",
+         "title": "VRT NWS journaal",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vrt-nws-journaal/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/fd748d84-c1f2-4358-8322-88430b2e3fcb.jpg"
+         },
+         "description": "De actualiteit van de dag."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1MjcwODk2NDM1MDN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8Ml92cnQtbndzLWpvdXJuYWFsLW1ldC12Z3Ql",
+         "title": "VRT NWS journaal met VGT",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vrt-nws-journaal-met-vgt/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/f7c64522-c875-47b1-8076-b622fe03baf1.jpg"
+         },
+         "description": "De actualiteit van de dag, getolkt in Vlaamse Gebarentaal (VGT)."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg1MTcyMzV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8M190ZXJ6YWtlJQ==",
+         "title": "VRT NWS Terzake",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/terzake/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/cbaa6b28-0a76-4df4-b8f4-56adc8f02fba.jpg"
+         },
+         "description": "Kathleen Cools, Annelies Beck en Pieterjan De Smedt kaderen de actualiteit aan de hand van kritische en verhelderende interviews."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg0ODY4MTh8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8NF9kZS1hZnNwcmFhayU=",
+         "title": "De afspraak",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-afspraak/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/24/f2e92201-1c5d-461a-8f0d-41676fa6f6d6.jpg"
+         },
+         "description": "Fatma Taspinar, Kobe Ilsen en Xavier Taveirne gaan in gesprek met gasten over nieuws dat ons elke dag bezig houdt. ​"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAxMjA4ODg0MzJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8NV9kZS1hZnNwcmFhay1vcC12cmlqZGFnJQ==",
+         "title": "De afspraak op vrijdag",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-afspraak-op-vrijdag/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/24/72fd857b-17f5-4a00-88a0-95c0945a5eb8.jpg"
+         },
+         "description": "Ivan De Vadder nodigt wekelijks één politicus en twee andere gasten uit. Samen overlopen zij de politieke actualiteit van de afgelopen week."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0NjAwMTg2NjA2OTB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8Nl9oZXQtd2VlciU=",
+         "title": "Het weer",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/het-weer/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/02/18/d66110f9-ae94-4264-8ff7-c1ed88d9d636.jpg"
+         },
+         "description": "Dagelijks weerpraatje met Sabine Hagedoren, Bram Verbruggen en Jacotte Brokken."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MDk5Nzl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8N19kZS16ZXZlbmRlLWRhZyU=",
+         "title": "VRT NWS De zevende dag",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-zevende-dag/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/6cfabb58-3dc7-4989-b707-8ea8811581c9.jpg"
+         },
+         "description": "Michaël Van Droogenbroeck en Kathleen Cools nemen een duik in de politieke en maatschappelijke actualiteit van de voorbije week."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1MTU3NjIzMTU1MzB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF84NjE2MTU0MThfY29weV98YiUwfCV8OF9kZS1tYXJrdCU=",
+         "title": "VRT NWS De markt",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-markt/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/31/5afaeb8c-c606-4e2c-8c4f-ffe6ddbcd117.jpg"
+         },
+         "description": "Duidingsprogramma over de economische actualiteit van de voorbije week."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Sportverhalen",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzIxMTgyMzI4ODJfY29weXxiJTB8JQ==",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1779949112290"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE0ODc5NTI2MzA0NzR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8MV9iZWxnYS1zcG9ydCU=",
+         "title": "Belga sport",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/belga-sport/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/22/fe281682-85bb-418b-a235-71200ad3c8a2.jpg"
+         },
+         "description": "Memorabele momenten uit de Belgische sportgeschiedenis"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODcwNTYwNjE5MDJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8Ml9vbnN0ZXJmZWxpamstLTUwLWphYXItbWVtb3JpYWwl",
+         "title": "Onsterfelijk: 50 jaar Memorial",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/onsterfelijk--50-jaar-memorial/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/18/139c62ec-e8cf-4d57-9195-5fd7008ebfb3.jpg"
+         },
+         "description": "Eric Goens blikt terug op 50 jaar Allianz Memorial Van Damme en zoekt de atletiekiconen op die de meeting mee groot maakten."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODc2NTM4Njk2MDJ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8M19pLWZvbGxvdy1yaXZlcnMl",
+         "title": "I follow rivers",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/i-follow-rivers/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/25/256bd9de-a012-458c-83ce-ca18e5e2e238.jpg"
+         },
+         "description": "Mariann Sæther is één van de beste wildwaterkajakkers ter wereld - en ook moeder van twee. Hoe ver gaat ze voor haar passie?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODc2NTUxMzY4Mzd8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8NF91bmJyZWFrYWJsZS0tdGhlLWplbGVuYS1kb2tpYy1zdG9yeSU=",
+         "title": "Unbreakable: the Jelena Dokic story",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/unbreakable--the-jelena-dokic-story/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/25/64ba4a91-ec4f-4906-9680-491f58a1caf2.jpg"
+         },
+         "description": "Jelena Dokic steeg tot de wereldtop in het tennis, maar achter haar succes schuilde een verhaal van geweld en misbruik door haar eigen vader en coach."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODc2NDIzMTQ0OTR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8NV91bmUtZmVtbWUtcXVpLXBhcnQl",
+         "title": "Une femme qui part",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/une-femme-qui-part/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/25/2a1f798d-40f6-4317-a71d-57835429dba2.jpg"
+         },
+         "description": "Filmmaker Ellen Vermeulen treedt in de voetsporen van Marie-Louise Chapelle, de eerste Franse vrouw die in 1952 een ongerepte Himalayapiek bereikte."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODcwNTYzNzE4NjR8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8Nl90aGUtYmFsbG9vbmlzdHMl",
+         "title": "The balloonists",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/the-balloonists/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/08/25/af3f9341-5f35-4b28-baf5-801688c257dc.jpg"
+         },
+         "description": "In 1999 wagen de Zwitserse avonturier Bertrand Piccard en de Britse vlieginstructeur Brian Jones zich aan de eerste non-stop ballonvlucht rond de wereld."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODM0MTc2ODI0MjN8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8N19kZS16b21lci12YW4tbHVjaWVuJQ==",
+         "title": "De zomer van Lucien",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/de-zomer-van-lucien/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/07/07/dddbe7ec-586b-4c5a-a120-c57d02692741.jpg"
+         },
+         "description": "50 jaar geleden won Lucien Van Impe de Ronde van Frankrijk. Karl Vannieuwkerke en Eddy Planckaert gaan op zoek naar verhalen achter deze Tourzege."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3Nzk5NDkxMTIyOTB8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8yMTE4MjMyODgyX2NvcHl8YiUwfCV8OF9jYXNhLWhvZ2FyJQ==",
+         "title": "Casa Hogar",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/casa-hogar/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/05/28/a38b6245-4070-4273-9b96-f5780a8ae419.jpg"
+         },
+         "description": "Na het WK van 1986 richtten de Rode Duivels een weeshuis op voor Mexicaanse straatkinderen. 40 jaar later keren enkele Duivels van toen terug."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Daar zit muziek in",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzMwMTg5NjEwfGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1761830363526"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTE4NzgwMDE0NTl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXwxX3phYWwtbHV4JQ==",
+         "title": "Zaal Lux",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/zaal-lux/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/13/afd8eb13-4667-4af6-a1eb-efd0835750a2.jpg"
+         },
+         "description": "Van internationale rockbands tot trouwe vrijwilligers: Zaal Lux blikt terug op haar rijke verleden tijdens het laatste concertjaar voor de renovatie."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NTE0ODM3MDI5Mzh8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXwyX3JlY29yZC1vbiU=",
+         "title": "Record on",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/record-on/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/07/02/be55771a-5c74-4d50-b343-693f4c06b011.jpg"
+         },
+         "description": "Hoe kwamen de baanbrekende albums van 's werelds meest vooraanstaande artiesten tot stand?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2NjE0MzY1MDk5MTZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXwzX2EtaGEtLXRoZS1tb3ZpZSU=",
+         "title": "A-ha, the movie",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/a-ha--the-movie/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2022/08/25/41516e3d-2481-11ed-b07d-02b7b76bf47f.jpg"
+         },
+         "description": "Toen 'Take on me' van de Noorse band a-ha in 1985 nummer 1 in de Amerikaanse lijsten werd, kwam de droom van drie jonge mannen uit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3MTEwMTM2OTIyNTZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXw0X3NpbXBsZS1taW5kcy0tZXZlcnl0aGluZy1pcy1wb3NzaWJsZSU=",
+         "title": "Simple Minds: everything is possible",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/simple-minds--everything-is-possible/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2024/03/21/225c354a-e767-11ee-8fc9-02b7b76bf47f.jpg"
+         },
+         "description": "Het verhaal van de Schotse newwaveband Simple Minds met nooit eerder vertoonde beelden uit de familiearchieven van de leden."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3OTExMTE0NDkxMzZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXw1X3BvbHktc3R5cmVuZS0taS1hbS1hLWNsaWNoZSU=",
+         "title": "Poly Styrene: I am a cliché",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/poly-styrene--i-am-a-cliche/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/04/44025eb7-bb33-4ffc-a703-3d3e04c7298e.jpg"
+         },
+         "description": "Poly Styrene, frontvrouw van de Engelse punkband X-Ray Spex, schreef nummers over onderwerpen waarmee ze haar tijd ver vooruit was."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2ODg2MzY4ODk5ODl8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXw2X3dlLWFyZS10b21vcnJvdyU=",
+         "title": "We are tomorrow",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/we-are-tomorrow/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/24/15164ad8-9328-412d-be48-776ffd22419f.jpg"
+         },
+         "description": "Festivalgangers uit de hele wereld delen hun verhalen over Tomorrowland 2026. Een kijkje achter de schermen van het festival dat mensen samenbrengt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3Njc4MDA3MTI2OTV8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXw3X3RpamQtdm9vci0tLS0l",
+         "title": "Tijd voor ...",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/tijd-voor----/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/12/44ca3129-ca92-4612-8fc8-01d06b2a4f64.png"
+         },
+         "description": "Stijn Van de Voorde stuurt videograaf Maarten op pad om te onderzoeken welke sporen de belangrijkste tijdloze artiesten nalaten."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NjE4MzAzNjM1MjZ8fHx8fHxwcm9ncmFtfHx8fG8lMzV8byU1MDl8ZGVmYXVsdCV8bGlzdF8zMDE4OTYxMHxiJTB8JXw4X2VlcmxpamstLSU=",
+         "title": "EERLIJK!?",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/eerlijk--/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/05/05/4557eaff-cb20-4808-b330-59e694be2c8f.jpg"
+         },
+         "description": "Esther Nwanu en Gailor Kiaku reageren samen met een wisselende groep reactors wekelijks op de nieuwste releases. Alles wat leeft binnen de hiphopcultuur krijgt hier een plek, live en ongefilterd."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": "Laatste kans",
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwl",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": true,
+       "endCursor": "1699886152786"
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE1NDQ2MTIyNDIzNjN8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE1NDQ2MTIyNDIzNjMl",
+         "title": "Vincent",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/vincent/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/07/3c271620-418e-4bf8-938b-d4a1baa7ef82.jpg"
+         },
+         "description": "De 17-jarige Vincent wil een radicaal statement maken tegen de wereldproblemen. Kan zijn tante Nikki hem de zonnige kant van het leven laten zien in Frankrijk?"
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODg5NjQ1OTY1MTR8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE3ODg5NjQ1OTY1MTQl",
+         "title": "All the beauty and the bloodshed",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/all-the-beauty-and-the-bloodshed/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/09/09/3f41b829-f60b-4ddf-b7de-f0ae9455ddd6.jpg"
+         },
+         "description": "De internationaal befaamde fotograaf en activiste Nan Goldin is een van de belangrijkste fotografen van de late 20e eeuw."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3MjkwODE4MjA0OTV8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE3MjkwODE4MjA0OTUl",
+         "title": "Radio 2 Dansathon",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/radio-2-dansathon/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/10/16/46e53c50-b2e3-46de-b571-4c520e7c4434.jpg"
+         },
+         "description": "Elk jaar krijgen gemiddeld 46.607 Vlamingen de diagnose kanker. Daarom dansen we opnieuw tegen kanker tijdens Radio 2 Dansathon."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NTM3MDA5MTM3NjF8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE3NTM3MDA5MTM3NjEl",
+         "title": "Licorice pizza",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/licorice-pizza/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2025/07/28/50edc98a-f397-4e58-bb81-6645727ddc4a.jpg"
+         },
+         "description": "Alana en Gary groeien in de jaren 70 op in San Fernando Valley en worden verliefd op elkaar."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3NzM4Mjg3MTA3MDJ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE3NzM4Mjg3MTA3MDIl",
+         "title": "Verdon: mountain of the dams",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/verdon--mountain-of-the-dams/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/03/18/28fec807-fb59-44da-b3a1-f38ea97b6ddd.jpg"
+         },
+         "description": "Documentaire over de Gorges du Verdon, de grootste kloof van Europa."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE3ODM5MzU2NjM2MTV8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE3ODM5MzU2NjM2MTUl",
+         "title": "In het spoor van Jakob Smits",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/in-het-spoor-van-jakob-smits/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/07/14/4d2e1794-0348-44cb-a874-70f134c5ee81.jpg"
+         },
+         "description": "Frans Verhoeven vergelijkt een landschapsschilderij van Jakob Smits met de overgebleven realiteit."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2ODAwMDYwNTM1MTJ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE2ODAwMDYwNTM1MTIl",
+         "title": "Hitler heeft mijn roze konijn gestolen",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/hitler-heeft-mijn-roze-konijn-gestolen/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2023/03/28/fc659c43-cd62-11ed-91d7-02b7b76bf47f.jpg"
+         },
+         "description": "De familie van Anna moet halsoverkop vluchten uit\nDuitsland. Vanaf nu is ze een vluchteling, die nieuwe talen leert en nieuwe\nvrienden maakt."
+        }
+       },
+       {
+        "node": {
+         "__typename": "ProgramTile",
+         "componentId": "$byUyNnxwcm9ncmFtfDE2OTk4ODYxNTI3ODZ8fCRieVV6Tlh4dkpUVXdPWHhrWldaaGRXeDBKWHhzYVhOMFh6RTJNalEyTURjMU9UTmZZMjl3ZVY4eE5EQTRNakV6TXpJemZHSWxNSHdsfHx8fHByb2dyYW18fGxpdmUvdnJ0bWF4L2xhYXRzdGVrYW5zP291dHB1dFR5cGU9cHJvZ3JhbXx8byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzE2MjQ2MDc1OTNfY29weV8xNDA4MjEzMzIzfGIlMHwlfDE2OTk4ODYxNTI3ODYl",
+         "title": "JFK: the home movie that changed the world",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/a-z/jfk--the-home-movie-that-changed-the-world/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2026/06/12/4b9eb38a-0318-4ea4-964f-8f664e40d264.jpg"
+         },
+         "description": "Eén persoon filmde de schietpartij op John F. Kennedy. De video van Abraham Zapruder zou worden gebruikt voor alle theorieën over de moord. Hij vertelt zijn verhaal."
+        }
+       }
+      ]
+     }
+    },
+    {
+     "__typename": "PaginatedTileList",
+     "title": null,
+     "listId": "$byUzNXxvJTUwOXxkZWZhdWx0JXxsaXN0XzI2Nzc0Nzg0N19jb3B5X18yODkzODM5OTl8YiUwfCU=",
+     "paginatedItems": {
+      "pageInfo": {
+       "hasNextPage": false,
+       "endCursor": "Wm2sgv6nX7ST6FJMurlnCEbKYnY="
+      },
+      "edges": [
+       {
+        "node": {
+         "__typename": "BannerTile",
+         "componentId": "$byUyNnxiYW5uZXJ8fHx8L3ZydG51Lm1vZGVsLmpzb258cGFyX2xpc3RfMjY3NzQ3ODQ3X2NvcHlfXzI4OTM4Mzk5OXwxX2l0ZW0wfGJhbm5lcnx8fHxvJTM1fG8lNTA5fGRlZmF1bHQlfGxpc3RfMjY3NzQ3ODQ3X2NvcHlfXzI4OTM4Mzk5OXxiJTB8JXwxX2l0ZW0wJQ==",
+         "title": "VRT MAX in het buitenland",
+         "action": {
+          "__typename": "LinkAction",
+          "link": "/vrtmax/artikels/2023/07/18/vrt-max-in-het-buitenland/"
+         },
+         "image": {
+          "templateUrl": "https://images.vrt.be/orig/2023/07/02/3ec45896-18bb-11ee-91d7-02b7b76bf47f.jpg?gravity=38p%2C44p"
+         }
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

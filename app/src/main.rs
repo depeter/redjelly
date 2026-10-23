@@ -26,6 +26,8 @@ mod settings;
 mod subtitles;
 mod update;
 mod video;
+mod vrt;
+mod web_player;
 mod ytdlp;
 #[cfg(windows)]
 mod video_window;
@@ -145,6 +147,8 @@ pub struct App {
     controls_focus: Cell<Option<i32>>,
     /// When Esc last hid the player bar (see `pointer_moved`).
     osd_hidden_at: Cell<Option<Instant>>,
+    /// When the mouse last moved over the player (hides the cursor when idle).
+    pointer_at: Cell<Instant>,
     update: RefCell<update::UpdateState>,
     /// Downloaded installers.
     update_dir: PathBuf,
@@ -154,6 +158,9 @@ pub struct App {
     requests: requests::State,
     /// yt-dlp for YouTube trailers (see `ytdlp.rs`).
     ytdlp_path: PathBuf,
+    vrt: vrt::State,
+    /// Windows video window (HWND), 0 without one; hosts the web player.
+    video_hwnd: Cell<i64>,
 }
 
 fn key_name(text: &str) -> Option<String> {
@@ -240,7 +247,12 @@ impl App {
         if now > self.toast_until.get() && !ui.get_toast().is_empty() {
             ui.set_toast(SharedString::new());
         }
-        self.player_tick(now);
+        self.vrt_tick(now);
+        if self.web_active() {
+            self.web_tick(now);
+        } else {
+            self.player_tick(now);
+        }
         self.update_tick(now);
         self.requests_tick(now);
     }
@@ -314,7 +326,7 @@ impl App {
             return true;
         }
 
-        let in_search = matches!(self.top_source(), Some(Source::Search { .. }));
+        let in_search = matches!(self.top_source(), Some(Source::Search { .. } | Source::VrtSearch { .. }));
         if screen == SCREEN_BROWSE && in_search && !ctrl && !alt {
             if name == "Backspace" {
                 self.search_edit(None);
@@ -345,11 +357,14 @@ impl App {
             self.handle(ctx, action);
             return true;
         }
-        // Type-to-search from any browse screen once signed in.
+        // Type-to-search from any browse screen once signed in; VRT MAX
+        // screens search VRT MAX.
         let signed_in = self.client.borrow().is_some();
         if ctx == Context::Browse && signed_in && !ctrl && !alt
             && let Some(c) = typed.filter(|c| c.is_alphanumeric()) {
-                self.open(Source::Search { term: c.to_string() }, Placement::Push);
+                let term = c.to_string();
+                let vrt = self.top_source().is_some_and(|s| s.is_vrt());
+                self.open(if vrt { Source::VrtSearch { term } } else { Source::Search { term } }, Placement::Push);
                 return true;
             }
         false
@@ -374,7 +389,9 @@ impl App {
             Action::Activate => self.activate_focused(),
             Action::Back => self.back(),
             Action::Search if self.client.borrow().is_some() => {
-                self.open(Source::Search { term: String::new() }, Placement::Push)
+                let vrt = self.top_source().is_some_and(|s| s.is_vrt());
+                let term = String::new();
+                self.open(if vrt { Source::VrtSearch { term } } else { Source::Search { term } }, Placement::Push)
             }
             Action::GoHome => self.go_home(),
             Action::Jobs if self.client.borrow().is_some() => self.open(Source::Jobs, Placement::Push),
@@ -444,6 +461,7 @@ impl App {
         let result = video_window::VideoWindow::new().and_then(|w| {
             w.follow(ui_hwnd)?;
             self.player.set_window(w.handle())?;
+            self.video_hwnd.set(w.handle());
             // Lives as long as the process; mpv draws into it until exit.
             std::mem::forget(w);
             Ok(())
@@ -603,12 +621,15 @@ fn main() -> anyhow::Result<()> {
         }),
         controls_focus: Cell::new(None),
         osd_hidden_at: Cell::new(None),
+        pointer_at: Cell::new(Instant::now()),
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
         shutdown_armed: Cell::new(None),
         discover: Default::default(),
         requests: Default::default(),
         ytdlp_path,
+        vrt: vrt::State::new(dirs.data_local_dir(), dirs.cache_dir()),
+        video_hwnd: Cell::new(0),
     });
     app.apply_tone_mapping();
     APP.with(|a| *a.borrow_mut() = Some(app.clone()));

@@ -2,3 +2,4 @@
 *.dll
 /models
 /dist
+.claude/settings.local.json

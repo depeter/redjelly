@@ -304,7 +304,7 @@ a progress bar. Target: 2 h film transcribed in < 5 min on a recent NVIDIA GPU.
 
 ## 8. UI screens
 
-Login / user switcher (Quick Connect + password) → Home (Continue watching, Next up,
+Login / user switcher (Quick Connect + password) → Home (Continue watching incl. next episodes,
 Latest per library) → Library grid (sort, filter, A–Z jump) → Series → Season →
 Episode/Movie detail (versions, audio/sub info, "subs: nl missing" badge) → Player
 (OSD, track menus, subtitle panel, AI job progress) → Search → Settings (Server &

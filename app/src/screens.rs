@@ -420,7 +420,7 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
 
 /// `discover`: Jellyseerr is set up, so offer the Discover wizard.
 /// `seerr_rows`: Jellyseerr rows (Requests, Popular) loaded alongside, shown
-/// after "Next up".
+/// after "Continue watching".
 pub async fn home(
     c: &Client,
     discover: bool,
@@ -434,10 +434,15 @@ pub async fn home(
     };
     let (server, seerr_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, seerr_rows);
     let (resume, next_up, views) = server?;
-    let mut rows = vec![
-        row("Continue watching", STYLE_WIDE, resume.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
-        row("Next up", STYLE_WIDE, next_up.items.iter().map(|i| item_card(c, i, STYLE_WIDE, false)).collect()),
-    ];
+    // One row: in-progress items first, then next episodes. Next Up also
+    // returns half-watched episodes, so skip those already in Resume.
+    let watching = resume
+        .items
+        .iter()
+        .chain(next_up.items.iter().filter(|n| !resume.items.iter().any(|r| r.id == n.id)))
+        .map(|i| item_card(c, i, STYLE_WIDE, false))
+        .collect();
+    let mut rows = vec![row("Continue watching", STYLE_WIDE, watching)];
     rows.extend(seerr_rows);
     rows.push(
         row(

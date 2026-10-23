@@ -27,6 +27,9 @@ export CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_LINKER=x86_64-w64-mingw32-clang
 export CARGO_TARGET_X86_64_PC_WINDOWS_GNULLVM_RUSTFLAGS="-L native=$MPV_DEV"
 export WINDRES=x86_64-w64-mingw32-windres
 
+free_gb=$(df -BG --output=avail "$root" | tail -1 | tr -dc 0-9)
+[ "$free_gb" -ge 5 ] || { echo "build-windows: only ${free_gb}G free (need 5G); try: cargo clean --profile dev" >&2; exit 1; }
+
 cargo build --release --target "$TARGET" -p redjelly --manifest-path "$root/Cargo.toml"
 
 dist="$root/dist/redjelly"

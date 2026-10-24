@@ -31,9 +31,6 @@ const ROW: [i32; 10] = [STOP, PREVIOUS, REWIND, PLAY, FORWARD, NEXT, SUBTITLES, 
 /// Hide the cursor once the mouse has rested this long.
 pub const POINTER_IDLE: Duration = Duration::from_secs(2);
 
-/// After Esc hides the bar, pointer events this soon are side effects.
-const HIDE_GRACE: Duration = Duration::from_millis(500);
-
 const REWIND_SECS: f64 = -10.0;
 const FORWARD_SECS: f64 = 30.0;
 
@@ -80,16 +77,17 @@ impl App {
     pub fn hide_controls(&self) {
         self.release_controls();
         self.osd_until.set(Instant::now());
-        self.osd_hidden_at.set(Some(Instant::now()));
         self.ui().set_player_osd(false);
     }
 
-    /// The mouse moved over the video or the bar: show the bar. Removing the
-    /// bar re-delivers the resting pointer to the video's TouchArea, whose
-    /// mouse-x/y were stale while the bar covered it — a "move" that would
-    /// bring the bar straight back after Esc. Ignore those for a moment.
-    pub fn pointer_moved(&self) {
-        if self.osd_hidden_at.get().is_some_and(|t| t.elapsed() < HIDE_GRACE) {
+    /// The mouse moved over the video or the bar: show the bar. Showing or
+    /// hiding the bar re-delivers the resting pointer to TouchAreas whose
+    /// mouse-x/y were stale (or new), and Windows sends moves of its own when
+    /// windows under it change (WebView2); those report the same window
+    /// position, so only a real change counts.
+    pub fn pointer_moved(&self, x: f32, y: f32) {
+        let last = self.pointer_pos.replace(Some((x, y)));
+        if last.is_some_and(|(lx, ly)| (lx - x).abs() < 1.0 && (ly - y).abs() < 1.0) {
             return;
         }
         self.pointer_at.set(Instant::now());

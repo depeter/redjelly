@@ -146,7 +146,8 @@ pub struct App {
     /// Player button with key/controller focus; None = keys control playback.
     controls_focus: Cell<Option<i32>>,
     /// When Esc last hid the player bar (see `pointer_moved`).
-    osd_hidden_at: Cell<Option<Instant>>,
+    /// Where the pointer last was over the player, in window coordinates.
+    pointer_pos: Cell<Option<(f32, f32)>>,
     /// When the mouse last moved over the player (hides the cursor when idle).
     pointer_at: Cell<Instant>,
     update: RefCell<update::UpdateState>,
@@ -620,7 +621,7 @@ fn main() -> anyhow::Result<()> {
             }
         }),
         controls_focus: Cell::new(None),
-        osd_hidden_at: Cell::new(None),
+        pointer_pos: Cell::new(None),
         pointer_at: Cell::new(Instant::now()),
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
@@ -653,7 +654,7 @@ fn main() -> anyhow::Result<()> {
             ui.window().set_fullscreen(!ui.window().is_fullscreen());
         })
     });
-    ui.on_player_pointer_moved(|| with_app(|app| app.pointer_moved()));
+    ui.on_player_pointer_moved(|x, y| with_app(|app| app.pointer_moved(x, y)));
     ui.on_player_button(|b| with_app(|app| app.press_control(b)));
     ui.on_player_seek(|f| with_app(|app| app.seek_to_fraction(f)));
     ui.on_player_set_volume(|f| with_app(|app| app.set_volume_fraction(f)));

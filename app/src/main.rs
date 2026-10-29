@@ -145,11 +145,12 @@ pub struct App {
     gamepads: RefCell<Option<rj_input::gamepad::Gamepads>>,
     /// Player button with key/controller focus; None = keys control playback.
     controls_focus: Cell<Option<i32>>,
-    /// When Esc last hid the player bar (see `pointer_moved`).
     /// Where the pointer last was over the player, in window coordinates.
     pointer_pos: Cell<Option<(f32, f32)>>,
     /// When the mouse last moved over the player (hides the cursor when idle).
     pointer_at: Cell<Instant>,
+    /// Whether `sync_cursor` last hid the cursor.
+    cursor_hidden: Cell<bool>,
     update: RefCell<update::UpdateState>,
     /// Downloaded installers.
     update_dir: PathBuf,
@@ -254,6 +255,7 @@ impl App {
         } else {
             self.player_tick(now);
         }
+        self.sync_cursor();
         self.update_tick(now);
         self.requests_tick(now);
     }
@@ -623,6 +625,7 @@ fn main() -> anyhow::Result<()> {
         controls_focus: Cell::new(None),
         pointer_pos: Cell::new(None),
         pointer_at: Cell::new(Instant::now()),
+        cursor_hidden: Cell::new(false),
         update: RefCell::new(Default::default()),
         update_dir: dirs.cache_dir().join("update"),
         shutdown_armed: Cell::new(None),

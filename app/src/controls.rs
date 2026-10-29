@@ -8,6 +8,7 @@ use rj_core::lang::Lang;
 use rj_input::Action;
 use rj_player::MpvTrack;
 use slint::ComponentHandle;
+use slint::winit_030::WinitWindowAccessor;
 
 use crate::subtitles::{Panel, PanelAction, PanelKind, entry};
 use crate::{App, PanelItem};
@@ -93,6 +94,21 @@ impl App {
         self.pointer_at.set(Instant::now());
         self.ui().set_player_pointer_idle(false);
         self.show_osd();
+        self.sync_cursor();
+    }
+
+    /// Slint applies `mouse-cursor` only while handling mouse events, so the
+    /// cursor hidden by the idle timer stayed on screen until the mouse moved
+    /// again. Mirror the player's cursor rule onto the window directly, and
+    /// bring the cursor back once playback ends.
+    pub fn sync_cursor(&self) {
+        let ui = self.ui();
+        let playing = self.web_active() || self.session.borrow().is_some();
+        let bar_visible = ui.get_player_osd() || ui.get_player_paused();
+        let hide = playing && (ui.get_player_pointer_idle() || !bar_visible);
+        if self.cursor_hidden.replace(hide) != hide {
+            ui.window().with_winit_window(|w| w.set_cursor_visible(!hide));
+        }
     }
 
     fn control_shown(&self, button: i32) -> bool {

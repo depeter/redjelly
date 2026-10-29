@@ -5491,7 +5491,7 @@ checksum = "03251193000f4bd3b042892be858ee50e8b3719f2b08e5833ac4353724632430"
 
 [[package]]
 name = "redjelly"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "anyhow",
  "ed25519-dalek",
@@ -5677,7 +5677,7 @@ dependencies = [
 
 [[package]]
 name = "rj-ai"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "candle-core",
  "candle-nn",
@@ -5693,7 +5693,7 @@ dependencies = [
 
 [[package]]
 name = "rj-core"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "directories",
  "serde",
@@ -5704,7 +5704,7 @@ dependencies = [
 
 [[package]]
 name = "rj-input"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "gilrs",
  "serde",
@@ -5716,7 +5716,7 @@ dependencies = [
 
 [[package]]
 name = "rj-jellyfin"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "base64 0.23.1",
  "reqwest",
@@ -5731,7 +5731,7 @@ dependencies = [
 
 [[package]]
 name = "rj-player"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "libmpv2",
  "rj-core",
@@ -5742,7 +5742,7 @@ dependencies = [
 
 [[package]]
 name = "rj-seerr"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "reqwest",
  "serde",
@@ -5756,7 +5756,7 @@ dependencies = [
 
 [[package]]
 name = "rj-subs"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "alass-core",
  "async-trait",
@@ -5774,7 +5774,7 @@ dependencies = [
 
 [[package]]
 name = "rj-vrt"
-version = "0.1.14"
+version = "0.1.15"
 dependencies = [
  "base64 0.23.1",
  "chrono",

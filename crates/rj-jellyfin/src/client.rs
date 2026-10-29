@@ -50,7 +50,14 @@ impl Client {
         if !base.path().ends_with('/') {
             base.set_path(&format!("{}/", base.path()));
         }
-        Ok(Self { http: reqwest::Client::new(), base, info, session: None })
+        // Without timeouts a request on a dead connection (server or Wi-Fi
+        // blip) hangs forever, and the "busy" guard then blocks every later
+        // play until restart. Read timeout = silence, not total length.
+        let http = reqwest::Client::builder()
+            .connect_timeout(std::time::Duration::from_secs(10))
+            .read_timeout(std::time::Duration::from_secs(30))
+            .build()?;
+        Ok(Self { http, base, info, session: None })
     }
 
     /// Restores a session from a stored token.

@@ -121,6 +121,8 @@ id recorded. This mapping lives in `rj-player` and is unit-tested.
   Esc/Backspace = back, Tab/Shift+Tab = next/previous region.
 - Focus is restored when returning to a screen (remember per-screen focus path).
 - Type-to-search: typing a letter on a browse screen opens search with that letter.
+- A 24-hour local clock sits top right on Home and in the player's top bar while the
+  controls are shown.
 
 ### 4.2 Default player keys (all rebindable)
 
@@ -330,6 +332,11 @@ RT scores to the meta line once fetched.
 With Jellyseerr set up, Home also has a **Popular & well rated** row (TMDb movies from
 the last 2 years, score 7+ with 200+ votes, by popularity), loaded alongside the other
 rows and dropped if Jellyseerr is slow (5 s) or fails.
+With Jellyseerr set up, **Search** also looks beyond the library: a **Not in your
+library** row of TMDb movies and shows leading to the same title page with Request.
+Titles fully in Jellyseerr's books or found in Jellyfin by TMDb id are left out; a
+partly available show stays. If Jellyseerr fails or takes over 5 s, library results
+still show, with the reason in the header.
 
 **Requests**: a Home **Requests** row (before Popular) lists open and failed requests
 (everyone's when the Jellyseerr account may see them; 8 s budget) with a live status:

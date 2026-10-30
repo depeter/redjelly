@@ -145,6 +145,10 @@ impl App {
             vrt.extend(seerr);
             vrt
         };
+        let seerr_search = match &source {
+            Source::Search { term } => self.seerr_search(term),
+            _ => None,
+        };
         let src = source.clone();
         self.load(source, placement, async move {
             match &src {
@@ -155,7 +159,7 @@ impl App {
                 }
                 Source::Series { id } => screens::series(&client, id).await,
                 Source::Detail { id } => screens::detail(&client, id, &prefs).await,
-                Source::Search { term } => screens::search(&client, term).await,
+                Source::Search { term } => screens::search(&client, term, seerr_search).await,
                 Source::Person { id, name } => screens::person(&client, id, name, columns).await,
                 _ => unreachable!("built locally or by discover.rs"),
             }

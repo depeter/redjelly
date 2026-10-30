@@ -798,29 +798,73 @@ pub async fn person(c: &Client, id: &str, name: &str, columns: usize) -> anyhow:
     })
 }
 
-pub async fn search(c: &Client, term: &str) -> anyhow::Result<Content> {
-    let header = HeaderContent {
+/// `beyond`: Jellyseerr's search, when it's set up.
+pub async fn search(
+    c: &Client,
+    term: &str,
+    beyond: Option<impl Future<Output = anyhow::Result<Vec<(rj_seerr::MediaKind, rj_seerr::models::Title)>>>>,
+) -> anyhow::Result<Content> {
+    let mut header = HeaderContent {
         title: "Search".into(),
         meta: format!("{term}_"),
-        info: if term.is_empty() { "Type to search movies, shows and episodes".into() } else { String::new() },
+        info: if beyond.is_some() {
+            "Type to search your library and everything you could request".into()
+        } else {
+            "Type to search movies, shows and episodes".into()
+        },
         ..Default::default()
     };
     let mut rows = Vec::new();
     if !term.trim().is_empty() {
-        let res = c.search(term, 60).await?;
+        header.info = String::new();
+        let beyond = async {
+            match beyond {
+                Some(f) => Some(f.await),
+                None => None,
+            }
+        };
+        let (res, beyond) = tokio::join!(c.search(term, 60), beyond);
+        let res = res?;
         let of = |kind: &'static str| res.items.iter().filter(move |i| i.kind == kind);
         let movies: Vec<_> = of("Movie").map(|i| item_card(c, i, STYLE_POSTER, false)).collect();
         let series: Vec<_> = of("Series").map(|i| item_card(c, i, STYLE_POSTER, false)).collect();
         let episodes: Vec<_> = of("Episode").map(|i| item_card(c, i, STYLE_WIDE, false)).collect();
-        for (title, style, cards) in [("Movies", STYLE_POSTER, movies), ("Shows", STYLE_POSTER, series), ("Episodes", STYLE_WIDE, episodes)] {
+        let requestable = match beyond {
+            Some(Ok(hits)) => {
+                let library = res
+                    .items
+                    .iter()
+                    .filter_map(|i| {
+                        let kind = match i.kind.as_str() {
+                            "Movie" => rj_seerr::MediaKind::Movie,
+                            "Series" => rj_seerr::MediaKind::Tv,
+                            _ => return None,
+                        };
+                        Some((kind, tmdb_id(i)?))
+                    })
+                    .collect();
+                crate::discover::requestable_cards(hits, &library)
+            }
+            Some(Err(e)) => {
+                tracing::warn!("searching Jellyseerr: {e:#}");
+                header.info = format!("Couldn't search beyond your library: {e:#}");
+                Vec::new()
+            }
+            None => Vec::new(),
+        };
+        for (title, style, cards) in [
+            ("Movies", STYLE_POSTER, movies),
+            ("Shows", STYLE_POSTER, series),
+            ("Not in your library", STYLE_POSTER, requestable),
+            ("Episodes", STYLE_WIDE, episodes),
+        ] {
             if !cards.is_empty() {
                 rows.push(row(title, style, cards));
             }
         }
-    }
-    let mut header = header;
-    if !term.trim().is_empty() && rows.is_empty() {
-        header.info = "Nothing found".into();
+        if rows.is_empty() && header.info.is_empty() {
+            header.info = "Nothing found".into();
+        }
     }
     Ok(Content { source: Source::Search { term: term.into() }, header: Some(header), rows, focus: (0, 0), paging: None })
 }

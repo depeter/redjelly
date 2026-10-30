@@ -112,6 +112,18 @@ fn session_cookie(set_cookie: &str) -> Option<String> {
     pair.starts_with("connect.sid=").then(|| pair.to_owned())
 }
 
+/// Everything but RFC 3986's unreserved characters as `%XX`.
+fn percent_encode(s: &str) -> String {
+    s.bytes().fold(String::new(), |mut out, b| {
+        if b.is_ascii_alphanumeric() || b"-_.~".contains(&b) {
+            out.push(char::from(b));
+        } else {
+            out.push_str(&format!("%{b:02X}"));
+        }
+        out
+    })
+}
+
 impl Client {
     pub fn new(url: &str) -> Result<Self, Error> {
         let mut base = Url::parse(url.trim())?;
@@ -186,6 +198,22 @@ impl Client {
             MediaKind::Tv => "discover/tv",
         };
         self.get(path, &query.params(kind, page)).await
+    }
+
+    /// TMDb search for movies and shows, best match first (no people).
+    pub async fn search(&self, term: &str) -> Result<Vec<(MediaKind, Title)>, Error> {
+        // Not `.query()`: Jellyseerr's validator rejects raw reserved
+        // characters, which includes the `+` that would encode a space.
+        let page: Page = self.get(&format!("search?query={}&page=1", percent_encode(term)), &[]).await?;
+        Ok(page
+            .results
+            .into_iter()
+            .filter_map(|t| match t.media_type.as_deref() {
+                Some("movie") => Some((MediaKind::Movie, t)),
+                Some("tv") => Some((MediaKind::Tv, t)),
+                _ => None,
+            })
+            .collect())
     }
 
     pub async fn genres(&self, kind: MediaKind) -> Result<Vec<Genre>, Error> {
@@ -319,6 +347,27 @@ mod tests {
             Some("connect.sid=s%3Aabc.def")
         );
         assert_eq!(session_cookie("other=1; Path=/"), None);
+    }
+
+    #[tokio::test]
+    async fn search_encodes_the_term_and_leaves_out_people() {
+        let server = MockServer::start().await;
+        Mock::given(method("GET"))
+            .and(path("/api/v1/search"))
+            .and(|r: &wiremock::Request| r.url.query() == Some("query=Am%C3%A9lie%20%26%20it%27s%2B&page=1"))
+            .respond_with(ResponseTemplate::new(200).set_body_json(json!({
+                "page": 1, "totalPages": 1, "totalResults": 3,
+                "results": [
+                    { "id": 194, "mediaType": "movie", "title": "Amélie", "releaseDate": "2001-04-25" },
+                    { "id": 7, "mediaType": "person", "name": "Audrey Tautou", "profilePath": "/p.jpg", "knownFor": [] },
+                    { "id": 9, "mediaType": "tv", "name": "Amélie Show", "firstAirDate": "2020-01-01" },
+                ],
+            })))
+            .mount(&server)
+            .await;
+        let found = Client::new(&server.uri()).unwrap().search("Amélie & it's+").await.unwrap();
+        let found: Vec<_> = found.iter().map(|(k, t)| (*k, t.id, t.title.as_str())).collect();
+        assert_eq!(found, [(MediaKind::Movie, 194, "Amélie"), (MediaKind::Tv, 9, "Amélie Show")]);
     }
 
     #[tokio::test]

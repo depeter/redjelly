@@ -4,7 +4,7 @@
 //! and their password from the credential store.
 
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
@@ -41,6 +41,8 @@ const TV_ALIASES: [(&str, &str); 5] = [
     ("War", "War & Politics"),
 ];
 const TMDB_IMAGES: &str = "https://image.tmdb.org/t/p";
+/// Library results wait for Jellyseerr's search, but not for long.
+const SEARCH_BUDGET: std::time::Duration = std::time::Duration::from_secs(5);
 
 type RatingsCache = Arc<Mutex<HashMap<(MediaKind, u32), Ratings>>>;
 type SharedClient = Arc<Mutex<Option<SeerrClient>>>;
@@ -616,6 +618,20 @@ fn found_card(f: &Found) -> CardContent {
     }
 }
 
+/// Search hits worth offering next to the library's own results: anything
+/// not fully in Jellyseerr's books or `library` (TMDb ids found in Jellyfin).
+/// A partly available show stays, its other seasons can still be requested.
+pub fn requestable_cards(hits: Vec<(MediaKind, Title)>, library: &HashSet<(MediaKind, u32)>) -> Vec<CardContent> {
+    hits.into_iter()
+        .filter(|(kind, t)| match t.media_info.as_ref().map(|i| i.status) {
+            Some(status::AVAILABLE) => false,
+            Some(status::PARTIALLY_AVAILABLE) => true,
+            _ => !library.contains(&(*kind, t.id)),
+        })
+        .map(|(kind, title)| found_card(&Found { kind, title, ratings: None }))
+        .collect()
+}
+
 /// One-line summary of the wizard answers.
 fn summary(f: &DiscoverFilters, providers: &[WatchProvider]) -> String {
     let mut parts: Vec<String> = vec![
@@ -876,6 +892,22 @@ impl App {
                 })
                 .unwrap_or_default();
             crate::requests::home_rows(requests, popular)
+        })
+    }
+
+    /// The search screen's look beyond the library. None when Jellyseerr
+    /// isn't set up; otherwise failures come back for the screen to show.
+    pub fn seerr_search(&self, term: &str) -> Option<impl Future<Output = anyhow::Result<Vec<(MediaKind, Title)>>> + Send + 'static> {
+        self.seerr_url()?;
+        let setup = self.seerr_setup();
+        let term = term.trim().to_owned();
+        Some(async move {
+            let (shared, client, login) = setup?;
+            let search = with_session(shared, client, login, move |c| {
+                let term = term.clone();
+                async move { c.search(&term).await }
+            });
+            tokio::time::timeout(SEARCH_BUDGET, search).await.map_err(|_| anyhow::anyhow!("Jellyseerr took too long"))?
         })
     }
 
@@ -1785,6 +1817,30 @@ mod tests {
         assert!(c.header.unwrap().info.starts_with("Your mind"));
         // No region: no Where to watch row.
         assert!(title_content(MediaKind::Movie, &d, None, &Default::default()).rows.iter().all(|r| !r.title.starts_with("Where")));
+    }
+
+    #[test]
+    fn requestable_leaves_out_what_is_already_here() {
+        let title = |id, media_status: Option<u8>| Title {
+            id,
+            title: format!("t{id}"),
+            media_info: media_status.map(|status| rj_seerr::models::MediaInfo { status, ..Default::default() }),
+            ..Default::default()
+        };
+        let hits = vec![
+            (MediaKind::Movie, title(1, None)),
+            (MediaKind::Movie, title(2, Some(status::AVAILABLE))),
+            // In Jellyfin, unknown to Jellyseerr.
+            (MediaKind::Movie, title(3, None)),
+            // Same id as a library movie, but a show.
+            (MediaKind::Tv, title(3, None)),
+            (MediaKind::Tv, title(4, Some(status::PARTIALLY_AVAILABLE))),
+            (MediaKind::Movie, title(5, Some(status::PENDING))),
+        ];
+        let library = HashSet::from([(MediaKind::Movie, 3), (MediaKind::Tv, 4)]);
+        let cards = requestable_cards(hits, &library);
+        let titles: Vec<_> = cards.iter().map(|c| c.title.as_str()).collect();
+        assert_eq!(titles, ["t1", "t3", "t4", "t5"]);
     }
 
     #[test]

@@ -208,7 +208,7 @@ impl Client {
         let s = self.session()?;
         let mut q = vec![
             ("userId", s.user_id.as_str()),
-            ("fields", "Overview,Genres,ChildCount,PrimaryImageAspectRatio"),
+            ("fields", "Overview,Genres,ChildCount,PrimaryImageAspectRatio,ProviderIds"),
             ("enableImageTypes", "Primary,Backdrop,Thumb"),
         ];
         q.extend_from_slice(query);

@@ -249,6 +249,9 @@ pub struct SeasonStatus {
 #[serde(rename_all = "camelCase")]
 pub struct Title {
     pub id: u32,
+    /// "movie", "tv" or "person" in search results.
+    #[serde(default)]
+    pub media_type: Option<String>,
     #[serde(default, alias = "name")]
     pub title: String,
     #[serde(default, alias = "firstAirDate")]

@@ -98,11 +98,14 @@ fn main() {
     ui.set_header_visible(false);
     ui.set_focus_row(1);
     ui.set_focus_col(0);
+    ui.set_clock("21:47".into());
+    ui.set_clock_on_browse(true);
     ui.set_toast("Arrow keys to move · Enter to open · ? for all keys".into());
     save(&window, &format!("{out}/home.png"));
 
     // Detail
     ui.set_toast("".into());
+    ui.set_clock_on_browse(false);
     ui.set_header(Header {
         title: "The Long Night".into(),
         meta: "2024 · 2h 14m · 16 · ★ 7.4 · Drama, Thriller · IMDb 7.8 · RT 92% · Audience 88%".into(),

@@ -258,6 +258,13 @@ impl App {
         self.sync_cursor();
         self.update_tick(now);
         self.requests_tick(now);
+        self.clock_tick();
+    }
+
+    fn clock_tick(&self) {
+        let ui = self.ui();
+        ui.set_clock(chrono::Local::now().format("%H:%M").to_string().into());
+        ui.set_clock_on_browse(self.nav.borrow().last().is_some_and(|s| s.source == Source::Home));
     }
 
     fn on_key(&self, text: &str, ctrl: bool, alt: bool, shift: bool) -> bool {

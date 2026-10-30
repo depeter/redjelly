@@ -19,6 +19,7 @@ tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 uuid.workspace = true
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
 slint = { version = "1.18", features = ["raw-window-handle-06", "unstable-winit-030"] }
 glow = "0.18"
 raw-window-handle = "0.6"

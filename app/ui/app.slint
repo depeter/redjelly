@@ -235,6 +235,8 @@ component BrowseView inherits Rectangle {
     /// `focus-bottom`) is always whole.
     in property <length> scroll-peek;
     in property <length> focus-bottom;
+    /// "21:47" top right, empty = none (and no room kept for it).
+    in property <string> clock;
     callback card-clicked(int, int);
 
     if root.header.has-backdrop: Image {
@@ -248,8 +250,17 @@ component BrowseView inherits Rectangle {
         background: @linear-gradient(90deg, Theme.bg 0%, #0e0e12cc 45%, #0e0e1200 100%);
     }
 
+    if root.clock != "": Text {
+        x: parent.width - self.width - Theme.side-pad;
+        y: 18px;
+        text: root.clock;
+        color: Theme.text;
+        font-size: 26px;
+        font-weight: 600;
+    }
+
     VerticalLayout {
-        padding-top: 32px;
+        padding-top: root.clock != "" ? 64px : 32px;
         spacing: 20px;
 
         if root.header-visible: VerticalLayout {
@@ -586,6 +597,7 @@ component ControlButton inherits Rectangle {
 // or it would hide the video underlay.
 component PlayerOverlay inherits Rectangle {
     in property <string> title;
+    in property <string> clock;
     in property <string> time-text;
     in property <string> total-text;
     in property <float> progress;
@@ -633,12 +645,21 @@ component PlayerOverlay inherits Rectangle {
         Text {
             x: 28px;
             y: 22px;
-            width: parent.width - 56px;
+            // Leaves room for the clock.
+            width: parent.width - 56px - 96px;
             text: root.title;
             color: white;
             font-size: 22px;
             font-weight: 600;
             overflow: elide;
+        }
+        Text {
+            x: parent.width - self.width - 28px;
+            y: 22px;
+            text: root.clock;
+            color: white;
+            font-size: 22px;
+            font-weight: 600;
         }
     }
 
@@ -1097,6 +1118,9 @@ export component AppWindow inherits Window {
     in property <length> scroll-y;
     in property <length> scroll-peek;
     in property <length> focus-bottom;
+    /// The time, kept current from Rust; shown on Home and over the player.
+    in property <string> clock;
+    in property <bool> clock-on-browse;
 
     // Login
     in-out property <string> server-url;
@@ -1177,10 +1201,12 @@ export component AppWindow inherits Window {
             scroll-y: root.scroll-y;
             scroll-peek: root.scroll-peek;
             focus-bottom: root.focus-bottom;
+            clock: root.clock-on-browse ? root.clock : "";
             card-clicked(r, c) => { root.card-clicked(r, c); }
         }
         if root.screen == 2: PlayerOverlay {
             title: root.player-title;
+            clock: root.clock;
             time-text: root.player-time;
             total-text: root.player-total;
             progress: root.player-progress;

@@ -4,7 +4,10 @@
 # builds the Windows installer, signs it, commits and tags, then — after
 # asking — pushes and creates the GitHub release.
 #
-#   LLVM_MINGW=... MPV_DEV=... MAKENSIS=... NSISDIR=... scripts/release.sh [x.y.z]
+#   LLVM_MINGW=... MPV_DEV=... MAKENSIS=... NSISDIR=... scripts/release.sh [--yes] [x.y.z]
+#
+# --yes publishes without asking; .github/workflows/release.yml runs it that
+# way on every merge to main.
 #
 # Build variables: see scripts/build-windows.sh. The signing key is
 # ~/.config/redjelly/release-signing.key (override with REDJELLY_SIGNING_KEY);
@@ -15,6 +18,11 @@ die() { echo "release: $*" >&2; exit 1; }
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
+yes=
+if [ "${1:-}" = --yes ] || [ "${1:-}" = -y ]; then
+  yes=1
+  shift
+fi
 key="${REDJELLY_SIGNING_KEY:-$HOME/.config/redjelly/release-signing.key}"
 
 : "${MAKENSIS:?set MAKENSIS (and the other scripts/build-windows.sh variables)}"
@@ -69,7 +77,11 @@ echo
 echo "Release notes:"
 cat "$notes"
 echo
-read -rp "Push main + v$new and publish the GitHub release? [y/N] " answer
+if [ -n "$yes" ]; then
+  answer=y
+else
+  read -rp "Push main + v$new and publish the GitHub release? [y/N] " answer
+fi
 if [ "$answer" != y ] && [ "$answer" != Y ]; then
   echo "Not published. Undo with: git tag -d v$new && git reset --hard HEAD~1"
   exit 0

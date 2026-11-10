@@ -432,6 +432,10 @@ SmartScreen warns on first run. Licence GPL-3.0-or-later (LICENSE), notices in
 with ed25519 (`openssl pkeyutl`, key in `~/.config/redjelly/release-signing.key`
 on the build box), tags `v<version>` and publishes a GitHub release with the
 exe, its `.sig` and the zip; notes are the commit subjects since the last tag.
+Every merge to main publishes a release this way, straight to production:
+`.github/workflows/release.yml` runs `scripts/release.sh --yes` (no prompt)
+with the key from the `REDJELLY_SIGNING_KEY` repo secret, one run at a time,
+skipping when main's head is already a `Release` commit.
 The app (`app/src/update.rs`) checks `releases/latest` 10 s after start and
 every 12 h, never during playback; Settings ▸ Updates shows the notes and
 installs: download, verify against the built-in public key, run the installer

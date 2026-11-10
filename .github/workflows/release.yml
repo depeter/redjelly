@@ -1,0 +1,94 @@
+# Publishes a new redjelly release (production: the GitHub release that
+# installed copies update themselves to) on every merge to main, by running
+# scripts/release.sh --yes. See SPEC.md §10.1.
+#
+# One-time setup in the repo settings:
+# - Secret REDJELLY_SIGNING_KEY: the PEM contents of the ed25519 key from
+#   ~/.config/redjelly/release-signing.key on the build box.
+# - Actions may push to main (the "Release x.y.z" commit and v-tag); if main
+#   is protected, let github-actions[bot] bypass it.
+# - Optional variables LLVM_MINGW_TAG / MPV_WINBUILD_TAG pin the toolchain
+#   releases; empty means latest.
+name: release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One release at a time; queued runs build whatever main is by then.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Pushes made with GITHUB_TOKEN don't trigger workflows, but guard against
+    # releasing the release commit anyway.
+    if: ${{ !startsWith(github.event.head_commit.message, 'Release ') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Latest main, not the triggering sha: an earlier queued run may
+          # have pushed a Release commit since, and ours must build on it.
+          ref: main
+          fetch-depth: 0
+
+      - name: Skip if nothing new since the last release
+        id: check
+        run: |
+          if git log -1 --format=%s | grep -q '^Release '; then
+            echo "HEAD is already a release commit; nothing to publish"
+            echo "skip=1" >>"$GITHUB_OUTPUT"
+          fi
+
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.check.outputs.skip != '1'
+        with:
+          targets: x86_64-pc-windows-gnullvm
+
+      - uses: Swatinem/rust-cache@v2
+        if: steps.check.outputs.skip != '1'
+
+      - name: Toolchain (llvm-mingw, mpv-dev, NSIS)
+        if: steps.check.outputs.skip != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LLVM_MINGW_TAG: ${{ vars.LLVM_MINGW_TAG }}
+          MPV_WINBUILD_TAG: ${{ vars.MPV_WINBUILD_TAG }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -q
+          sudo apt-get install -yq nsis p7zip-full
+          tools="$RUNNER_TEMP/tools"
+          mkdir -p "$tools" && cd "$tools"
+          gh release download $LLVM_MINGW_TAG --repo mstorsjo/llvm-mingw \
+            --pattern 'llvm-mingw-*-ucrt-ubuntu-*-x86_64.tar.xz'
+          tarball=$(ls llvm-mingw-*.tar.xz | sort -V | tail -1)
+          tar -xf "$tarball"
+          echo "LLVM_MINGW=$tools/${tarball%.tar.xz}" >>"$GITHUB_ENV"
+          gh release download $MPV_WINBUILD_TAG --repo zhongfly/mpv-winbuild \
+            --pattern 'mpv-dev-x86_64-[0-9]*.7z'
+          7z x -y -ompv-dev mpv-dev-x86_64-*.7z >/dev/null
+          echo "MPV_DEV=$tools/mpv-dev" >>"$GITHUB_ENV"
+          echo "MAKENSIS=$(command -v makensis)" >>"$GITHUB_ENV"
+          echo "NSISDIR=/usr/share/nsis" >>"$GITHUB_ENV"
+
+      - name: Build, sign and publish
+        if: steps.check.outputs.skip != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIGNING_KEY: ${{ secrets.REDJELLY_SIGNING_KEY }}
+        run: |
+          set -euo pipefail
+          [ -n "$SIGNING_KEY" ] || { echo "secret REDJELLY_SIGNING_KEY is not set" >&2; exit 1; }
+          key="$RUNNER_TEMP/release-signing.key"
+          (umask 077 && printf '%s\n' "$SIGNING_KEY" >"$key")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          REDJELLY_SIGNING_KEY="$key" scripts/release.sh --yes
+          rm -f "$key"

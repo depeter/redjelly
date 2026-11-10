@@ -258,10 +258,24 @@ group, resolution, edition). 3. Not hearing-impaired (unless `prefer_sdh`).
   `whisper-vad-speech-segments` (Silero VAD, CPU package ~10 MB). Speech spans are
   cached per item+track. Downloads load immediately, re-sync to the audio in the
   background, swap the synced version in and upload that one.
-- Alignment: cues longer than 12 s (signs, music banners) are ignored; a split
-  alignment (penalty 8) runs at the native framerate and at the best-fitting other
-  ratio (25/23.976/24 fps pairs), and the framerate fix is kept only if it scores
-  clearly (>5 %) better.
+- Alignment: cues longer than 12 s (signs, music banners) are ignored; common
+  framerate ratios (25/23.976/24 fps pairs) are tried and a fix is kept only if it
+  scores clearly (>5 %) better.
+  - Against another subtitle: Viterbi over a 100 ms offset grid (±12 % of the film,
+    5–20 min), scoring how close each cue's start and end land to a reference cue's
+    start/end (500 ms kernel); switching offset costs 4 "matched cues"; each part is
+    then refined to 10 ms. Unlike alass it can drop and reorder lines, which other
+    cuts need. Measured on F9 (theatrical Dutch subs vs the Director's Cut's English
+    track, scored by name anchors): 216/226 vs alass 178/226; per-part error
+    55–115 ms vs 160–500 ms; it finds the Tokyo scene moved ~9 min later.
+  - Against speech (voice detection): alass split alignment (penalty 8). Detected
+    speech is too noisy for edge scoring (on F9 a quarter of the lines have no
+    detected speech under them); alass kept the correctly timed English track at
+    0 s for 100 % of cues where the Viterbi got 80–100 % depending on penalty.
+- Built-in tracks are read from the server by Jellyfin index, which is not mpv's
+  `ff-index`: Jellyfin 10.11 numbers external subtitles first. The n-th stream in
+  the file is the n-th non-external Jellyfin stream (also used for the audio
+  track of AI transcription started from the player).
 - Choosing the reference: the S panel lists "Sync current subtitle to" → the audio,
   or any other text subtitle track (forced ones dimmed); a reference's remembered
   delay counts as part of its timing. Ctrl+Z picks automatically: a full (non-forced,

@@ -209,6 +209,17 @@ async fn reference_cues(
     None
 }
 
+/// Jellyfin `MediaStream.Index` of the stream mpv calls `ff-index` (its
+/// index inside the file). They differ: Jellyfin numbers external subtitles
+/// too, and since 10.11 puts them *first* (F9: Dutch downloads 0–4, video 5,
+/// audio 6, English subs 7–9, while mpv sees 0, 1, 2…). The n-th stream of
+/// the file is the n-th non-external stream in Jellyfin's order.
+pub(crate) fn jellyfin_index(ms: &MediaSource, ff_index: i64) -> Option<u32> {
+    let mut embedded: Vec<u32> = ms.media_streams.iter().filter(|s| !s.is_external).map(|s| s.index).collect();
+    embedded.sort_unstable();
+    embedded.get(usize::try_from(ff_index).ok()?).copied()
+}
+
 /// Reads a subtitle track's text.
 async fn read_source(
     src: &SubSource,
@@ -318,16 +329,29 @@ async fn audio_reference(
     Ok(spans)
 }
 
+/// What a sync reference is: another subtitle's cues, or speech detected in
+/// the audio (noisier; aligned differently, see rj_subs::sync).
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum RefKind {
+    Subtitle,
+    Speech,
+}
+
 /// Re-times subtitle text against reference spans; returns the new text and
 /// the alignment.
 async fn align_text(
     text: &str,
     format: Format,
     reference: Vec<(i64, i64)>,
+    kind: RefKind,
 ) -> anyhow::Result<(String, rj_subs::sync::Alignment)> {
     let cues = timing::parse(text, format);
     let target: Vec<_> = cues.iter().map(|c| (c.start_ms, c.end_ms)).collect();
-    let a = tokio::task::spawn_blocking(move || rj_subs::sync::align(&reference, &target)).await?;
+    let a = tokio::task::spawn_blocking(move || match kind {
+        RefKind::Subtitle => rj_subs::sync::align(&reference, &target),
+        RefKind::Speech => rj_subs::sync::align_to_speech(&reference, &target),
+    })
+    .await?;
     let times: Vec<_> = cues.iter().enumerate().map(|(i, c)| a.map(i, c.start_ms, c.end_ms)).collect();
     Ok((timing::retime(text, format, &cues, &times), a))
 }
@@ -686,8 +710,11 @@ impl App {
             }
             None => {
                 let mpv = self.player.mpv();
-                let audio_index =
-                    mpv.get_property::<i64>("current-tracks/audio/ff-index").ok().filter(|i| *i >= 0).map(|i| i as u32);
+                let ms = self.session.borrow().as_ref().and_then(|s| s.req.media_source.clone());
+                let audio_index = mpv
+                    .get_property::<i64>("current-tracks/audio/ff-index")
+                    .ok()
+                    .and_then(|ff| jellyfin_index(ms.as_ref()?, ff));
                 let spoken = mpv.get_property::<String>("current-tracks/audio/lang").ok().and_then(|l| Lang::parse(&l));
                 crate::ai::JobKind::Transcribe { audio_index, spoken }
             }
@@ -734,7 +761,7 @@ impl App {
                     };
                     match reference {
                         Some(reference) => {
-                            let (text, a) = align_text(&file.text, format, reference).await?;
+                            let (text, a) = align_text(&file.text, format, reference, RefKind::Subtitle).await?;
                             file.text = text;
                             synced = Some(describe(&a));
                         }
@@ -800,7 +827,7 @@ impl App {
                 let result: anyhow::Result<(PathBuf, String)> = async {
                     let reference = audio_reference(&ctx, Some(&file.lang), progress).await?;
                     let format = Format::from_ext(&file.format).unwrap_or(Format::Srt);
-                    let (text, a) = align_text(&file.text, format, reference).await?;
+                    let (text, a) = align_text(&file.text, format, reference, RefKind::Speech).await?;
                     let path = cache.join(format!("{}.{}.synced.{}", ctx.item_id, file.lang, file.format));
                     tokio::fs::write(&path, &text).await?;
                     file.text = text;
@@ -898,7 +925,11 @@ impl App {
     fn sync_tracks(&self) -> Vec<SyncTrack> {
         let mpv = self.player.mpv();
         let all = self.player.tracks();
-        let item = self.session.borrow().as_ref().and_then(|s| s.req.item.as_ref().map(|i| i.id.clone()));
+        let (item, ms) = self
+            .session
+            .borrow()
+            .as_ref()
+            .map_or((None, None), |s| (s.req.item.as_ref().map(|i| i.id.clone()), s.req.media_source.clone()));
         let count: i64 = mpv.get_property("track-list/count").unwrap_or(0);
         let mut out = Vec::new();
         for i in 0..count {
@@ -911,13 +942,16 @@ impl App {
             if ["pgs", "dvd", "dvb", "xsub"].iter().any(|c| codec.contains(c)) {
                 continue;
             }
+            // Delay memory key, as `current_sub_key` builds it.
+            let mut key = String::new();
             let source = match s("external-filename") {
                 Some(src) if src.starts_with("http://") || src.starts_with("https://") => SubSource::Url(src),
                 Some(path) => SubSource::File(PathBuf::from(path)),
                 None => {
-                    // ff-index = Jellyfin MediaStream index for embedded tracks.
-                    let Ok(idx) = mpv.get_property::<i64>(&format!("track-list/{i}/ff-index")) else { continue };
-                    let Ok(idx) = u32::try_from(idx) else { continue };
+                    // Built into the file: read via the server, by its Jellyfin index.
+                    let Ok(ff) = mpv.get_property::<i64>(&format!("track-list/{i}/ff-index")) else { continue };
+                    let Some(idx) = ms.as_ref().and_then(|m| jellyfin_index(m, ff)) else { continue };
+                    key = format!("emb:{ff}");
                     SubSource::Embedded(idx, if codec == "ass" || codec == "ssa" { "ass" } else { "srt" })
                 }
             };
@@ -925,11 +959,11 @@ impl App {
                 .iter()
                 .find(|t| t.id == id)
                 .map_or_else(|| (format!("Track {id}"), String::new()), crate::controls::track_label);
-            let key = match &source {
-                SubSource::Url(u) => format!("ext:{}", u.split('?').next().unwrap_or(u)),
-                SubSource::File(p) => format!("ext:{}", p.to_string_lossy()),
-                SubSource::Embedded(idx, _) => format!("emb:{idx}"),
-            };
+            match &source {
+                SubSource::Url(u) => key = format!("ext:{}", u.split('?').next().unwrap_or(u)),
+                SubSource::File(p) => key = format!("ext:{}", p.to_string_lossy()),
+                SubSource::Embedded(..) => {}
+            }
             let delay_ms = item.as_deref().map_or(0, |item| self.state.borrow().sub_delay(item, &key));
             out.push(SyncTrack {
                 id,
@@ -1053,17 +1087,19 @@ impl App {
                         for c in &mut cues {
                             *c = (c.0 + r.delay_ms, c.1 + r.delay_ms);
                         }
-                        reference = Some((cues, format!("the {} subtitle", r.name)));
+                        reference = Some((cues, format!("the {} subtitle", r.name), RefKind::Subtitle));
                         break;
                     }
                 }
-                let (reference, against) = match (reference, &audio_ctx) {
+                let (reference, against, kind) = match (reference, &audio_ctx) {
                     (Some(r), _) => r,
-                    (None, Some(ctx)) if use_audio => (audio_reference(ctx, sub_lang.as_ref(), progress).await?, "the audio".to_owned()),
+                    (None, Some(ctx)) if use_audio => {
+                        (audio_reference(ctx, sub_lang.as_ref(), progress).await?, "the audio".to_owned(), RefKind::Speech)
+                    }
                     _ => anyhow::bail!("no full subtitle track to sync to, and no audio (not a Jellyfin video)"),
                 };
                 anyhow::ensure!(!reference.is_empty(), "{against} has no timing to sync to");
-                let (retimed, a) = align_text(&text, format, reference).await?;
+                let (retimed, a) = align_text(&text, format, reference, kind).await?;
                 // Only write a new file when a delay can't do it.
                 let path = if a.as_constant().is_none() {
                     tokio::fs::create_dir_all(&cache).await?;
@@ -1158,5 +1194,32 @@ impl App {
         if ms != 0 {
             self.toast(format!("Remembered subtitle delay {}", seconds(ms)));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ff_index_maps_past_external_subtitles() {
+        // F9 on Jellyfin 10.11: five external Dutch subs first, then the
+        // file's own streams (video, audio, three English subs).
+        let streams: Vec<_> = (0..10)
+            .map(|i| {
+                let kind = match i {
+                    5 => "Video",
+                    6 => "Audio",
+                    _ => "Subtitle",
+                };
+                serde_json::json!({ "Index": i, "Type": kind, "IsExternal": i < 5 })
+            })
+            .collect();
+        let ms: MediaSource = serde_json::from_value(serde_json::json!({ "Id": "x", "MediaStreams": streams })).unwrap();
+        assert_eq!(jellyfin_index(&ms, 0), Some(5)); // video
+        assert_eq!(jellyfin_index(&ms, 1), Some(6)); // audio, for AI transcription
+        assert_eq!(jellyfin_index(&ms, 2), Some(7)); // English subtitle, not Dutch download #2
+        assert_eq!(jellyfin_index(&ms, 5), None);
+        assert_eq!(jellyfin_index(&ms, -1), None);
     }
 }

@@ -19,6 +19,14 @@ impl Format {
             _ => None,
         }
     }
+
+    pub fn ext(self) -> &'static str {
+        match self {
+            Self::Srt => "srt",
+            Self::Vtt => "vtt",
+            Self::Ass => "ass",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -104,10 +112,16 @@ pub fn parse(text: &str, format: Format) -> Vec<Cue> {
 
 /// Applies per-cue offsets (`deltas[i]` ms for `cues[i]`).
 pub fn shift(text: &str, format: Format, cues: &[Cue], deltas: &[i64]) -> String {
+    let times: Vec<_> = cues.iter().zip(deltas).map(|(c, d)| (c.start_ms + d, c.end_ms + d)).collect();
+    retime(text, format, cues, &times)
+}
+
+/// Gives `cues[i]` the new (start, end) `times[i]` (ms).
+pub fn retime(text: &str, format: Format, cues: &[Cue], times: &[(i64, i64)]) -> String {
     let mut edits: Vec<(Range<usize>, String)> = Vec::with_capacity(cues.len() * 2);
-    for (cue, d) in cues.iter().zip(deltas) {
-        edits.push((cue.start_at.clone(), format_clock(cue.start_ms + d, format)));
-        edits.push((cue.end_at.clone(), format_clock(cue.end_ms + d, format)));
+    for (cue, &(start, end)) in cues.iter().zip(times) {
+        edits.push((cue.start_at.clone(), format_clock(start, format)));
+        edits.push((cue.end_at.clone(), format_clock(end, format)));
     }
     edits.sort_by_key(|(r, _)| r.start);
     let mut out = String::with_capacity(text.len() + 64);

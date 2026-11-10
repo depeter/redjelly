@@ -257,8 +257,17 @@ group, resolution, edition). 3. Not hearing-impaired (unless `prefer_sdh`).
   audio-only transcode, §7) and run through whisper.cpp's
   `whisper-vad-speech-segments` (Silero VAD, CPU package ~10 MB). Speech spans are
   cached per item+track. Downloads load immediately, re-sync to the audio in the
-  background, swap the synced version in and upload that one. Ctrl+Z applies the
-  result as a remembered subtitle delay.
+  background, swap the synced version in and upload that one.
+- Alignment: cues longer than 12 s (signs, music banners) are ignored; a split
+  alignment (penalty 8) runs at the native framerate and at the best-fitting other
+  ratio (25/23.976/24 fps pairs), and the framerate fix is kept only if it scores
+  clearly (>5 %) better.
+- Choosing the reference: the S panel lists "Sync current subtitle to" → the audio,
+  or any other text subtitle track (forced ones dimmed); a reference's remembered
+  delay counts as part of its timing. Ctrl+Z picks automatically: a full (non-forced,
+  ≥40 % of the cues) embedded track, then a server external one, then the audio.
+- Result: a plain shift becomes a remembered subtitle delay; a framerate fix or
+  parts with different offsets load a re-timed copy ("… · synced") instead.
 
 ### 6.5 Style overrides
 Font, size, colour, outline/shadow, bottom margin, background box. Mapped to mpv

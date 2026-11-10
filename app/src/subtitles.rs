@@ -33,7 +33,8 @@ pub struct SubSearch {
 pub enum PanelAction {
     None,
     Download(usize),
-    AutoSync,
+    /// Re-time the current subtitle against this reference.
+    SyncTo(SyncRef),
     Search,
     /// Whisper on the current audio track.
     AiTranscribe,
@@ -50,6 +51,40 @@ pub enum PanelAction {
     UpdateCheck,
     /// Release search panel: the n-th stored action (requests.rs).
     Release(usize),
+}
+
+/// What to sync the current subtitle to.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum SyncRef {
+    /// Best other full subtitle track, else the audio (Ctrl+Z).
+    Auto,
+    Audio,
+    /// This mpv subtitle track.
+    Track(i64),
+}
+
+/// Where a subtitle track's text can be read.
+#[derive(Debug, Clone)]
+enum SubSource {
+    Url(String),
+    File(PathBuf),
+    /// Embedded track, fetched from the server (Jellyfin index, extension).
+    Embedded(u32, &'static str),
+}
+
+/// An mpv subtitle track usable as sync target or reference.
+#[derive(Debug, Clone)]
+struct SyncTrack {
+    id: i64,
+    source: SubSource,
+    /// "English · SDH", and "built in" / mpv title for the detail line.
+    name: String,
+    detail: String,
+    /// Remembered delay of this track (ms), part of its real timing.
+    delay_ms: i64,
+    lang: Option<String>,
+    title: Option<String>,
+    forced: bool,
 }
 
 /// What the side panel is showing.
@@ -74,9 +109,9 @@ pub struct Panel {
 }
 
 enum Downloaded {
-    /// File on disk, ready for mpv; `synced` = median shift applied (ms).
+    /// File on disk, ready for mpv; `synced` = what auto-sync did.
     /// `audio_sync`: no subtitle track to align to, sync to the audio next.
-    Local { path: PathBuf, file: SubtitleFile, synced: Option<i64>, audio_sync: bool },
+    Local { path: PathBuf, file: SubtitleFile, synced: Option<String>, audio_sync: bool },
     /// The Jellyfin server fetched and stored it itself.
     OnServer,
 }
@@ -137,29 +172,85 @@ async fn fetch_srt(client: &Client, http: &reqwest::Client, item_id: &str, ms_id
     Ok(rj_subs::encoding::to_utf8(&bytes))
 }
 
-/// Cue times of a text subtitle track to align against, if the file has one.
+/// Cue times of a subtitle text, in any supported format.
+fn cue_times(text: &str) -> (Format, Vec<(i64, i64)>) {
+    let format = rj_subs::encoding::detect_format(text).and_then(Format::from_ext).unwrap_or(Format::Srt);
+    (format, timing::parse(text, format).iter().map(|c| (c.start_ms, c.end_ms)).collect())
+}
+
+/// A reference needs to cover the film, not just a few lines: forced
+/// (foreign-parts-only) tracks make bad references.
+fn full_enough(reference: usize, target: usize) -> bool {
+    reference >= 20 && reference * 10 >= target * 4
+}
+
+/// Cue times of a full text subtitle track of this file to align against.
 async fn reference_cues(
     client: &Client,
     http: &reqwest::Client,
     item_id: &str,
     ms: &MediaSource,
-    exclude_index: Option<u32>,
+    target_cues: usize,
 ) -> Option<Vec<(i64, i64)>> {
     let mut candidates: Vec<_> = ms
         .media_streams
         .iter()
-        .filter(|s| s.kind == StreamType::Subtitle && s.is_text_subtitle_stream && Some(s.index) != exclude_index)
+        .filter(|s| s.kind == StreamType::Subtitle && s.is_text_subtitle_stream && !s.is_forced)
         .collect();
     // Embedded tracks are authored for this exact release: best reference.
     candidates.sort_by_key(|s| s.is_external);
     for s in candidates {
         let Ok(text) = fetch_srt(client, http, item_id, &ms.id, s.index).await else { continue };
-        let cues: Vec<_> = timing::parse(&text, Format::Srt).iter().map(|c| (c.start_ms, c.end_ms)).collect();
-        if cues.len() >= 20 {
+        let (_, cues) = cue_times(&text);
+        if full_enough(cues.len(), target_cues) {
             return Some(cues);
         }
     }
     None
+}
+
+/// Reads a subtitle track's text.
+async fn read_source(
+    src: &SubSource,
+    client: Option<&Client>,
+    http: &reqwest::Client,
+    ids: Option<&(String, String)>,
+) -> anyhow::Result<String> {
+    match src {
+        SubSource::Url(url) => {
+            let mut req = http.get(url);
+            // Only the Jellyfin server gets the token.
+            if let Some(c) = client.filter(|c| c.url("").is_ok_and(|base| url.starts_with(base.as_str()))) {
+                req = req.header("Authorization", c.auth_header());
+            }
+            Ok(rj_subs::encoding::to_utf8(&req.send().await?.error_for_status()?.bytes().await?))
+        }
+        SubSource::File(path) => Ok(rj_subs::encoding::to_utf8(&tokio::fs::read(path).await?)),
+        SubSource::Embedded(index, ext) => {
+            let (Some(client), Some((item_id, ms_id))) = (client, ids) else {
+                anyhow::bail!("built-in subtitles can only be read from Jellyfin videos")
+            };
+            let url = client.subtitle_url(item_id, ms_id, *index, ext)?;
+            let b = http.get(url).header("Authorization", client.auth_header()).send().await?.error_for_status()?.bytes().await?;
+            Ok(rj_subs::encoding::to_utf8(&b))
+        }
+    }
+}
+
+/// Short user-facing summary of what an alignment did ("" = nothing).
+fn describe(a: &rj_subs::sync::Alignment) -> String {
+    let shift = a.median_shift();
+    let mut parts = Vec::new();
+    if shift.abs() >= 50 || a.framerate_fixed() {
+        parts.push(format!("shifted {}", seconds(shift)));
+    }
+    if a.framerate_fixed() {
+        parts.push("framerate corrected".to_owned());
+    }
+    if a.sections() > 1 {
+        parts.push(format!("in {} parts", a.sections()));
+    }
+    parts.join(" · ")
 }
 
 /// What audio-based sync needs off the UI thread.
@@ -227,20 +318,18 @@ async fn audio_reference(
     Ok(spans)
 }
 
-fn median(v: &[i64]) -> i64 {
-    let mut v = v.to_vec();
-    v.sort_unstable();
-    v.get(v.len() / 2).copied().unwrap_or(0)
-}
-
 /// Re-times subtitle text against reference spans; returns the new text and
-/// the median shift (ms).
-async fn align_text(text: &str, format: &str, reference: Vec<(i64, i64)>) -> anyhow::Result<(String, i64)> {
-    let format = Format::from_ext(format).unwrap_or(Format::Srt);
+/// the alignment.
+async fn align_text(
+    text: &str,
+    format: Format,
+    reference: Vec<(i64, i64)>,
+) -> anyhow::Result<(String, rj_subs::sync::Alignment)> {
     let cues = timing::parse(text, format);
     let target: Vec<_> = cues.iter().map(|c| (c.start_ms, c.end_ms)).collect();
-    let deltas = tokio::task::spawn_blocking(move || rj_subs::sync::align(&reference, &target)).await?;
-    Ok((timing::shift(text, format, &cues, &deltas), median(&deltas)))
+    let a = tokio::task::spawn_blocking(move || rj_subs::sync::align(&reference, &target)).await?;
+    let times: Vec<_> = cues.iter().enumerate().map(|(i, c)| a.map(i, c.start_ms, c.end_ms)).collect();
+    Ok((timing::retime(text, format, &cues, &times), a))
 }
 
 fn seconds(ms: i64) -> String {
@@ -421,15 +510,8 @@ impl App {
         let top = prefs.languages.first().cloned();
         let mut entries = vec![header("ON THIS VIDEO".into())];
         entries.extend(self.subtitle_track_entries());
-        let has_sub = self.player.mpv().get_property::<i64>("sid").is_ok();
-        entries.push(header("FIX OR GET SUBTITLES".into()));
-        let mut sync = entry(
-            "Auto-sync current subtitle",
-            "If it's early or late · Z / X shift it by hand",
-            PanelAction::AutoSync,
-        );
-        sync.0.dimmed = !has_sub;
-        entries.push(sync);
+        entries.extend(self.sync_panel_entries());
+        entries.push(header("GET SUBTITLES".into()));
         if let Some(top) = &top {
             entries.extend(self.ai_panel_entries(top));
         }
@@ -547,7 +629,7 @@ impl App {
         let action = self.panel.borrow().as_ref().and_then(|p| p.entries.get(p.focus).map(|e| e.1));
         match action {
             Some(PanelAction::Download(i)) => self.download_subtitle(i),
-            Some(PanelAction::AutoSync) => self.auto_sync_current(),
+            Some(PanelAction::SyncTo(r)) => self.sync_current(r),
             Some(PanelAction::Search) => self.start_sub_search(false),
             Some(PanelAction::AiTranscribe) => self.queue_ai_from_player(None),
             Some(PanelAction::AiTranslate(index, lang)) => self.queue_ai_from_player(Some((index, lang))),
@@ -644,15 +726,17 @@ impl App {
                 let Some(mut file) = provider.download(&query, &c).await? else { return anyhow::Ok(Downloaded::OnServer) };
                 let (mut synced, mut audio_sync) = (None, false);
                 if auto_sync && !c.hash_match {
+                    let format = Format::from_ext(&file.format).unwrap_or(Format::Srt);
+                    let target_cues = timing::parse(&file.text, format).len();
                     let reference = match &ms {
-                        Some(m) => reference_cues(&client, &http, &item_id, m, None).await,
+                        Some(m) => reference_cues(&client, &http, &item_id, m, target_cues).await,
                         None => None,
                     };
                     match reference {
                         Some(reference) => {
-                            let (text, shift) = align_text(&file.text, &file.format, reference).await?;
+                            let (text, a) = align_text(&file.text, format, reference).await?;
                             file.text = text;
-                            synced = Some(shift);
+                            synced = Some(describe(&a));
                         }
                         // No subtitle track to align to: load now, sync to the audio after.
                         None => audio_sync = ms.is_some(),
@@ -680,7 +764,7 @@ impl App {
     }
 
     /// Loads a downloaded file into mpv and selects it; returns its track id.
-    fn load_downloaded(&self, path: &std::path::Path, file: &SubtitleFile, c: &Candidate, synced: Option<i64>, audio_sync: bool) -> Option<i64> {
+    fn load_downloaded(&self, path: &std::path::Path, file: &SubtitleFile, c: &Candidate, synced: Option<String>, audio_sync: bool) -> Option<i64> {
         let title = format!("{} · {}", c.provider.label(), c.release);
         let id = match self.player.add_subtitle(&path.to_string_lossy(), &title, file.lang.as_str()) {
             Ok(id) => {
@@ -695,7 +779,7 @@ impl App {
         };
         let mut msg = format!("{} subtitle loaded", file.lang.name());
         match synced {
-            Some(ms) if ms.abs() >= 50 => msg.push_str(&format!(" · auto-synced {}", seconds(ms))),
+            Some(what) if !what.is_empty() => msg.push_str(&format!(" · auto-synced, {what}")),
             Some(_) => msg.push_str(" · timing already matched"),
             None if audio_sync => msg.push_str(" · syncing to the audio in the background…"),
             None => {}
@@ -713,20 +797,21 @@ impl App {
         let progress = toast_progress();
         self.spawn_ui(
             async move {
-                let result: anyhow::Result<(PathBuf, i64)> = async {
+                let result: anyhow::Result<(PathBuf, String)> = async {
                     let reference = audio_reference(&ctx, Some(&file.lang), progress).await?;
-                    let (text, shift) = align_text(&file.text, &file.format, reference).await?;
+                    let format = Format::from_ext(&file.format).unwrap_or(Format::Srt);
+                    let (text, a) = align_text(&file.text, format, reference).await?;
                     let path = cache.join(format!("{}.{}.synced.{}", ctx.item_id, file.lang, file.format));
                     tokio::fs::write(&path, &text).await?;
                     file.text = text;
-                    Ok((path, shift))
+                    Ok((path, describe(&a)))
                 }
                 .await;
                 (file, result)
             },
             move |app, (file, result)| {
                 match result {
-                    Ok((path, shift)) => {
+                    Ok((path, what)) => {
                         let playing = app.session.borrow().as_ref().and_then(|s| s.req.item.as_ref().map(|i| i.id.clone()));
                         if playing.as_deref() == Some(item_id.as_str()) {
                             let title = format!("{} · {} · synced", c.provider.label(), c.release);
@@ -737,8 +822,8 @@ impl App {
                                 }
                             }
                         }
-                        app.toast(if shift.abs() >= 50 {
-                            format!("Subtitle synced to the audio · shifted {}", seconds(shift))
+                        app.toast(if !what.is_empty() {
+                            format!("Subtitle synced to the audio · {what}")
                         } else {
                             "Subtitle checked against the audio · timing already matched".to_owned()
                         });
@@ -808,61 +893,229 @@ impl App {
         );
     }
 
-    /// Ctrl+Z / panel: aligns the current subtitle to another text track (or
-    /// to the audio when there is none) and applies the result as a
-    /// (remembered) subtitle delay.
-    pub fn auto_sync_current(&self) {
+    /// Subtitle tracks mpv has loaded whose text can be read for syncing
+    /// (not picture-based ones like PGS/VobSub).
+    fn sync_tracks(&self) -> Vec<SyncTrack> {
         let mpv = self.player.mpv();
-        let prop = |k: &str| mpv.get_property::<String>(k).ok().filter(|v| !v.is_empty());
-        if prop("current-tracks/sub/id").is_none() {
-            return self.toast("No subtitle selected to sync");
+        let all = self.player.tracks();
+        let item = self.session.borrow().as_ref().and_then(|s| s.req.item.as_ref().map(|i| i.id.clone()));
+        let count: i64 = mpv.get_property("track-list/count").unwrap_or(0);
+        let mut out = Vec::new();
+        for i in 0..count {
+            let s = |k: &str| mpv.get_property::<String>(&format!("track-list/{i}/{k}")).ok().filter(|v| !v.is_empty());
+            if s("type").as_deref() != Some("sub") {
+                continue;
+            }
+            let Ok(id) = mpv.get_property::<i64>(&format!("track-list/{i}/id")) else { continue };
+            let codec = s("codec").unwrap_or_default();
+            if ["pgs", "dvd", "dvb", "xsub"].iter().any(|c| codec.contains(c)) {
+                continue;
+            }
+            let source = match s("external-filename") {
+                Some(src) if src.starts_with("http://") || src.starts_with("https://") => SubSource::Url(src),
+                Some(path) => SubSource::File(PathBuf::from(path)),
+                None => {
+                    // ff-index = Jellyfin MediaStream index for embedded tracks.
+                    let Ok(idx) = mpv.get_property::<i64>(&format!("track-list/{i}/ff-index")) else { continue };
+                    let Ok(idx) = u32::try_from(idx) else { continue };
+                    SubSource::Embedded(idx, if codec == "ass" || codec == "ssa" { "ass" } else { "srt" })
+                }
+            };
+            let (name, detail) = all
+                .iter()
+                .find(|t| t.id == id)
+                .map_or_else(|| (format!("Track {id}"), String::new()), crate::controls::track_label);
+            let key = match &source {
+                SubSource::Url(u) => format!("ext:{}", u.split('?').next().unwrap_or(u)),
+                SubSource::File(p) => format!("ext:{}", p.to_string_lossy()),
+                SubSource::Embedded(idx, _) => format!("emb:{idx}"),
+            };
+            let delay_ms = item.as_deref().map_or(0, |item| self.state.borrow().sub_delay(item, &key));
+            out.push(SyncTrack {
+                id,
+                source,
+                name,
+                detail,
+                delay_ms,
+                lang: s("lang"),
+                title: s("title"),
+                forced: mpv.get_property::<bool>(&format!("track-list/{i}/forced")).unwrap_or(false),
+            });
         }
-        let external = prop("current-tracks/sub/external-filename");
-        let ff_index = mpv.get_property::<i64>("current-tracks/sub/ff-index").ok().filter(|i| *i >= 0).map(|i| i as u32);
-        let session = self.session.borrow();
-        let Some(s) = session.as_ref() else { return };
-        let (Some(item_id), Some(ms)) = (s.req.item.as_ref().map(|i| i.id.clone()), s.req.media_source.clone()) else {
-            return self.toast("Auto-sync needs a video from Jellyfin");
+        out
+    }
+
+    /// "Sync current subtitle to…" choices for the subtitle panel.
+    fn sync_panel_entries(&self) -> Vec<(PanelItem, PanelAction)> {
+        let current = self.player.mpv().get_property::<i64>("sid").ok();
+        let mut entries = vec![header("SYNC CURRENT SUBTITLE TO".into())];
+        let Some(current) = current else {
+            let mut e = entry("Pick a subtitle above first", "Then sync it to the audio or to another subtitle", PanelAction::None);
+            e.0.dimmed = true;
+            entries.push(e);
+            return entries;
         };
-        drop(session);
-        let Some(client) = self.client.borrow().clone() else { return };
+        let has_audio = self.audio_sync_ctx().is_some();
+        let mut audio = entry(
+            "The audio",
+            "Detects speech in the current audio track · slower the first time · Z / X shift by hand",
+            PanelAction::SyncTo(SyncRef::Audio),
+        );
+        audio.0.dimmed = !has_audio;
+        entries.push(audio);
+        for t in self.sync_tracks().into_iter().filter(|t| t.id != current) {
+            let mut detail = t.detail.clone();
+            if t.forced {
+                detail.push_str(" · forced, only covers some lines");
+            }
+            let mut e = entry(
+                format!("{} subtitle", t.name),
+                detail,
+                PanelAction::SyncTo(SyncRef::Track(t.id)),
+            );
+            e.0.dimmed = t.forced;
+            entries.push(e);
+        }
+        entries
+    }
+
+    /// Ctrl+Z: syncs to the best reference available.
+    pub fn auto_sync_current(&self) {
+        self.sync_current(SyncRef::Auto)
+    }
+
+    /// Aligns the current subtitle to `reference`. A plain shift becomes a
+    /// (remembered) subtitle delay; anything more (framerate fix, parts with
+    /// different offsets) loads a re-timed copy of the track.
+    pub fn sync_current(&self, reference: SyncRef) {
+        let tracks = self.sync_tracks();
+        let Some(current_id) = self.player.mpv().get_property::<i64>("sid").ok() else {
+            return self.toast("No subtitle selected to sync");
+        };
+        let Some(target) = tracks.iter().find(|t| t.id == current_id).cloned() else {
+            return self.toast("This subtitle is a picture format (PGS/VobSub) and can't be synced");
+        };
+        let refs: Vec<SyncTrack> = match reference {
+            SyncRef::Audio => Vec::new(),
+            SyncRef::Track(id) => match tracks.iter().find(|t| t.id == id) {
+                Some(t) => vec![t.clone()],
+                None => return self.toast("That subtitle track is gone"),
+            },
+            SyncRef::Auto => {
+                // Embedded tracks were made for this exact release, then the
+                // server's external ones; downloads/AI files may be off too.
+                let mut v: Vec<_> =
+                    tracks.iter().filter(|t| t.id != current_id && !t.forced && !matches!(t.source, SubSource::File(_))).cloned().collect();
+                v.sort_by_key(|t| match t.source {
+                    SubSource::Embedded(..) => 0,
+                    _ => 1,
+                });
+                v
+            }
+        };
+        let use_audio = matches!(reference, SyncRef::Audio | SyncRef::Auto);
+        let audio_ctx = self.audio_sync_ctx();
+        if reference == SyncRef::Audio && audio_ctx.is_none() {
+            return self.toast("Syncing to the audio needs a video from Jellyfin");
+        }
+        let client = self.client.borrow().clone();
         let http = self.http.clone();
-        let sub_lang = prop("current-tracks/sub/lang").and_then(|l| Lang::parse(&l));
-        let Some(audio_ctx) = self.audio_sync_ctx() else { return };
+        let ids = {
+            let session = self.session.borrow();
+            session.as_ref().and_then(|s| Some((s.req.item.as_ref()?.id.clone(), s.req.media_source.as_ref()?.id.clone())))
+        };
+        let sub_lang = target.lang.as_deref().and_then(Lang::parse);
+        let cache = self.sub_cache.clone();
         let progress = toast_progress();
         self.close_panel();
-        self.toast("Syncing subtitle…");
+        self.toast(match reference {
+            SyncRef::Track(_) => format!("Syncing subtitle to the {} subtitle…", refs[0].name),
+            SyncRef::Audio => "Syncing subtitle to the audio…".to_owned(),
+            SyncRef::Auto => "Syncing subtitle…".to_owned(),
+        });
+        let target2 = target.clone();
         self.spawn_ui(
             async move {
-                // Text of the current track: external file/URL, or the
-                // embedded track via the server (ff-index = Jellyfin index).
-                let (text, exclude) = match &external {
-                    Some(src) if src.starts_with("http") => {
-                        let b = http.get(src).header("Authorization", client.auth_header()).send().await?.bytes().await?;
-                        (rj_subs::encoding::to_utf8(&b), None)
+                let text = read_source(&target.source, client.as_ref(), &http, ids.as_ref()).await?;
+                let (format, target_cues) = cue_times(&text);
+                anyhow::ensure!(target_cues.len() >= 5, "couldn't read the cues of this subtitle");
+
+                let mut reference = None;
+                for r in &refs {
+                    let mut cues = match read_source(&r.source, client.as_ref(), &http, ids.as_ref()).await {
+                        Ok(t) => cue_times(&t).1,
+                        Err(e) if !use_audio => return Err(e.context(format!("reading the {} subtitle", r.name))),
+                        Err(_) => continue,
+                    };
+                    // An explicit choice is the user's call; auto wants a full track.
+                    if !use_audio || full_enough(cues.len(), target_cues.len()) {
+                        // A delay the user set on the reference is part of its timing.
+                        for c in &mut cues {
+                            *c = (c.0 + r.delay_ms, c.1 + r.delay_ms);
+                        }
+                        reference = Some((cues, format!("the {} subtitle", r.name)));
+                        break;
                     }
-                    Some(path) => (rj_subs::encoding::to_utf8(&tokio::fs::read(path).await?), None),
-                    None => {
-                        let idx = ff_index.ok_or_else(|| anyhow::anyhow!("can't identify the embedded track"))?;
-                        (fetch_srt(&client, &http, &item_id, &ms.id, idx).await?, Some(idx))
-                    }
-                };
-                let format = rj_subs::encoding::detect_format(&text).and_then(Format::from_ext).unwrap_or(Format::Srt);
-                let target: Vec<_> = timing::parse(&text, format).iter().map(|c| (c.start_ms, c.end_ms)).collect();
-                let (reference, against) = match reference_cues(&client, &http, &item_id, &ms, exclude).await {
-                    Some(r) => (r, "another subtitle track"),
-                    None => (audio_reference(&audio_ctx, sub_lang.as_ref(), progress).await?, "the audio"),
-                };
-                let deltas = tokio::task::spawn_blocking(move || rj_subs::sync::align(&reference, &target)).await?;
-                anyhow::Ok((median(&deltas), against))
-            },
-            |app, result| match result {
-                Ok((delta, against)) => {
-                    let _ = app.player.mpv().set_property("sub-delay", delta as f64 / 1000.0);
-                    app.remember_sub_delay();
-                    app.toast(format!("Subtitle synced to {against} · delay {}", seconds(delta)));
                 }
-                Err(e) => app.toast(format!("Auto-sync failed: {e:#}")),
+                let (reference, against) = match (reference, &audio_ctx) {
+                    (Some(r), _) => r,
+                    (None, Some(ctx)) if use_audio => (audio_reference(ctx, sub_lang.as_ref(), progress).await?, "the audio".to_owned()),
+                    _ => anyhow::bail!("no full subtitle track to sync to, and no audio (not a Jellyfin video)"),
+                };
+                anyhow::ensure!(!reference.is_empty(), "{against} has no timing to sync to");
+                let (retimed, a) = align_text(&text, format, reference).await?;
+                // Only write a new file when a delay can't do it.
+                let path = if a.as_constant().is_none() {
+                    tokio::fs::create_dir_all(&cache).await?;
+                    let n = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs());
+                    let item = ids.as_ref().map_or("local", |(i, _)| i.as_str());
+                    let lang = target.lang.as_deref().unwrap_or("und");
+                    let path = cache.join(format!("{item}.{lang}.synced.{n}.{}", format.ext()));
+                    tokio::fs::write(&path, retimed).await?;
+                    Some(path)
+                } else {
+                    None
+                };
+                anyhow::Ok((a, against, path))
+            },
+            move |app, result| {
+                let (a, against, path) = match result {
+                    Ok(r) => r,
+                    Err(e) => return app.toast(format!("Auto-sync failed: {e:#}")),
+                };
+                let what = describe(&a);
+                match (a.as_constant(), path) {
+                    (Some(delta), _) => {
+                        let _ = app.player.mpv().set_property("sub-delay", delta as f64 / 1000.0);
+                        app.remember_sub_delay();
+                        app.toast(if what.is_empty() {
+                            format!("Subtitle checked against {against} · timing already matched")
+                        } else {
+                            format!("Subtitle synced to {against} · delay {}", seconds(delta))
+                        });
+                    }
+                    (None, Some(path)) => {
+                        let base = target2.title.clone().unwrap_or_else(|| target2.name.clone());
+                        let base = base.trim_end_matches(" · synced");
+                        let lang = target2.lang.clone().unwrap_or_default();
+                        match app.player.add_subtitle(&path.to_string_lossy(), &format!("{base} · synced"), &lang) {
+                            Ok(id) => {
+                                let _ = app.player.set_subtitle(Some(id));
+                                let _ = app.player.mpv().set_property("sub-delay", 0.0);
+                                // An earlier synced copy we made is replaced, not piled up.
+                                if let SubSource::File(old) = &target2.source
+                                    && old.starts_with(&app.sub_cache)
+                                    && base != target2.title.as_deref().unwrap_or_default()
+                                {
+                                    let _ = app.player.mpv().command("sub-remove", &[&target2.id.to_string()]);
+                                }
+                                app.toast(format!("Subtitle synced to {against} · {what}"));
+                            }
+                            Err(e) => app.toast(format!("mpv couldn't load the synced subtitle: {e}")),
+                        }
+                    }
+                    (None, None) => {}
+                }
             },
         );
     }

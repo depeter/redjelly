@@ -53,8 +53,34 @@ pub struct WebSession {
     /// The programme on air (live channels with a guide), for Restart.
     programme: Option<epg::Programme>,
     state: PageState,
+    /// When the frame behind `state` last reported.
+    state_at: Instant,
     loaded: Instant,
     shown_msg: String,
+}
+
+/// How long a frame may go quiet before another one's report takes over.
+const FRAME_STALE: Duration = Duration::from_millis(2000);
+
+/// How much a report says about the video being watched: a playing video
+/// beats a paused one beats one without data beats none.
+fn report_rank(s: &PageState) -> u8 {
+    match (s.video, s.rs >= 1, s.paused) {
+        (false, _, _) => 0,
+        (true, false, _) => 1,
+        (true, true, true) => 2,
+        (true, true, false) => 3,
+    }
+}
+
+/// Whether report `new` should replace `cur`, last updated `since` ago.
+/// Several frames can hold a `<video>` (the player and a preview or ad,
+/// maybe on the same origin); taking each frame's report in turn made the
+/// paused state, and so the control bar, flip twice a second. Stick with
+/// one frame unless another has a better video or this one went quiet.
+fn take_report(cur: &PageState, new: &PageState, since: Duration) -> bool {
+    let same = new.frame == cur.frame && new.url == cur.url;
+    same || report_rank(cur) == 0 || report_rank(new) > report_rank(cur) || since > FRAME_STALE
 }
 
 pub struct State {
@@ -664,8 +690,10 @@ impl App {
         let mut session = self.vrt.session.borrow_mut();
         let Some(s) = session.as_mut() else { return };
         // The frame with the video wins; the top page reports too.
-        if state.video || !s.state.video || state.frame == s.state.frame {
+        let now = Instant::now();
+        if take_report(&s.state, &state, now.duration_since(s.state_at)) {
             s.state = state;
+            s.state_at = now;
         }
     }
 
@@ -724,6 +752,7 @@ impl App {
             live,
             programme: None,
             state: PageState::default(),
+            state_at: Instant::now(),
             loaded: Instant::now(),
             shown_msg: String::new(),
         });
@@ -942,6 +971,32 @@ impl App {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn report(frame: &str, url: &str, paused: bool) -> PageState {
+        PageState { frame: frame.into(), url: url.into(), video: true, rs: 4, paused, ..Default::default() }
+    }
+
+    #[test]
+    fn rj1_two_video_frames_do_not_alternate() {
+        let quick = Duration::from_millis(500);
+        let main = report("https://player.vrt.be", "https://player.vrt.be/a", false);
+        let other = report("https://player.vrt.be", "https://player.vrt.be/b", true);
+        let top = report("top", "https://www.vrt.be/vrtmax/", true);
+        // A paused second video, even on the same origin, can't take over.
+        assert!(!take_report(&main, &other, quick));
+        assert!(!take_report(&main, &top, quick));
+        // The frame we follow keeps updating, paused or not.
+        assert!(take_report(&main, &report("https://player.vrt.be", "https://player.vrt.be/a", true), quick));
+        // Two paused videos: stay put.
+        let main_paused = report("https://player.vrt.be", "https://player.vrt.be/a", true);
+        assert!(!take_report(&main_paused, &other, quick));
+        // A playing video beats a paused one.
+        assert!(take_report(&other, &main, quick));
+        // Anything beats no video; a frame that went quiet gives way.
+        assert!(take_report(&PageState::default(), &other, quick));
+        assert!(!take_report(&main, &PageState::default(), quick));
+        assert!(take_report(&main, &other, FRAME_STALE + quick));
+    }
 
     fn tile(kind: TileKind, link: &str, available: bool) -> Tile {
         Tile {

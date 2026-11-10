@@ -66,14 +66,26 @@ jobs:
           sudo apt-get install -yq nsis p7zip-full
           tools="$RUNNER_TEMP/tools"
           mkdir -p "$tools" && cd "$tools"
-          gh release download $LLVM_MINGW_TAG --repo mstorsjo/llvm-mingw \
-            --pattern 'llvm-mingw-*-ucrt-ubuntu-*-x86_64.tar.xz'
-          tarball=$(ls llvm-mingw-*.tar.xz | sort -V | tail -1)
+          # Download the one asset of $1's release $2 (empty: latest) whose
+          # name matches the regex $3; fail listing the assets if not exactly one.
+          fetch() {
+            local repo=$1 tag=$2 re=$3 rel names
+            if [ -n "$tag" ]; then rel="repos/$repo/releases/tags/$tag"; else rel="repos/$repo/releases/latest"; fi
+            names=$(gh api "$rel" --jq '.assets[].name')
+            local hits; hits=$(grep -E "$re" <<<"$names" || true)
+            if [ "$(grep -c . <<<"$hits")" != 1 ]; then
+              echo "expected one asset matching /$re/ in $repo ${tag:-latest}, got:" >&2
+              echo "${hits:-(none)}" >&2; echo "all assets:" >&2; echo "$names" >&2
+              return 1
+            fi
+            gh release download ${tag:+"$tag"} --repo "$repo" --pattern "$hits" >&2
+            echo "$hits"
+          }
+          tarball=$(fetch mstorsjo/llvm-mingw "$LLVM_MINGW_TAG" '^llvm-mingw-[0-9]+-ucrt-ubuntu-[0-9.]+-x86_64\.tar\.xz$')
           tar -xf "$tarball"
           echo "LLVM_MINGW=$tools/${tarball%.tar.xz}" >>"$GITHUB_ENV"
-          gh release download $MPV_WINBUILD_TAG --repo zhongfly/mpv-winbuild \
-            --pattern 'mpv-dev-x86_64-[0-9]*.7z'
-          7z x -y -ompv-dev mpv-dev-x86_64-*.7z >/dev/null
+          mpv=$(fetch zhongfly/mpv-winbuild "$MPV_WINBUILD_TAG" '^mpv-dev-x86_64-[0-9]{8}-git-[0-9a-f]+\.7z$')
+          7z x -y -ompv-dev "$mpv" >/dev/null
           echo "MPV_DEV=$tools/mpv-dev" >>"$GITHUB_ENV"
           echo "MAKENSIS=$(command -v makensis)" >>"$GITHUB_ENV"
           echo "NSISDIR=/usr/share/nsis" >>"$GITHUB_ENV"
@@ -87,8 +99,20 @@ jobs:
           set -euo pipefail
           [ -n "$SIGNING_KEY" ] || { echo "secret REDJELLY_SIGNING_KEY is not set" >&2; exit 1; }
           key="$RUNNER_TEMP/release-signing.key"
+          trap 'rm -f "$key"' EXIT
           (umask 077 && printf '%s\n' "$SIGNING_KEY" >"$key")
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          REDJELLY_SIGNING_KEY="$key" scripts/release.sh --yes
-          rm -f "$key"
+          # Exit 3: main moved while building, so nothing was published. The
+          # merge that moved it queued its own run, which releases the new main.
+          status=0
+          REDJELLY_SIGNING_KEY="$key" scripts/release.sh --yes || status=$?
+          if [ "$status" = 3 ]; then
+            echo "::notice::main moved during the build; the next queued run publishes it"
+            exit 0
+          fi
+          exit "$status"
+
+      - name: Remove signing key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release-signing.key"

@@ -4,7 +4,10 @@
 # builds the Windows installer, signs it, commits and tags, then — after
 # asking — pushes and creates the GitHub release.
 #
-#   LLVM_MINGW=... MPV_DEV=... MAKENSIS=... NSISDIR=... scripts/release.sh [x.y.z]
+#   LLVM_MINGW=... MPV_DEV=... MAKENSIS=... NSISDIR=... scripts/release.sh [--yes] [x.y.z]
+#
+# --yes publishes without asking; .github/workflows/release.yml runs it that
+# way on every merge to main.
 #
 # Build variables: see scripts/build-windows.sh. The signing key is
 # ~/.config/redjelly/release-signing.key (override with REDJELLY_SIGNING_KEY);
@@ -15,6 +18,15 @@ die() { echo "release: $*" >&2; exit 1; }
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
+yes=
+version=
+for arg in "$@"; do
+  case "$arg" in
+    --yes|-y) yes=1 ;;
+    -*) die "unknown option '$arg'" ;;
+    *) [ -z "$version" ] || die "more than one version given"; version="$arg" ;;
+  esac
+done
 key="${REDJELLY_SIGNING_KEY:-$HOME/.config/redjelly/release-signing.key}"
 
 : "${MAKENSIS:?set MAKENSIS (and the other scripts/build-windows.sh variables)}"
@@ -32,8 +44,8 @@ free_gb=$(df -BG --output=avail "$root" | tail -1 | tr -dc 0-9)
 [ "$free_gb" -ge 5 ] || die "only ${free_gb}G free on $root (need 5G); try: cargo clean --profile dev"
 
 old=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
-if [ $# -ge 1 ]; then
-  new="$1"
+if [ -n "$version" ]; then
+  new="$version"
 else
   IFS=. read -r major minor patch <<<"$old"
   new="$major.$minor.$((patch + 1))"
@@ -69,12 +81,30 @@ echo
 echo "Release notes:"
 cat "$notes"
 echo
-read -rp "Push main + v$new and publish the GitHub release? [y/N] " answer
+if [ -n "$yes" ]; then
+  answer=y
+else
+  read -rp "Push main + v$new and publish the GitHub release? [y/N] " answer
+fi
 if [ "$answer" != y ] && [ "$answer" != Y ]; then
   echo "Not published. Undo with: git tag -d v$new && git reset --hard HEAD~1"
   exit 0
 fi
-git push origin main "v$new"
+# Publish only on top of the main we built from. If someone merged meanwhile,
+# drop our commit and tag so a rerun (in CI: the run that merge queued)
+# starts clean from the new main instead of tripping over a stray tag.
+undo_local() { git tag -d "v$new" >/dev/null; git reset -q --hard HEAD~1; }
+git fetch -q origin main
+if [ "$(git rev-parse origin/main)" != "$(git rev-parse HEAD~1)" ]; then
+  undo_local
+  echo "release: main moved on origin while building; not published, rerun on the new main" >&2
+  exit 3
+fi
+# --atomic: main and the tag land together or not at all.
+git push --atomic origin main "v$new" || {
+  undo_local
+  die "push failed; nothing published, local release commit and tag removed"
+}
 gh release create "v$new" --title "redjelly $new" --notes-file "$notes" \
   "$exe" "$exe.sig" "dist/redjelly-install-$new.zip"
 echo "published redjelly $new"

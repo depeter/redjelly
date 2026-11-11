@@ -23,7 +23,7 @@ Status: v1 spec, agreed 2026-10-15. All milestones are in scope for v1.
 | Sub providers | Jellyfin server remote search, Subdl (free); OpenSubtitles.com opt-in (quota/paid). Podnapisi dropped: site gone (no DNS, 2026-10) |
 | Sub storage | Upload to Jellyfin server (user is admin) |
 | Auto-fetch | Background search when preferred-language sub missing; toast, no auto-download |
-| Sub tools | Manual delay (remembered), auto-sync via alass, style overrides |
+| Sub tools | Manual delay (remembered), auto-sync (Viterbi aligner), style overrides |
 | AI subs | Local whisper.cpp (CUDA, NVIDIA GPU), on demand — run as the official prebuilt `whisper-cli` (CUDA 12 package downloaded on first use), since CUDA can't be cross-compiled from Linux |
 | Translation | Local model (Opus-MT via candle), e.g. en→nl |
 | Languages | Ordered preference list, user default `nl, en` |
@@ -44,7 +44,7 @@ app (redjelly.exe, Slint UI, tokio runtime)
  ├── rj-core      config, language codes, track-selection rules, local state DB
  ├── rj-jellyfin  typed REST client for the Jellyfin API
  ├── rj-player    libmpv wrapper: playback, tracks, OSD, render-API integration
- ├── rj-subs      subtitle providers, ranking, hashing, encoding fixups, alass sync, upload
+ ├── rj-subs      subtitle providers, ranking, hashing, encoding fixups, auto-sync, upload
  ├── rj-ai        audio extraction, whisper transcription, Opus-MT translation, job queue
  ├── rj-input     Action model, keymaps, keyboard/gamepad/media-key sources
  ├── rj-seerr     Jellyseerr / Radarr / Sonarr clients (Discover, requests)
@@ -136,7 +136,7 @@ id recorded. This mapping lives in `rj-player` and is unit-tested.
 | [ / ] | speed −/+0.1 | Shift+Backspace | reset speed |
 | A | cycle audio track | J / Shift+J | cycle subtitle / reverse |
 | V | toggle subtitles | S | open subtitle panel (search/download/AI) |
-| Z / X | sub delay −/+100 ms | Ctrl+Z | auto-sync subtitle (alass) |
+| Z / X | sub delay −/+100 ms | Ctrl+Z | auto-sync subtitle |
 | Enter | skip intro/credits (when shown) | I | stats overlay |
 | Esc / Backspace | hide controls → stop → back | ? | keybinding cheat sheet |
 | 0–9 | seek to 0%–90% | Ctrl+S | cycle shader preset |
@@ -251,7 +251,7 @@ group, resolution, edition). 3. Not hearing-impaired (unless `prefer_sdh`).
 ### 6.4 Sync
 - Manual: Z/X ±100 ms, Shift for ±1 s. Stored per item+subtitle in the state DB and
   reapplied; option "apply permanently" rewrites timings and re-uploads.
-- Auto: `alass-core` aligns subtitle timespans to a reference — (a) another text sub
+- Auto: aligns subtitle timespans to a reference — (a) another text sub
   track in the same file (instant), else (b) speech detected in the audio: the audio
   track in the subtitle's language (else the default track) is extracted (server
   audio-only transcode, §7) and run through whisper.cpp's
@@ -268,10 +268,16 @@ group, resolution, edition). 3. Not hearing-impaired (unless `prefer_sdh`).
     cuts need. Measured on F9 (theatrical Dutch subs vs the Director's Cut's English
     track, scored by name anchors): 216/226 vs alass 178/226; per-part error
     55–115 ms vs 160–500 ms; it finds the Tokyo scene moved ~9 min later.
-  - Against speech (voice detection): alass split alignment (penalty 8). Detected
-    speech is too noisy for edge scoring (on F9 a quarter of the lines have no
-    detected speech under them); alass kept the correctly timed English track at
-    0 s for 100 % of cues where the Viterbi got 80–100 % depending on penalty.
+  - Against speech (voice detection): the same Viterbi, but only cue starts are
+    scored, against speech onsets (spans merge lines and trail into music), with
+    switch penalty 12 (a quarter of the lines have no detected speech under them),
+    and lines are placed 80 ms before the onset (on F9 every line of the correctly
+    timed track landed exactly 80 ms late without it). F9, theatrical Dutch subs
+    onto the Director's Cut audio, name anchors within 3 s: 195/226, 168/205,
+    121/161 vs alass 158, 134, 103; median error 73–97 ms; the correctly timed
+    English track stays at 0 for every cue, also shifted 3.7 s or PAL-scaled.
+    Silero VAD settings (threshold 0.35–0.65, min silence 50 ms, no padding)
+    made no difference.
 - Built-in tracks are read from the server by Jellyfin index, which is not mpv's
   `ff-index`: Jellyfin 10.11 numbers external subtitles first. The n-th stream in
   the file is the n-th non-external Jellyfin stream (also used for the audio
@@ -432,7 +438,7 @@ All of these ship in v1; the order is for dependency, not priority.
   playback, reporting, resume, track selection + memory, focus model, keymap, cheat
   sheet, SMTC.
 - **M2 Subtitles** — providers, hash, ranking, panel, encoding fix, upload, delay
-  memory, style overrides, alass sync, auto-search toast.
+  memory, style overrides, auto-sync, auto-search toast.
 - **M3 AI** — extraction, whisper, Opus-MT translation, job queue, models manager,
   season batch.
 - **M4 Polish** — gamepad, keymap editor UI, intro/credits skip, next-episode,

@@ -156,12 +156,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "alass-core"
-version = "2.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4ad56e53efbd3731dc4fb0db24953d399f9789caa706b4c5a1a715010170124"
-
-[[package]]
 name = "allocator-api2"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5759,7 +5753,6 @@ dependencies = [
 name = "rj-subs"
 version = "0.1.20"
 dependencies = [
- "alass-core",
  "async-trait",
  "chardetng",
  "encoding_rs",

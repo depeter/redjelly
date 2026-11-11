@@ -18,12 +18,9 @@
 //! Framerate mismatches (25 vs 23.976 fps: a 4 % drift) are handled by
 //! trying the common ratios and keeping the clearly best fit.
 //!
-//! Speech detected in the audio is a much noisier reference (music and
-//! effects hide a lot of speech, spans merge several lines), and there the
-//! edge scoring jumps to wrong offsets; alass's ordered alignment holds up
-//! better, so `align_to_speech` uses that (measured on a real film: SPEC §6.4).
-
-use alass_core::{NoProgressHandler, TimeDelta, TimePoint, TimeSpan};
+//! Detected speech is a noisier reference (music and effects hide a lot
+//! of speech, spans merge several lines), so there only cue starts are
+//! scored against speech onsets, with a dearer offset switch (SPEC §6.4).
 
 /// Grid step of the coarse offset search (ms).
 const STEP_MS: i64 = 100;
@@ -35,9 +32,27 @@ const KERNEL_MS: i64 = 500;
 const FINE_KERNEL_MS: i64 = 200;
 const FINE_STEP_MS: i64 = 10;
 
-/// Cost of switching offset, in "well-matched cues": a part needs about
-/// this many more matching lines at its own offset to get one.
-const PENALTY: f32 = 4.0;
+/// How cues are scored against a reference.
+#[derive(Clone, Copy)]
+struct Scoring {
+    /// Cost of switching offset, in "well-matched cues": a part needs about
+    /// this many more matching lines at its own offset to get one.
+    penalty: f32,
+    /// Weight of a cue's end next to its start (1 = equal).
+    end_weight: f32,
+    /// How much earlier than a reference onset a line should appear (ms).
+    lead_ms: i64,
+}
+
+/// Against another subtitle both edges of a line mean something.
+const SUBTITLE: Scoring = Scoring { penalty: 4.0, end_weight: 1.0, lead_ms: 0 };
+
+/// Detected speech: only onsets are reliable (spans merge several lines and
+/// trail off into music), and a quarter of the lines have no speech under
+/// them, so switching has to be dearer. Detected onsets come ~80 ms after
+/// a subtitler's line start (on F9 every line of the correctly timed track
+/// landed exactly 80 ms late, the other-cut tracks 85–113 ms).
+const SPEECH: Scoring = Scoring { penalty: 12.0, end_weight: 0.0, lead_ms: 80 };
 
 /// Cues longer than this are signs, karaoke or "♪ music ♪" banners, not
 /// speech: they only blur the alignment.
@@ -152,15 +167,17 @@ impl Edges {
     }
 
     /// Coarse-grid scores of a target cue's start and end for every offset.
-    fn emissions(&self, (s, e): (i64, i64), range: i64, starts: &mut [f32], ends: &mut [f32]) {
+    fn emissions(&self, (s, e): (i64, i64), range: i64, sc: Scoring, starts: &mut [f32], ends: &mut [f32]) {
         starts.iter_mut().for_each(|v| *v = 0.0);
         ends.iter_mut().for_each(|v| *v = 0.0);
         Self::kernel(&self.starts, s, range, starts);
-        Self::kernel(&self.ends, e, range, ends);
+        if sc.end_weight > 0.0 {
+            Self::kernel(&self.ends, e, range, ends);
+        }
     }
 
     /// Fine score of a target cue at offset `o`.
-    fn fine(&self, (s, e): (i64, i64), o: i64) -> f32 {
+    fn fine(&self, (s, e): (i64, i64), o: i64, sc: Scoring) -> f32 {
         let near = |edges: &[i64], t: i64| {
             let i = edges.partition_point(|&x| x < t);
             let d = [i.checked_sub(1), Some(i)]
@@ -172,7 +189,8 @@ impl Edges {
                 .unwrap_or(i64::MAX);
             (1.0 - d as f32 / FINE_KERNEL_MS as f32).max(0.0)
         };
-        0.5 * (near(&self.starts, s + o) + near(&self.ends, e + o))
+        let end = if sc.end_weight > 0.0 { sc.end_weight * near(&self.ends, e + o) } else { 0.0 };
+        (near(&self.starts, s + o) + end) / (1.0 + sc.end_weight)
     }
 }
 
@@ -181,7 +199,7 @@ fn argmax(v: &[f32]) -> (usize, f32) {
 }
 
 /// Viterbi over the offset grid; returns each cue's offset and the path score.
-fn offset_path(edges: &Edges, target: &[(i64, i64)], range: i64) -> (Vec<i64>, f32) {
+fn offset_path(edges: &Edges, target: &[(i64, i64)], range: i64, sc: Scoring) -> (Vec<i64>, f32) {
     let n_states = (2 * range / STEP_MS + 1) as usize;
     let words = n_states.div_ceil(64);
     let mut score = vec![0f32; n_states];
@@ -190,16 +208,16 @@ fn offset_path(edges: &Edges, target: &[(i64, i64)], range: i64) -> (Vec<i64>, f
     let mut switched = vec![0u64; words * target.len()];
     let mut from = Vec::with_capacity(target.len());
     for (i, &cue) in target.iter().enumerate() {
-        edges.emissions(cue, range, &mut starts, &mut ends);
+        edges.emissions(cue, range, sc, &mut starts, &mut ends);
         let (bi, bv) = argmax(&score);
-        let jump = bv - PENALTY;
+        let jump = bv - sc.penalty;
         let bits = &mut switched[i * words..(i + 1) * words];
         for k in 0..n_states {
             if jump > score[k] {
                 score[k] = jump;
                 bits[k / 64] |= 1 << (k % 64);
             }
-            score[k] += 0.5 * (starts[k] + ends[k]);
+            score[k] += (starts[k] + sc.end_weight * ends[k]) / (1.0 + sc.end_weight);
         }
         from.push(bi);
     }
@@ -215,7 +233,7 @@ fn offset_path(edges: &Edges, target: &[(i64, i64)], range: i64) -> (Vec<i64>, f
 }
 
 /// Refines each run of equal coarse offsets to 10 ms.
-fn refine(edges: &Edges, target: &[(i64, i64)], offsets: &mut [i64]) {
+fn refine(edges: &Edges, target: &[(i64, i64)], offsets: &mut [i64], sc: Scoring) {
     let reach = (FINE_KERNEL_MS + STEP_MS) / FINE_STEP_MS;
     let mut start = 0;
     while start < offsets.len() {
@@ -226,7 +244,7 @@ fn refine(edges: &Edges, target: &[(i64, i64)], offsets: &mut [i64]) {
         let c = offsets[start];
         let best = (-reach..=reach)
             .map(|j| c + j * FINE_STEP_MS)
-            .map(|o| (o, target[start..end].iter().map(|&cue| edges.fine(cue, o)).sum::<f32>()))
+            .map(|o| (o, target[start..end].iter().map(|&cue| edges.fine(cue, o, sc)).sum::<f32>()))
             .fold((c, f32::MIN), |a, b| if b.1 > a.1 { b } else { a })
             .0;
         offsets[start..end].iter_mut().for_each(|d| *d = best);
@@ -260,6 +278,15 @@ fn spread(target: &[(i64, i64)], clean: &[(i64, i64)], offsets: &[i64]) -> Vec<i
 
 /// Moves `target` cues onto the timing of another subtitle track.
 pub fn align(reference: &[(i64, i64)], target: &[(i64, i64)]) -> Alignment {
+    viterbi(reference, target, SUBTITLE)
+}
+
+/// Moves `target` cues onto speech spans detected in the audio.
+pub fn align_to_speech(speech: &[(i64, i64)], target: &[(i64, i64)]) -> Alignment {
+    viterbi(speech, target, SPEECH)
+}
+
+fn viterbi(reference: &[(i64, i64)], target: &[(i64, i64)], sc: Scoring) -> Alignment {
     let reference = usable(reference);
     let clean = usable(target);
     if reference.is_empty() || clean.is_empty() {
@@ -273,7 +300,7 @@ pub fn align(reference: &[(i64, i64)], target: &[(i64, i64)]) -> Alignment {
 
     let mut best: Option<(f64, Vec<i64>, f32)> = None;
     for &ratio in &RATIOS {
-        let (offsets, score) = offset_path(&edges, &scaled(&clean, ratio), range);
+        let (offsets, score) = offset_path(&edges, &scaled(&clean, ratio), range, sc);
         // A different framerate has to win clearly, not by noise.
         let score = if ratio == 1.0 { score * 1.05 } else { score };
         if best.as_ref().is_none_or(|b| score > b.2) {
@@ -281,59 +308,8 @@ pub fn align(reference: &[(i64, i64)], target: &[(i64, i64)]) -> Alignment {
         }
     }
     let (scale, mut offsets, _) = best.expect("RATIOS is not empty");
-    refine(&edges, &scaled(&clean, scale), &mut offsets);
-    Alignment { scale, deltas: spread(target, &clean, &offsets) }
-}
-
-/// alass works on integer time points; 10 ms is plenty precise.
-const ALASS_UNIT_MS: i64 = 10;
-
-/// Higher = fewer splits; alass recommends 7 ± 1, a little stricter keeps
-/// voice detection noise from scattering the result.
-const ALASS_SPLIT_PENALTY: f64 = 8.0;
-
-fn alass_spans(cues: &[(i64, i64)], scale: f64) -> Vec<TimeSpan> {
-    cues.iter()
-        .map(|&(s, e)| {
-            let s = (s as f64 * scale) as i64 / ALASS_UNIT_MS;
-            let e = (e as f64 * scale) as i64 / ALASS_UNIT_MS;
-            TimeSpan::new_safe(TimePoint::from(s), TimePoint::from(e.max(s + 1)))
-        })
-        .collect()
-}
-
-fn alass_split(reference: &[TimeSpan], target: &[(i64, i64)], scale: f64) -> (Vec<i64>, f64) {
-    let spans = alass_spans(target, scale);
-    let (deltas, score) =
-        alass_core::align(reference, &spans, ALASS_SPLIT_PENALTY, Some(1.0), alass_core::standard_scoring, NoProgressHandler);
-    (deltas.iter().map(|d: &TimeDelta| d.as_i64() * ALASS_UNIT_MS).collect(), score)
-}
-
-/// Moves `target` cues onto speech spans detected in the audio.
-pub fn align_to_speech(speech: &[(i64, i64)], target: &[(i64, i64)]) -> Alignment {
-    let reference = alass_spans(&usable(speech), 1.0);
-    let clean = usable(target);
-    if reference.is_empty() || clean.is_empty() {
-        return Alignment { scale: 1.0, deltas: vec![0; target.len()] };
-    }
-    // The likeliest other framerate by a cheap single-shift fit; it has to
-    // beat the native one clearly in the full alignment.
-    let other = RATIOS[1..]
-        .iter()
-        .map(|&r| {
-            let (_, score) = alass_core::align_nosplit(
-                &reference,
-                &alass_spans(&clean, r),
-                alass_core::overlap_scoring,
-                NoProgressHandler,
-            );
-            (r, score)
-        })
-        .fold((1.0, f64::MIN), |a, b| if b.1 > a.1 { b } else { a })
-        .0;
-    let (native, native_score) = alass_split(&reference, &clean, 1.0);
-    let (other_offsets, other_score) = alass_split(&reference, &clean, other);
-    let (scale, offsets) = if other_score > native_score * 1.05 { (other, other_offsets) } else { (1.0, native) };
+    refine(&edges, &scaled(&clean, scale), &mut offsets, sc);
+    offsets.iter_mut().for_each(|d| *d -= sc.lead_ms);
     Alignment { scale, deltas: spread(target, &clean, &offsets) }
 }
 
@@ -448,20 +424,47 @@ mod tests {
         check(&truth, &target, &a, 30);
     }
 
+    /// Where lines should start against detected speech: a little before
+    /// the onset.
+    fn speech_starts(v: &[(i64, i64)]) -> Vec<Option<i64>> {
+        v.iter().map(|c| Some(c.0 - SPEECH.lead_ms)).collect()
+    }
+
     #[test]
     fn speech_constant_offset_and_framerate() {
         let speech = pattern(600);
         let late: Vec<_> = speech.iter().map(|&(s, e)| (s + 2_300, e + 2_300)).collect();
         let a = align_to_speech(&speech, &late);
         let c = a.as_constant().expect("constant");
-        assert!((c + 2_300).abs() <= 20, "shift {c}");
+        assert!((c + 2_300 + SPEECH.lead_ms).abs() <= 20, "shift {c}");
         let pal: Vec<_> = speech
             .iter()
             .map(|&(s, e)| ((s as f64 * 23.976 / 25.0) as i64 + 800, (e as f64 * 23.976 / 25.0) as i64 + 800))
             .collect();
         let a = align_to_speech(&speech, &pal);
         assert!((a.scale - 25.0 / 23.976).abs() < 1e-9, "scale {}", a.scale);
-        check(&starts(&speech), &pal, &a, 60);
+        check(&speech_starts(&speech), &pal, &a, 60);
+    }
+
+    #[test]
+    fn speech_other_cut_with_patchy_detection() {
+        // Subtitle for a cut without lines 150..190 of the film, against
+        // speech where every fourth line went undetected (music, effects)
+        // and some onsets were merged into the line before.
+        let film = pattern(400);
+        let cut = film[190].0 - film[150].0;
+        let (mut target, mut truth) = (Vec::new(), Vec::new());
+        for (i, &(s, e)) in film.iter().enumerate() {
+            if (150..190).contains(&i) {
+                continue;
+            }
+            let shift = if i < 150 { 0 } else { cut };
+            target.push((s - shift + 5_000, e - shift + 5_000));
+            truth.push(Some(s - SPEECH.lead_ms));
+        }
+        let speech: Vec<_> = film.iter().enumerate().filter(|(i, _)| i % 4 != 1).map(|(_, &c)| c).collect();
+        let a = align_to_speech(&speech, &target);
+        check(&truth, &target, &a, 60);
     }
 
     #[test]

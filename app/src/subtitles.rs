@@ -68,8 +68,8 @@ pub enum SyncRef {
 enum SubSource {
     Url(String),
     File(PathBuf),
-    /// Embedded track, fetched from the server (Jellyfin index, extension).
-    Embedded(u32, &'static str),
+    /// Embedded track, fetched from the server (index inside the file, extension).
+    Embedded(i64, &'static str),
 }
 
 /// An mpv subtitle track usable as sync target or reference.
@@ -220,6 +220,13 @@ pub(crate) fn jellyfin_index(ms: &MediaSource, ff_index: i64) -> Option<u32> {
     embedded.get(usize::try_from(ff_index).ok()?).copied()
 }
 
+/// The media source as the server numbers its streams right now: the one from
+/// the start of playback is out of date as soon as a subtitle gets stored.
+async fn current_source(client: &Client, item_id: &str, known: &MediaSource) -> MediaSource {
+    let fresh = client.item(item_id).await.ok().and_then(|i| i.media_sources.into_iter().find(|m| m.id == known.id));
+    fresh.unwrap_or_else(|| known.clone())
+}
+
 /// Reads a subtitle track's text.
 async fn read_source(
     src: &SubSource,
@@ -241,7 +248,14 @@ async fn read_source(
             let (Some(client), Some((item_id, ms_id))) = (client, ids) else {
                 anyhow::bail!("built-in subtitles can only be read from Jellyfin videos")
             };
-            let url = client.subtitle_url(item_id, ms_id, *index, ext)?;
+            let item = client.item(item_id).await?;
+            let index = item
+                .media_sources
+                .iter()
+                .find(|m| &m.id == ms_id)
+                .and_then(|m| jellyfin_index(m, *index))
+                .ok_or_else(|| anyhow::anyhow!("the server no longer lists this built-in subtitle"))?;
+            let url = client.subtitle_url(item_id, ms_id, index, ext)?;
             let b = http.get(url).header("Authorization", client.auth_header()).send().await?.error_for_status()?.bytes().await?;
             Ok(rj_subs::encoding::to_utf8(&b))
         }
@@ -294,7 +308,8 @@ async fn audio_reference(
     lang: Option<&Lang>,
     progress: impl Fn(String) + Send + Sync + Clone + 'static,
 ) -> anyhow::Result<Vec<(i64, i64)>> {
-    let index = crate::audio::track_for_sync(&ctx.ms, lang);
+    let ms = current_source(&ctx.client, &ctx.item_id, &ctx.ms).await;
+    let index = crate::audio::track_for_sync(&ms, lang);
     let cache = ctx.work_dir.join(format!("speech-{}-{}.json", ctx.item_id, index.map_or(-1, i64::from)));
     if let Ok(text) = tokio::fs::read_to_string(&cache).await
         && let Ok(spans) = serde_json::from_str::<Vec<(i64, i64)>>(&text) {
@@ -309,7 +324,7 @@ async fn audio_reference(
     crate::audio::extract_wav(
         &ctx.client,
         &ctx.item_id,
-        &ctx.ms,
+        &ms,
         index,
         &wav,
         move |what, f| p(format!("Syncing to the audio · {} {:.0}%", what.to_lowercase(), f * 100.0)),
@@ -706,17 +721,21 @@ impl App {
         let kind = match translate {
             Some((sub_index, pair)) => {
                 let Some((from, _)) = crate::models::Models::opus_pairs().into_iter().nth(pair) else { return };
-                crate::ai::JobKind::TranslateSub { sub_index, from }
+                let ms = self.session.borrow().as_ref().and_then(|s| s.req.media_source.clone());
+                let Some(sub) = ms.as_ref().and_then(|m| crate::ai::StreamRef::of(m, sub_index)) else {
+                    return self.toast("Couldn't find that subtitle on the server");
+                };
+                crate::ai::JobKind::TranslateSub { sub, from }
             }
             None => {
                 let mpv = self.player.mpv();
-                let ms = self.session.borrow().as_ref().and_then(|s| s.req.media_source.clone());
-                let audio_index = mpv
+                let audio = mpv
                     .get_property::<i64>("current-tracks/audio/ff-index")
                     .ok()
-                    .and_then(|ff| jellyfin_index(ms.as_ref()?, ff));
+                    .and_then(|ff| usize::try_from(ff).ok())
+                    .map(crate::ai::StreamRef::File);
                 let spoken = mpv.get_property::<String>("current-tracks/audio/lang").ok().and_then(|l| Lang::parse(&l));
-                crate::ai::JobKind::Transcribe { audio_index, spoken }
+                crate::ai::JobKind::Transcribe { audio, spoken }
             }
         };
         self.toast("Queued AI subtitles · it loads here automatically when done");
@@ -756,7 +775,10 @@ impl App {
                     let format = Format::from_ext(&file.format).unwrap_or(Format::Srt);
                     let target_cues = timing::parse(&file.text, format).len();
                     let reference = match &ms {
-                        Some(m) => reference_cues(&client, &http, &item_id, m, target_cues).await,
+                        Some(m) => {
+                            let m = current_source(&client, &item_id, m).await;
+                            reference_cues(&client, &http, &item_id, &m, target_cues).await
+                        }
                         None => None,
                     };
                     match reference {
@@ -950,9 +972,11 @@ impl App {
                 None => {
                     // Built into the file: read via the server, by its Jellyfin index.
                     let Ok(ff) = mpv.get_property::<i64>(&format!("track-list/{i}/ff-index")) else { continue };
-                    let Some(idx) = ms.as_ref().and_then(|m| jellyfin_index(m, ff)) else { continue };
+                    if ms.as_ref().and_then(|m| jellyfin_index(m, ff)).is_none() {
+                        continue;
+                    }
                     key = format!("emb:{ff}");
-                    SubSource::Embedded(idx, if codec == "ass" || codec == "ssa" { "ass" } else { "srt" })
+                    SubSource::Embedded(ff, if codec == "ass" || codec == "ssa" { "ass" } else { "srt" })
                 }
             };
             let (name, detail) = all

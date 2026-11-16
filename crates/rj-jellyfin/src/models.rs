@@ -299,6 +299,9 @@ pub struct MediaStream {
     pub channels: Option<u32>,
     #[serde(default)]
     pub delivery_url: Option<String>,
+    /// File of an external stream.
+    #[serde(default)]
+    pub path: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

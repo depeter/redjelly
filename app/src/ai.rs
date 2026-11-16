@@ -22,11 +22,43 @@ use crate::{App, SCREEN_BROWSE, with_app};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum JobKind {
-    /// Whisper on an audio track (Jellyfin stream index), translating when
-    /// the spoken language isn't the target.
-    Transcribe { audio_index: Option<u32>, spoken: Option<Lang> },
+    /// Whisper on an audio track, translating when the spoken language
+    /// isn't the target.
+    Transcribe { audio: Option<StreamRef>, spoken: Option<Lang> },
     /// Translate an existing text subtitle track, keeping its timing.
-    TranslateSub { sub_index: u32, from: Lang },
+    TranslateSub { sub: StreamRef, from: Lang },
+}
+
+/// A stream of an item, named so that it survives Jellyfin renumbering. The
+/// server lists external subtitles first, so every subtitle it stores shifts
+/// each `MediaStream.Index`: after one download during playback, "subtitle
+/// 2" was the audio track and fetching it answered 500.
+#[derive(Debug, Clone, PartialEq)]
+pub enum StreamRef {
+    /// The n-th stream inside the file (mpv's `ff-index`).
+    File(usize),
+    /// A separate file, by its path on the server.
+    External(String),
+}
+
+impl StreamRef {
+    pub fn of(ms: &MediaSource, index: u32) -> Option<Self> {
+        let s = ms.media_streams.iter().find(|s| s.index == index)?;
+        if s.is_external {
+            return s.path.clone().map(Self::External);
+        }
+        Some(Self::File(ms.media_streams.iter().filter(|o| !o.is_external && o.index < index).count()))
+    }
+
+    /// Its `MediaStream.Index` in `ms`, `None` when it is gone.
+    pub fn index_in(&self, ms: &MediaSource) -> Option<u32> {
+        match self {
+            Self::File(n) => crate::subtitles::jellyfin_index(ms, i64::try_from(*n).ok()?),
+            Self::External(path) => {
+                ms.media_streams.iter().find(|s| s.is_external && s.path.as_deref() == Some(path)).map(|s| s.index)
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -85,13 +117,14 @@ pub fn plan(item: &Item, target: &Lang) -> Option<JobKind> {
         return None;
     }
     let pairs = Models::opus_pairs();
-    if let Some((index, from)) = subs.iter().find(|(_, from)| pairs.iter().any(|(f, t)| f == from && t == target)) {
-        return Some(JobKind::TranslateSub { sub_index: *index, from: from.clone() });
+    let translatable = subs.iter().filter(|(_, from)| pairs.iter().any(|(f, t)| f == from && t == target));
+    if let Some((sub, from)) = translatable.into_iter().find_map(|(index, from)| Some((StreamRef::of(ms, *index)?, from))) {
+        return Some(JobKind::TranslateSub { sub, from: from.clone() });
     }
     let audio = ms.media_streams.iter().filter(|s| s.kind == StreamType::Audio);
     let chosen = audio.clone().find(|s| s.is_default).or_else(|| audio.clone().next());
     Some(JobKind::Transcribe {
-        audio_index: chosen.map(|s| s.index),
+        audio: chosen.and_then(|s| StreamRef::of(ms, s.index)),
         spoken: chosen.and_then(|s| s.language.as_deref()).and_then(Lang::parse),
     })
 }
@@ -154,8 +187,12 @@ async fn run(input: JobInput, rep: Reporter) -> anyhow::Result<PathBuf> {
     let en = Lang::parse("en").expect("valid");
 
     let (cues, spoken) = match kind {
-        JobKind::TranslateSub { sub_index, from } => {
+        JobKind::TranslateSub { sub, from } => {
             status("Fetching subtitle".into(), 0.0);
+            let sub_index = sub
+                .index_in(&ms)
+                .filter(|i| ms.media_streams.iter().any(|s| s.index == *i && s.kind == StreamType::Subtitle))
+                .ok_or_else(|| anyhow::anyhow!("the {} subtitle is no longer on the server", from.name()))?;
             let url = client.subtitle_url(&item_id, &ms.id, sub_index, "srt")?;
             let bytes =
                 http.get(url).header("Authorization", client.auth_header()).send().await?.error_for_status()?.bytes().await?;
@@ -163,7 +200,8 @@ async fn run(input: JobInput, rep: Reporter) -> anyhow::Result<PathBuf> {
             anyhow::ensure!(!source.is_empty(), "the source subtitle is empty");
             (source, Some(from))
         }
-        JobKind::Transcribe { audio_index, spoken } => {
+        JobKind::Transcribe { audio, spoken } => {
+            let audio_index = audio.and_then(|a| a.index_in(&ms));
             models.ensure(&http, true, &[], &status, &cancel).await?;
             check_cancel(&cancel)?;
 
@@ -468,7 +506,31 @@ mod tests {
             {"Index":1,"Type":"Audio","Language":"eng","IsDefault":true},
             {"Index":2,"Type":"Subtitle","Language":"eng","IsTextSubtitleStream":true}]}]}"#);
         let nl = Lang::parse("nl").unwrap();
-        assert_eq!(plan(&i, &nl), Some(JobKind::TranslateSub { sub_index: 2, from: Lang::parse("en").unwrap() }));
+        assert_eq!(plan(&i, &nl), Some(JobKind::TranslateSub { sub: StreamRef::File(1), from: Lang::parse("en").unwrap() }));
+    }
+
+    /// The Hobbit: one Dutch download later the English track is 3, not 2.
+    #[test]
+    fn stream_ref_follows_renumbering() {
+        let before = item(r#"{"Id":"x","MediaSources":[{"Id":"m","MediaStreams":[
+            {"Index":0,"Type":"Video"},
+            {"Index":1,"Type":"Audio","Language":"eng"},
+            {"Index":2,"Type":"Subtitle","Language":"eng","IsTextSubtitleStream":true}]}]}"#);
+        let after = item(r#"{"Id":"x","MediaSources":[{"Id":"m","MediaStreams":[
+            {"Index":0,"Type":"Subtitle","Language":"dut","IsExternal":true,"Path":"/meta/a.dut.0.srt"},
+            {"Index":1,"Type":"Subtitle","Language":"dut","IsExternal":true,"Path":"/meta/a.dut.srt"},
+            {"Index":2,"Type":"Video"},
+            {"Index":3,"Type":"Audio","Language":"eng"},
+            {"Index":4,"Type":"Subtitle","Language":"eng","IsTextSubtitleStream":true}]}]}"#);
+        let (before, after) = (&before.media_sources[0], &after.media_sources[0]);
+        let sub = StreamRef::of(before, 2).unwrap();
+        assert_eq!(sub, StreamRef::File(2));
+        assert_eq!(sub.index_in(after), Some(4));
+        assert_eq!(StreamRef::of(before, 1).unwrap().index_in(after), Some(3));
+        let dutch = StreamRef::of(after, 1).unwrap();
+        assert_eq!(dutch, StreamRef::External("/meta/a.dut.srt".into()));
+        assert_eq!(dutch.index_in(after), Some(1));
+        assert_eq!(dutch.index_in(before), None);
     }
 
     #[test]
@@ -478,7 +540,7 @@ mod tests {
             {"Index":2,"Type":"Audio","Language":"jpn","IsDefault":true},
             {"Index":3,"Type":"Subtitle","Language":"jpn","IsTextSubtitleStream":false}]}]}"#);
         let nl = Lang::parse("nl").unwrap();
-        assert_eq!(plan(&i, &nl), Some(JobKind::Transcribe { audio_index: Some(2), spoken: Lang::parse("ja") }));
+        assert_eq!(plan(&i, &nl), Some(JobKind::Transcribe { audio: Some(StreamRef::File(1)), spoken: Lang::parse("ja") }));
     }
 
     #[test]

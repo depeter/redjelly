@@ -127,6 +127,8 @@ pub struct App {
     osd_until: Cell<Instant>,
     toast_until: Cell<Instant>,
     stats: Cell<bool>,
+    /// When mpv started waiting for the network, if it is.
+    buffering_since: Cell<Option<Instant>>,
     subs_raised: Cell<bool>,
     media: RefCell<Option<OsMediaControls>>,
     last_media_update: Cell<Instant>,
@@ -507,6 +509,11 @@ fn main() -> anyhow::Result<()> {
     let dirs = rj_core::config::dirs()?;
     let log_dir = dirs.data_local_dir().join("logs");
     std::fs::create_dir_all(&log_dir)?;
+    // Restarting is the usual cure for a playback problem, and it must not
+    // destroy the evidence: keep the previous run's logs as *.prev.log.
+    for name in ["redjelly", "mpv"] {
+        let _ = std::fs::rename(log_dir.join(format!("{name}.log")), log_dir.join(format!("{name}.prev.log")));
+    }
     let log_file = std::fs::File::create(log_dir.join("redjelly.log"))?;
     {
         use tracing_subscriber::layer::SubscriberExt;
@@ -609,6 +616,7 @@ fn main() -> anyhow::Result<()> {
         osd_until: Cell::new(Instant::now()),
         toast_until: Cell::new(Instant::now()),
         stats: Cell::new(false),
+        buffering_since: Cell::new(None),
         subs_raised: Cell::new(false),
         media: RefCell::new(None),
         last_media_update: Cell::new(Instant::now()),

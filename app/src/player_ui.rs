@@ -403,6 +403,8 @@ impl App {
         }
         let ui = self.ui();
         ui.set_player_stats(SharedString::new());
+        self.buffering_since.set(None);
+        ui.set_player_buffering(SharedString::new());
         if self.standalone {
             let _ = slint::quit_event_loop();
             return;
@@ -477,6 +479,7 @@ impl App {
         ui.set_player_total(format_time(dur).into());
         ui.set_player_progress(if dur > 0.0 { (pos / dur) as f32 } else { 0.0 });
         ui.set_player_paused(paused);
+        self.update_buffering(now);
         if now > self.osd_until.get() {
             ui.set_player_osd(false);
             if !paused {
@@ -510,6 +513,30 @@ impl App {
                 s.last_report = now;
             }
             self.report(REPORT_PROGRESS);
+        }
+    }
+
+    /// "Buffering…" in the middle of the picture while mpv waits for data,
+    /// so a slow network doesn't look like a frozen player. Not for the
+    /// blink of a normal start or seek.
+    fn update_buffering(&self, now: Instant) {
+        let mpv = self.player.mpv();
+        let text = if mpv.get_property::<bool>("paused-for-cache").unwrap_or(false) {
+            let since = self.buffering_since.get().unwrap_or(now);
+            self.buffering_since.set(Some(since));
+            if now.duration_since(since) >= Duration::from_millis(700) {
+                let pct = mpv.get_property::<i64>("cache-buffering-state").unwrap_or(0);
+                format!("Buffering… {pct}%")
+            } else {
+                String::new()
+            }
+        } else {
+            self.buffering_since.set(None);
+            String::new()
+        };
+        let ui = self.ui();
+        if ui.get_player_buffering() != text.as_str() {
+            ui.set_player_buffering(text.into());
         }
     }
 

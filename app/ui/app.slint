@@ -606,6 +606,8 @@ component PlayerOverlay inherits Rectangle {
     /// The mouse hasn't moved for a while: hide the cursor, even over the bar.
     in property <bool> pointer-idle;
     in property <string> stats;
+    /// "Buffering… 40%" while playback waits for the network, else empty.
+    in property <string> buffering;
     in property <string> skip-label;
     in property <string> next-label;
     /// 0..1 of 100 %.
@@ -904,6 +906,22 @@ component PlayerOverlay inherits Rectangle {
         }
     }
 
+    if root.buffering != "": Rectangle {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        width: buffering-text.preferred-width + 48px;
+        height: buffering-text.preferred-height + 28px;
+        background: #000000b0;
+        border-radius: 8px;
+        buffering-text := Text {
+            x: 24px;
+            y: 14px;
+            text: root.buffering;
+            color: white;
+            font-size: 22px;
+        }
+    }
+
     if root.stats != "": Rectangle {
         x: 16px;
         y: 80px;
@@ -1139,6 +1157,7 @@ export component AppWindow inherits Window {
     in property <bool> player-osd;
     in property <bool> player-pointer-idle;
     in property <string> player-stats;
+    in property <string> player-buffering;
     in property <string> player-skip;
     in property <string> player-next;
     in property <float> player-volume;
@@ -1214,6 +1233,7 @@ export component AppWindow inherits Window {
             osd-visible: root.player-osd;
             pointer-idle: root.player-pointer-idle;
             stats: root.player-stats;
+            buffering: root.player-buffering;
             skip-label: root.player-skip;
             next-label: root.player-next;
             volume: root.player-volume;

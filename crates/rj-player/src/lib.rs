@@ -101,6 +101,10 @@ impl Player {
             }
             init.set_option("cache", "yes")?;
             init.set_option("demuxer-max-bytes", "512MiB")?;
+            // After running dry, wait for 10 s of video (mpv: 1 s). On a
+            // connection slower than the film that is a few long pauses
+            // instead of a second of playback between each stall.
+            init.set_option("cache-pause-wait", "10")?;
             // 8-bit output: dither, or HDR→SDR gradients band.
             init.set_option("dither-depth", "auto")?;
             Ok(())
@@ -217,8 +221,16 @@ impl Player {
     pub fn stats(&self) -> String {
         let m = self.mpv;
         let g = |k: &str| m.get_property::<String>(k).unwrap_or_else(|_| "-".into());
+        // Waiting for the network (as opposed to a stuck decoder or output)
+        // shows here as "buffering" with little cached and a low speed.
+        let buffering = if m.get_property::<bool>("paused-for-cache").unwrap_or(false) {
+            format!(", buffering {}%", g("cache-buffering-state"))
+        } else {
+            String::new()
+        };
+        let speed = m.get_property::<i64>("cache-speed").unwrap_or(0) / 1024;
         format!(
-            "video   {} {}x{} @ {} fps\nhwdec   {}\nvo      {}\ncolor   {} / {} / peak {}\naudio   {} {} ch\ndisplay {} Hz, sync {}\ndrops   {} decoder, {} vo, {} late, {} mistimed\ncache   {} s",
+            "video   {} {}x{} @ {} fps\nhwdec   {}\nvo      {}\ncolor   {} / {} / peak {}\naudio   {} {} ch\ndisplay {} Hz, sync {}\ndrops   {} decoder, {} vo, {} late, {} mistimed\ncache   {} s, {speed} KiB/s{buffering}",
             g("video-codec"),
             g("video-params/w"),
             g("video-params/h"),

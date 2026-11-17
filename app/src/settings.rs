@@ -272,10 +272,11 @@ impl App {
                     card("Server", cfg.server.url.clone().unwrap_or_default(), Setting::ChangeServer),
                     card(
                         "Local address",
-                        match &cfg.server.local_url {
-                            None => "Not set".into(),
-                            Some(u) if self.on_local_route() => format!("{u} (in use)"),
-                            Some(u) => format!("{u} (not reachable)"),
+                        match (&cfg.server.local_url, self.local_route()) {
+                            (Some(u), Some(_)) => format!("{u} (in use)"),
+                            (Some(u), None) => format!("{u} (not reachable)"),
+                            (None, Some(found)) => format!("Automatic: {found} (in use)"),
+                            (None, None) => "Automatic: not found on this network".into(),
                         },
                         Setting::LocalUrl,
                     ),
@@ -352,7 +353,7 @@ impl App {
                 return self.open_prompt(
                     s,
                     "Local server address",
-                    "The Jellyfin server on your home network, e.g. http://192.168.1.10:8096 · used whenever it answers · leave empty for none",
+                    "The Jellyfin server on your home network, e.g. http://192.168.1.10:8096 · used whenever it answers · leave empty to find it automatically",
                     &cur,
                     false,
                 );

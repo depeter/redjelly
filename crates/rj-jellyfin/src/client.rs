@@ -155,6 +155,16 @@ impl Client {
         Ok(auth)
     }
 
+    /// The server's id (no login needed); the same on every address of it.
+    pub async fn server_id(&self) -> Result<String, Error> {
+        #[derive(serde::Deserialize)]
+        #[serde(rename_all = "PascalCase")]
+        struct PublicInfo {
+            id: String,
+        }
+        Ok(self.get::<PublicInfo>("System/Info/Public", &[]).await?.id)
+    }
+
     /// Checks a restored token is still valid.
     pub async fn me(&self) -> Result<User, Error> {
         match self.get("Users/Me", &[]).await {

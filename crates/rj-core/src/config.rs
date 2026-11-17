@@ -41,6 +41,9 @@ pub struct ServerConfig {
     /// `http://192.168.1.10:8096`), used instead of `url` whenever it
     /// answers: streams then skip the internet round trip.
     pub local_url: Option<String>,
+    /// The server's id, remembered so it can be recognised on the home
+    /// network even when `url` is unreachable.
+    pub id: Option<String>,
     /// Generated once per install; Jellyfin uses it to identify the session.
     pub device_id: Option<String>,
     pub last_user_id: Option<String>,

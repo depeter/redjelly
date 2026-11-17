@@ -2,6 +2,7 @@
 //! (SPEC §3).
 
 mod client;
+pub mod discovery;
 pub mod models;
 
 pub use client::{Client, ClientInfo, Error};

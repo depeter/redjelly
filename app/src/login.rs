@@ -210,56 +210,93 @@ impl App {
         self.open(Source::Home, Placement::Reset);
     }
 
-    /// Whether the signed-in client talks to the configured local address.
-    pub fn on_local_route(&self) -> bool {
-        let local = self.config.borrow().server.local_url.clone();
+    /// The local address the signed-in client is using, if it is.
+    pub fn local_route(&self) -> Option<String> {
+        let public = self.config.borrow().server.url.clone()?;
         let client = self.client.borrow();
-        match (local, client.as_ref()) {
-            (Some(local), Some(c)) => c.with_base(&local).is_ok_and(|l| l.base() == c.base()),
-            _ => false,
-        }
+        let c = client.as_ref()?;
+        let on_public = c.with_base(&public).is_ok_and(|p| p.base() == c.base());
+        (!on_public).then(|| c.base().as_str().trim_end_matches('/').to_owned())
     }
 
-    /// Switches the signed-in client to the server's local address when one
-    /// is configured and it answers as the same server (it accepts our
-    /// token for the same user); otherwise stays on the public address.
+    /// Switches the signed-in client to the server's address on the home
+    /// network when there is one: the configured local address, or else
+    /// whatever answers Jellyfin's network discovery with this server's id.
+    /// An address only counts if it accepts our token for the same user;
+    /// otherwise the client stays on the public address.
     /// `announce`: tell the user the outcome (they just changed the setting).
     pub fn try_local_route(&self, announce: bool) {
-        let (public, local) = {
+        let (public, local, known_id) = {
             let cfg = self.config.borrow();
-            (cfg.server.url.clone(), cfg.server.local_url.clone())
+            (cfg.server.url.clone(), cfg.server.local_url.clone(), cfg.server.id.clone())
         };
         let Some(public) = public else { return };
         // Start from the public address: the setting may have been cleared
-        // or changed while the local one was in use.
+        // or changed while a local one was in use.
         let Some(client) = self.client.borrow().as_ref().and_then(|c| c.with_base(&public).ok()) else { return };
         *self.client.borrow_mut() = Some(client.clone());
-        let Some(local) = local else { return };
-        let candidate = match client.with_base(&local) {
-            Ok(c) => c,
-            Err(e) => return self.toast(format!("Bad local address: {e}")),
-        };
+        let probe = client.clone();
         self.spawn_ui(
             async move {
-                let me = tokio::time::timeout(std::time::Duration::from_secs(3), candidate.me()).await;
-                let ok = matches!(&me, Ok(Ok(u)) if Some(u.id.as_str()) == candidate.user_id());
-                (candidate, ok)
+                let mut server_id = None;
+                let candidates = match local {
+                    Some(local) => vec![local],
+                    None => {
+                        let found = tokio::task::spawn_blocking(|| {
+                            rj_jellyfin::discovery::discover(std::time::Duration::from_millis(1500))
+                        });
+                        let (found, id) = tokio::join!(found, probe.server_id());
+                        server_id = id.ok();
+                        let want = server_id.clone().or(known_id);
+                        let found = match found {
+                            Ok(Ok(f)) => f,
+                            Ok(Err(e)) => {
+                                tracing::info!("server discovery: {e}");
+                                Vec::new()
+                            }
+                            Err(_) => Vec::new(),
+                        };
+                        found
+                            .into_iter()
+                            .filter(|f| want.as_deref().is_some_and(|w| w.eq_ignore_ascii_case(&f.id)))
+                            .flat_map(|f| f.urls)
+                            .collect()
+                    }
+                };
+                let mut winner = None;
+                for url in candidates {
+                    let Ok(candidate) = probe.with_base(&url) else { continue };
+                    let me = tokio::time::timeout(std::time::Duration::from_secs(3), candidate.me()).await;
+                    if matches!(&me, Ok(Ok(u)) if Some(u.id.as_str()) == candidate.user_id()) {
+                        winner = Some((candidate, url));
+                        break;
+                    }
+                    tracing::info!("server: local address {url} didn't answer");
+                }
+                (winner, server_id)
             },
-            move |app, (candidate, ok)| {
+            move |app, (winner, server_id)| {
                 // Signed out or switched user while probing: not ours any more.
-                if app.client.borrow().as_ref().map(|c| c.token().map(str::to_owned)) != Some(candidate.token().map(str::to_owned)) {
+                if app.client.borrow().as_ref().map(|c| c.token().map(str::to_owned)) != Some(client.token().map(str::to_owned)) {
                     return;
                 }
-                if ok {
-                    tracing::info!("server: using local address {local}");
-                    *app.client.borrow_mut() = Some(candidate);
-                    if announce {
-                        app.toast("Using the local address");
+                if server_id.is_some() && app.config.borrow().server.id != server_id {
+                    app.config.borrow_mut().server.id = server_id;
+                    app.save_config();
+                }
+                match winner {
+                    Some((candidate, url)) => {
+                        tracing::info!("server: using local address {url}");
+                        *app.client.borrow_mut() = Some(candidate);
+                        if announce {
+                            app.toast(format!("Using the local address {url}"));
+                        }
                     }
-                } else {
-                    tracing::info!("server: local address {local} didn't answer; using {public}");
-                    if announce {
-                        app.toast("Local address didn't answer; using the public one");
+                    None => {
+                        tracing::info!("server: no local address; using {public}");
+                        if announce {
+                            app.toast("No local address answered; using the public one");
+                        }
                     }
                 }
                 app.refresh_settings();

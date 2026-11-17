@@ -204,9 +204,67 @@ impl App {
             }
         }
         *self.client.borrow_mut() = Some(client);
+        self.try_local_route(false);
         self.ui().set_password(SharedString::new());
         self.clear_toast();
         self.open(Source::Home, Placement::Reset);
+    }
+
+    /// Whether the signed-in client talks to the configured local address.
+    pub fn on_local_route(&self) -> bool {
+        let local = self.config.borrow().server.local_url.clone();
+        let client = self.client.borrow();
+        match (local, client.as_ref()) {
+            (Some(local), Some(c)) => c.with_base(&local).is_ok_and(|l| l.base() == c.base()),
+            _ => false,
+        }
+    }
+
+    /// Switches the signed-in client to the server's local address when one
+    /// is configured and it answers as the same server (it accepts our
+    /// token for the same user); otherwise stays on the public address.
+    /// `announce`: tell the user the outcome (they just changed the setting).
+    pub fn try_local_route(&self, announce: bool) {
+        let (public, local) = {
+            let cfg = self.config.borrow();
+            (cfg.server.url.clone(), cfg.server.local_url.clone())
+        };
+        let Some(public) = public else { return };
+        // Start from the public address: the setting may have been cleared
+        // or changed while the local one was in use.
+        let Some(client) = self.client.borrow().as_ref().and_then(|c| c.with_base(&public).ok()) else { return };
+        *self.client.borrow_mut() = Some(client.clone());
+        let Some(local) = local else { return };
+        let candidate = match client.with_base(&local) {
+            Ok(c) => c,
+            Err(e) => return self.toast(format!("Bad local address: {e}")),
+        };
+        self.spawn_ui(
+            async move {
+                let me = tokio::time::timeout(std::time::Duration::from_secs(3), candidate.me()).await;
+                let ok = matches!(&me, Ok(Ok(u)) if Some(u.id.as_str()) == candidate.user_id());
+                (candidate, ok)
+            },
+            move |app, (candidate, ok)| {
+                // Signed out or switched user while probing: not ours any more.
+                if app.client.borrow().as_ref().map(|c| c.token().map(str::to_owned)) != Some(candidate.token().map(str::to_owned)) {
+                    return;
+                }
+                if ok {
+                    tracing::info!("server: using local address {local}");
+                    *app.client.borrow_mut() = Some(candidate);
+                    if announce {
+                        app.toast("Using the local address");
+                    }
+                } else {
+                    tracing::info!("server: local address {local} didn't answer; using {public}");
+                    if announce {
+                        app.toast("Local address didn't answer; using the public one");
+                    }
+                }
+                app.refresh_settings();
+            },
+        );
     }
 
     pub fn switch_user(&self) {

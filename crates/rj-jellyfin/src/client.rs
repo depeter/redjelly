@@ -43,13 +43,18 @@ pub struct Client {
     session: Option<Session>,
 }
 
+fn parse_base(server_url: &str) -> Result<Url, Error> {
+    let mut base = Url::parse(server_url)?;
+    // Ensure joins append rather than replace the last path segment.
+    if !base.path().ends_with('/') {
+        base.set_path(&format!("{}/", base.path()));
+    }
+    Ok(base)
+}
+
 impl Client {
     pub fn new(server_url: &str, info: ClientInfo) -> Result<Self, Error> {
-        let mut base = Url::parse(server_url)?;
-        // Ensure joins append rather than replace the last path segment.
-        if !base.path().ends_with('/') {
-            base.set_path(&format!("{}/", base.path()));
-        }
+        let base = parse_base(server_url)?;
         // Without timeouts a request on a dead connection (server or Wi-Fi
         // blip) hangs forever, and the "busy" guard then blocks every later
         // play until restart. Read timeout = silence, not total length.
@@ -58,6 +63,16 @@ impl Client {
             .read_timeout(std::time::Duration::from_secs(30))
             .build()?;
         Ok(Self { http, base, info, session: None })
+    }
+
+    /// The same client (session, device) talking to another address of the
+    /// same server, e.g. its LAN address instead of the public one.
+    pub fn with_base(&self, server_url: &str) -> Result<Self, Error> {
+        Ok(Self { base: parse_base(server_url)?, ..self.clone() })
+    }
+
+    pub fn base(&self) -> &Url {
+        &self.base
     }
 
     /// Restores a session from a stored token.

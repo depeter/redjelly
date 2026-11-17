@@ -49,6 +49,7 @@ pub enum Setting {
     SwitchUser,
     SignOut,
     ChangeServer,
+    LocalUrl,
     Update,
     AutoUpdate,
     SeerrUrl,
@@ -269,6 +270,15 @@ impl App {
                     card("Switch user", "Ctrl+U".into(), Setting::SwitchUser),
                     card("Sign out", "Forget saved login".into(), Setting::SignOut),
                     card("Server", cfg.server.url.clone().unwrap_or_default(), Setting::ChangeServer),
+                    card(
+                        "Local address",
+                        match &cfg.server.local_url {
+                            None => "Not set".into(),
+                            Some(u) if self.on_local_route() => format!("{u} (in use)"),
+                            Some(u) => format!("{u} (not reachable)"),
+                        },
+                        Setting::LocalUrl,
+                    ),
                 ],
             ),
         ];
@@ -336,6 +346,16 @@ impl App {
                     return self.toast("Set the OpenSubtitles username first");
                 }
                 return self.open_prompt(s, "OpenSubtitles password", "Stored in Windows Credential Manager.", "", true);
+            }
+            LocalUrl => {
+                let cur = self.config.borrow().server.local_url.clone().unwrap_or_default();
+                return self.open_prompt(
+                    s,
+                    "Local server address",
+                    "The Jellyfin server on your home network, e.g. http://192.168.1.10:8096 · used whenever it answers · leave empty for none",
+                    &cur,
+                    false,
+                );
             }
             SeerrUrl => {
                 let cur = self.config.borrow().discover.seerr_url.clone().unwrap_or_default();
@@ -476,6 +496,7 @@ impl App {
                 self.discover.status.borrow_mut().clear();
             }
             Setting::VrtUser | Setting::VrtPassword => self.vrt_sign_in_again(),
+            Setting::LocalUrl => self.try_local_route(true),
             Setting::UiScale => self.toast("UI size changes after restarting redjelly"),
             Setting::VideoOutput => self.toast("Video output changes after restarting redjelly"),
             _ => {}
@@ -525,6 +546,13 @@ impl App {
                     if let Some(user) = cfg.providers.opensubtitles_username.clone() {
                         self.tokens.set_secret(&crate::secrets::provider_account("opensubtitles", &user), &value);
                     }
+                }
+                Setting::LocalUrl => {
+                    // A bare address on the home network is plain http.
+                    cfg.server.local_url = opt(&value).map(|v| {
+                        let v = v.trim_end_matches('/');
+                        if v.contains("://") { v.to_owned() } else { format!("http://{v}") }
+                    });
                 }
                 Setting::SeerrUrl => cfg.discover.seerr_url = opt(&value).map(|v| crate::login::normalise_url(&v)),
                 Setting::SeerrRegion => {

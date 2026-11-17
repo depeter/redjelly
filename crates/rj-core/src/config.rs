@@ -37,6 +37,10 @@ pub struct Config {
 #[serde(default)]
 pub struct ServerConfig {
     pub url: Option<String>,
+    /// The same server's address on the home network (e.g.
+    /// `http://192.168.1.10:8096`), used instead of `url` whenever it
+    /// answers: streams then skip the internet round trip.
+    pub local_url: Option<String>,
     /// Generated once per install; Jellyfin uses it to identify the session.
     pub device_id: Option<String>,
     pub last_user_id: Option<String>,

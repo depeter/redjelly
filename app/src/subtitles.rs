@@ -38,8 +38,8 @@ pub enum PanelAction {
     Search,
     /// Whisper on the current audio track.
     AiTranscribe,
-    /// Translate a text subtitle track (Jellyfin index, language).
-    AiTranslate(u32, usize),
+    /// Translate a text subtitle track (Jellyfin index).
+    AiTranslate(u32),
     /// Keymap editor: rebind this action.
     KeyBinding(rj_input::Context, rj_input::Action),
     /// Switch to this mpv audio track.
@@ -257,6 +257,26 @@ async fn current_source(client: &Client, item_id: &str, known: &MediaSource) -> 
 
 fn external_subtitles(ms: &MediaSource) -> impl Iterator<Item = &rj_jellyfin::models::MediaStream> {
     ms.media_streams.iter().filter(|s| s.kind == StreamType::Subtitle && s.is_external)
+}
+
+/// The text subtitle track to offer for AI translation into `target`: its
+/// index, language and whether a direct model exists. Direct pairs win;
+/// any other language goes through English, which is rougher.
+fn translatable_sub(ms: &MediaSource, target: &Lang) -> Option<(u32, Lang, bool)> {
+    let pairs = crate::models::Models::opus_pairs();
+    let subs: Vec<(u32, Lang)> = ms
+        .media_streams
+        .iter()
+        .filter(|s| s.kind == StreamType::Subtitle && s.is_text_subtitle_stream)
+        .filter_map(|s| Some((s.index, s.language.as_deref().and_then(Lang::parse)?)))
+        .filter(|(_, from)| from != target)
+        .collect();
+    let direct = subs.iter().find(|(_, from)| pairs.iter().any(|(f, t)| f == from && t == target));
+    if let Some((index, from)) = direct {
+        return Some((*index, from.clone(), true));
+    }
+    let (index, from) = subs.iter().find(|(_, from)| !crate::models::Models::models_for(std::slice::from_ref(from), target).is_empty())?;
+    Some((*index, from.clone(), false))
 }
 
 /// Reads a subtitle track's text.
@@ -703,7 +723,7 @@ impl App {
             Some(PanelAction::SyncTo(r)) => self.sync_current(r),
             Some(PanelAction::Search) => self.start_sub_search(false),
             Some(PanelAction::AiTranscribe) => self.queue_ai_from_player(None),
-            Some(PanelAction::AiTranslate(index, lang)) => self.queue_ai_from_player(Some((index, lang))),
+            Some(PanelAction::AiTranslate(index)) => self.queue_ai_from_player(Some(index)),
             Some(PanelAction::KeyBinding(ctx, action)) => self.start_capture(ctx, action),
             Some(PanelAction::Audio(id)) => self.choose_audio(id),
             Some(PanelAction::Subtitle(id)) => self.choose_subtitle(id),
@@ -728,33 +748,31 @@ impl App {
             "Whisper on your GPU, from the current audio track · a few minutes",
             PanelAction::AiTranscribe,
         )];
-        let pairs = crate::models::Models::opus_pairs();
-        if let Some(ms) = &s.req.media_source {
-            for st in ms.media_streams.iter().filter(|st| st.kind == StreamType::Subtitle && st.is_text_subtitle_stream) {
-                let Some(from) = st.language.as_deref().and_then(Lang::parse) else { continue };
-                if pairs.iter().any(|(f, t)| *f == from && t == top) {
-                    let lang_index = pairs.iter().position(|(f, t)| *f == from && t == top).unwrap_or(0);
-                    out.push(entry(
-                        format!("Translate {} subtitle to {} (AI)", from.name(), top.name()),
-                        "Keeps the original timing · about a minute",
-                        PanelAction::AiTranslate(st.index, lang_index),
-                    ));
-                    break;
-                }
-            }
+        if let Some((index, from, direct)) = s.req.media_source.as_ref().and_then(|ms| translatable_sub(ms, top)) {
+            out.push(entry(
+                format!("Translate {} subtitle to {} (AI)", from.name(), top.name()),
+                if direct {
+                    "Keeps the original timing · about a minute"
+                } else {
+                    "Via English, so rougher · keeps the original timing · a few minutes"
+                },
+                PanelAction::AiTranslate(index),
+            ));
         }
         out
     }
 
-    fn queue_ai_from_player(&self, translate: Option<(u32, usize)>) {
+    fn queue_ai_from_player(&self, translate: Option<u32>) {
         let session = self.session.borrow();
         let Some(item) = session.as_ref().and_then(|s| s.req.item.clone()) else { return };
         drop(session);
         let kind = match translate {
-            Some((sub_index, pair)) => {
-                let Some((from, _)) = crate::models::Models::opus_pairs().into_iter().nth(pair) else { return };
+            Some(sub_index) => {
                 let ms = self.session.borrow().as_ref().and_then(|s| s.req.media_source.clone());
-                let Some(sub) = ms.as_ref().and_then(|m| crate::ai::StreamRef::of(m, sub_index)) else {
+                let stream = ms.as_ref().and_then(|m| m.media_streams.iter().find(|s| s.index == sub_index));
+                let from = stream.and_then(|s| s.language.as_deref()).and_then(Lang::parse);
+                let sub = ms.as_ref().and_then(|m| crate::ai::StreamRef::of(m, sub_index));
+                let (Some(from), Some(sub)) = (from, sub) else {
                     return self.toast("Couldn't find that subtitle on the server");
                 };
                 crate::ai::JobKind::TranslateSub { sub, from }
@@ -1288,6 +1306,32 @@ impl App {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn source_with_subs(subs: &[(&str, bool)]) -> MediaSource {
+        let streams: Vec<_> = subs
+            .iter()
+            .enumerate()
+            .map(|(i, (lang, text))| {
+                serde_json::json!({"Index": i, "Type": "Subtitle", "Language": lang, "IsTextSubtitleStream": text})
+            })
+            .collect();
+        serde_json::from_value(serde_json::json!({"Id": "m", "MediaStreams": streams})).unwrap()
+    }
+
+    #[test]
+    fn offers_translation_for_any_text_subtitle() {
+        let nl = Lang::parse("nl").unwrap();
+        let lang = |s: &str| Lang::parse(s).unwrap();
+        // A direct model wins over an earlier track that needs English in between.
+        let ms = source_with_subs(&[("ita", true), ("eng", true)]);
+        assert_eq!(translatable_sub(&ms, &nl), Some((1, lang("en"), true)));
+        // Italian only: via English.
+        let ms = source_with_subs(&[("ita", true)]);
+        assert_eq!(translatable_sub(&ms, &nl), Some((0, lang("it"), false)));
+        // Picture subtitles (PGS) have no text to translate; Dutch needs none.
+        let ms = source_with_subs(&[("eng", false), ("dut", true)]);
+        assert_eq!(translatable_sub(&ms, &nl), None);
+    }
 
     #[test]
     fn reads_subtitle_failure_from_server_log() {

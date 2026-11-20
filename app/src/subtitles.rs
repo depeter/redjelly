@@ -992,7 +992,15 @@ impl App {
                     }
                     Err(e) => app.toast(format!("mpv couldn't load the subtitle: {e}")),
                 },
-                Err(Some(reason)) => app.toast(format!("Jellyfin couldn't download the subtitle: {reason}")),
+                Err(Some(reason)) => {
+                    let msg = format!("Jellyfin couldn't download the subtitle: {reason}");
+                    // A toast is gone in seconds; the panel keeps it readable.
+                    if let Some(s) = app.sub_search.borrow_mut().as_mut() {
+                        s.problems.retain(|p| p != &msg);
+                        s.problems.push(msg.clone());
+                    }
+                    app.toast(msg);
+                }
                 Err(None) => app.toast("Jellyfin didn't add the subtitle (check the server log)"),
             },
         );

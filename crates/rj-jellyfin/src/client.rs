@@ -415,6 +415,24 @@ impl Client {
         Self::send(self.request(Method::POST, &path)?, &path).await.map(drop)
     }
 
+    /// The server's main log file written to last (admins only).
+    pub async fn newest_log(&self) -> Result<Option<LogFile>, Error> {
+        let logs: Vec<LogFile> = self.get("System/Logs", &[]).await?;
+        Ok(logs.into_iter().filter(|l| l.name.starts_with("log_")).max_by(|a, b| a.date_modified.cmp(&b.date_modified)))
+    }
+
+    /// A server log file's text from byte `from` on (admins only).
+    pub async fn log_text(&self, name: &str, from: u64) -> Result<String, Error> {
+        let path = "System/Logs/Log";
+        let rb = self.request(Method::GET, path)?.query(&[("name", name)]).header("Range", format!("bytes={from}-"));
+        let resp = Self::send(rb, path).await?;
+        let partial = resp.status() == StatusCode::PARTIAL_CONTENT;
+        let bytes = resp.bytes().await?;
+        // Servers that ignore Range send the whole file.
+        let skip = if partial { 0 } else { (from as usize).min(bytes.len()) };
+        Ok(String::from_utf8_lossy(&bytes[skip..]).into_owned())
+    }
+
     /// Uploads a UTF-8 subtitle file to be stored next to the media.
     pub async fn upload_subtitle(
         &self,

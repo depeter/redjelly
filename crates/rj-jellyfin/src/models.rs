@@ -334,6 +334,17 @@ pub struct MediaSegment {
     pub end_ticks: i64,
 }
 
+/// A file in the server's log directory.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct LogFile {
+    pub name: String,
+    #[serde(default)]
+    pub size: u64,
+    #[serde(default)]
+    pub date_modified: Option<String>,
+}
+
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct RemoteSubtitle {

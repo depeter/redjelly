@@ -112,8 +112,36 @@ enum Downloaded {
     /// File on disk, ready for mpv; `synced` = what auto-sync did.
     /// `audio_sync`: no subtitle track to align to, sync to the audio next.
     Local { path: PathBuf, file: SubtitleFile, synced: Option<String>, audio_sync: bool },
-    /// The Jellyfin server fetched and stored it itself.
-    OnServer,
+    /// The Jellyfin server was asked to fetch and store it itself.
+    OnServer(ServerFetch),
+}
+
+/// Server state from just before it was asked to fetch a subtitle.
+struct ServerFetch {
+    /// External subtitle tracks the item had.
+    existing_external: usize,
+    /// Newest server log file and its size then (admins only).
+    log_mark: Option<(String, u64)>,
+}
+
+/// Why Jellyfin says a subtitle download failed, from its log. The server
+/// answers 204 either way, so the log is the only place the reason shows.
+fn server_subtitle_error(log: &str) -> Option<String> {
+    let mut lines = log.lines().skip_while(|l| !l.contains("Error downloading subtitles")).peekable();
+    let mut reason = None;
+    while let Some(line) = lines.next() {
+        if !line.contains("Error downloading subtitles") {
+            continue;
+        }
+        // The exception follows its log line: "Some.Type: message".
+        let Some(next) = lines.peek().map(|l| l.trim()).filter(|l| !l.is_empty() && !l.starts_with('[')) else { continue };
+        let msg = match next.split_once(": ") {
+            Some((ty, msg)) if !ty.contains(' ') => msg,
+            _ => next,
+        };
+        reason = Some(msg.chars().take(200).collect());
+    }
+    reason
 }
 
 pub fn header(title: String) -> (PanelItem, PanelAction) {
@@ -225,6 +253,10 @@ pub(crate) fn jellyfin_index(ms: &MediaSource, ff_index: i64) -> Option<u32> {
 async fn current_source(client: &Client, item_id: &str, known: &MediaSource) -> MediaSource {
     let fresh = client.item(item_id).await.ok().and_then(|i| i.media_sources.into_iter().find(|m| m.id == known.id));
     fresh.unwrap_or_else(|| known.clone())
+}
+
+fn external_subtitles(ms: &MediaSource) -> impl Iterator<Item = &rj_jellyfin::models::MediaStream> {
+    ms.media_streams.iter().filter(|s| s.kind == StreamType::Subtitle && s.is_external)
 }
 
 /// Reads a subtitle track's text.
@@ -769,7 +801,19 @@ impl App {
         let c = candidate.clone();
         self.spawn_ui(
             async move {
-                let Some(mut file) = provider.download(&query, &c).await? else { return anyhow::Ok(Downloaded::OnServer) };
+                let server = if c.provider == ProviderId::JellyfinServer {
+                    let external = match client.item(&item_id).await {
+                        Ok(item) => item.media_sources.first().map(|m| external_subtitles(m).count()),
+                        Err(_) => None,
+                    };
+                    let log_mark = client.newest_log().await.ok().flatten().map(|l| (l.name, l.size));
+                    Some(ServerFetch { existing_external: external.unwrap_or(existing_external), log_mark })
+                } else {
+                    None
+                };
+                let Some(mut file) = provider.download(&query, &c).await? else {
+                    return anyhow::Ok(Downloaded::OnServer(server.unwrap_or(ServerFetch { existing_external, log_mark: None })));
+                };
                 let (mut synced, mut audio_sync) = (None, false);
                 if auto_sync && !c.hash_match {
                     let format = Format::from_ext(&file.format).unwrap_or(Format::Srt);
@@ -806,7 +850,7 @@ impl App {
                         app.upload_subtitle_file(file);
                     }
                 }
-                Ok(Downloaded::OnServer) => app.wait_for_server_subtitle(candidate.lang.clone(), existing_external),
+                Ok(Downloaded::OnServer(before)) => app.wait_for_server_subtitle(candidate.lang.clone(), before),
                 Err(e) => app.toast(format!("Download failed: {e:#}")),
             },
         );
@@ -903,7 +947,7 @@ impl App {
 
     /// The server provider stores the file itself; poll the item until the
     /// new external track shows up, then load it from the server.
-    fn wait_for_server_subtitle(&self, lang: Lang, existing_external: usize) {
+    fn wait_for_server_subtitle(&self, lang: Lang, before: ServerFetch) {
         let session = self.session.borrow();
         let Some(item_id) = session.as_ref().and_then(|s| s.req.item.as_ref().map(|i| i.id.clone())) else { return };
         drop(session);
@@ -912,32 +956,44 @@ impl App {
         let wanted = lang.clone();
         self.spawn_ui(
             async move {
-                for _ in 0..12 {
+                for _ in 0..20 {
                     tokio::time::sleep(Duration::from_millis(1500)).await;
                     let Ok(item) = client.item(&item_id).await else { continue };
                     let Some(ms) = item.media_sources.first() else { continue };
-                    let external: Vec<_> =
-                        ms.media_streams.iter().filter(|s| s.kind == StreamType::Subtitle && s.is_external).collect();
-                    if external.len() > existing_external {
-                        let s = external.iter().rev().find(|s| s.language.as_deref().and_then(Lang::parse).as_ref() == Some(&wanted)).or(external.last())?;
+                    let external: Vec<_> = external_subtitles(ms).collect();
+                    if external.len() > before.existing_external {
+                        let s = external
+                            .iter()
+                            .rev()
+                            .find(|s| s.language.as_deref().and_then(Lang::parse).as_ref() == Some(&wanted))
+                            .or(external.last())
+                            .ok_or(None)?;
                         let url = match &s.delivery_url {
-                            Some(u) => client.url(u).ok()?,
-                            None => client.subtitle_url(&item_id, &ms.id, s.index, "srt").ok()?,
+                            Some(u) => client.url(u),
+                            None => client.subtitle_url(&item_id, &ms.id, s.index, "srt"),
                         };
-                        return Some(url.to_string());
+                        return url.map(|u| u.to_string()).map_err(|_| None);
+                    }
+                    // The server logs a failed download before it answers.
+                    if let Some((name, from)) = &before.log_mark
+                        && let Ok(log) = client.log_text(name, *from).await
+                        && let Some(reason) = server_subtitle_error(&log)
+                    {
+                        return Err(Some(reason));
                     }
                 }
-                None
+                Err(None)
             },
-            move |app, url| match url {
-                Some(url) => match app.player.add_subtitle(&url, "Jellyfin", lang.as_str()) {
+            move |app, url: Result<String, Option<String>>| match url {
+                Ok(url) => match app.player.add_subtitle(&url, "Jellyfin", lang.as_str()) {
                     Ok(id) => {
                         let _ = app.player.set_subtitle(Some(id));
                         app.toast(format!("{} subtitle loaded from Jellyfin", lang.name()));
                     }
                     Err(e) => app.toast(format!("mpv couldn't load the subtitle: {e}")),
                 },
-                None => app.toast("Jellyfin didn't add the subtitle (check the server log)"),
+                Err(Some(reason)) => app.toast(format!("Jellyfin couldn't download the subtitle: {reason}")),
+                Err(None) => app.toast("Jellyfin didn't add the subtitle (check the server log)"),
             },
         );
     }
@@ -1224,6 +1280,19 @@ impl App {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn reads_subtitle_failure_from_server_log() {
+        let log = "[2026-11-20 20:15:00.100 +01:00] [INF] [12] Emby.Server: something else\n\
+[2026-11-20 20:15:01.123 +01:00] [ERR] [45] Jellyfin.Api.Controllers.SubtitleController: Error downloading subtitles\n\
+MediaBrowser.Common.Net.RateLimitExceededException: OpenSubtitles download count exceeded, 0 downloads remaining\n\
+   at Jellyfin.Plugin.OpenSubtitles.OpenSubtitleDownloader.GetSubtitles(String id)\n";
+        assert_eq!(
+            server_subtitle_error(log).as_deref(),
+            Some("OpenSubtitles download count exceeded, 0 downloads remaining")
+        );
+        assert_eq!(server_subtitle_error("[2026-11-20 20:15:00.100 +01:00] [INF] [12] Main: all fine\n"), None);
+    }
 
     #[test]
     fn ff_index_maps_past_external_subtitles() {

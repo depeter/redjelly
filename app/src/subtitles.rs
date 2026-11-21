@@ -264,13 +264,7 @@ fn external_subtitles(ms: &MediaSource) -> impl Iterator<Item = &rj_jellyfin::mo
 /// any other language goes through English, which is rougher.
 fn translatable_sub(ms: &MediaSource, target: &Lang) -> Option<(u32, Lang, bool)> {
     let pairs = crate::models::Models::opus_pairs();
-    let subs: Vec<(u32, Lang)> = ms
-        .media_streams
-        .iter()
-        .filter(|s| s.kind == StreamType::Subtitle && s.is_text_subtitle_stream)
-        .filter_map(|s| Some((s.index, s.language.as_deref().and_then(Lang::parse)?)))
-        .filter(|(_, from)| from != target)
-        .collect();
+    let subs: Vec<(u32, Lang)> = crate::ai::text_sub_langs(ms).into_iter().filter(|(_, from)| from != target).collect();
     let direct = subs.iter().find(|(_, from)| pairs.iter().any(|(f, t)| f == from && t == target));
     if let Some((index, from)) = direct {
         return Some((*index, from.clone(), true));
@@ -769,8 +763,8 @@ impl App {
         let kind = match translate {
             Some(sub_index) => {
                 let ms = self.session.borrow().as_ref().and_then(|s| s.req.media_source.clone());
-                let stream = ms.as_ref().and_then(|m| m.media_streams.iter().find(|s| s.index == sub_index));
-                let from = stream.and_then(|s| s.language.as_deref()).and_then(Lang::parse);
+                let langs = ms.as_ref().map(crate::ai::text_sub_langs).unwrap_or_default();
+                let from = langs.into_iter().find(|(i, _)| *i == sub_index).map(|(_, l)| l);
                 let sub = ms.as_ref().and_then(|m| crate::ai::StreamRef::of(m, sub_index));
                 let (Some(from), Some(sub)) = (from, sub) else {
                     return self.toast("Couldn't find that subtitle on the server");
@@ -1328,6 +1322,14 @@ mod tests {
         // Italian only: via English.
         let ms = source_with_subs(&[("ita", true)]);
         assert_eq!(translatable_sub(&ms, &nl), Some((0, lang("it"), false)));
+        // No language tag (WEB rips): taken to be the audio's language.
+        let ms: MediaSource = serde_json::from_value(serde_json::json!({"Id": "m", "MediaStreams": [
+            {"Index": 0, "Type": "Video"},
+            {"Index": 1, "Type": "Audio", "Language": "eng"},
+            {"Index": 2, "Type": "Subtitle", "IsTextSubtitleStream": true, "IsForced": true},
+            {"Index": 3, "Type": "Subtitle", "IsTextSubtitleStream": true}]}))
+        .unwrap();
+        assert_eq!(translatable_sub(&ms, &nl), Some((3, lang("en"), true)));
         // Picture subtitles (PGS) have no text to translate; Dutch needs none.
         let ms = source_with_subs(&[("eng", false), ("dut", true)]);
         assert_eq!(translatable_sub(&ms, &nl), None);

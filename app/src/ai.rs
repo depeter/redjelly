@@ -98,12 +98,18 @@ impl Job {
     }
 }
 
-/// Text subtitle languages already present on an item.
-fn text_sub_langs(ms: &MediaSource) -> Vec<(u32, Lang)> {
+/// Text subtitle languages already present on an item. A track without a
+/// language tag (common in WEB rips) is taken to be in the audio's language,
+/// unless it is a forced track; lines are still language-checked one by one
+/// when translating.
+pub(crate) fn text_sub_langs(ms: &MediaSource) -> Vec<(u32, Lang)> {
+    let lang = |s: &rj_jellyfin::models::MediaStream| s.language.as_deref().and_then(Lang::parse);
+    let audio = ms.media_streams.iter().filter(|s| s.kind == StreamType::Audio);
+    let spoken = audio.clone().find(|s| s.is_default).or_else(|| audio.clone().next()).and_then(lang);
     ms.media_streams
         .iter()
         .filter(|s| s.kind == StreamType::Subtitle && s.is_text_subtitle_stream)
-        .filter_map(|s| Some((s.index, Lang::parse(s.language.as_deref()?)?)))
+        .filter_map(|s| Some((s.index, lang(s).or_else(|| spoken.clone().filter(|_| !s.is_forced))?)))
         .collect()
 }
 

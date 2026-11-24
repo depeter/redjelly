@@ -461,14 +461,14 @@ pub async fn users(c: &Client, server_url: &str) -> anyhow::Result<Content> {
 
 /// `discover`: Jellyseerr is set up, so offer the Discover wizard; `vrt`:
 /// VRT MAX is on. `extra_rows`: rows from elsewhere (Live on VRT, Jellyseerr
-/// requests and popular) loaded alongside, shown after "Continue watching".
+/// requests and popular) loaded alongside, shown after the "Latest in" rows.
 pub async fn home(
     c: &Client,
     discover: bool,
     vrt: bool,
     extra_rows: impl Future<Output = Vec<RowContent>>,
 ) -> anyhow::Result<Content> {
-    let (server, seerr_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, extra_rows);
+    let (server, extra_rows) = tokio::join!(async { tokio::try_join!(c.resume(24), c.next_up(24), c.user_views()) }, extra_rows);
     let (resume, next_up, views) = server?;
     // One row: in-progress items first, then next episodes. Next Up also
     // returns half-watched episodes, so skip those already in Resume.
@@ -479,7 +479,24 @@ pub async fn home(
         .map(|i| item_card(c, i, STYLE_WIDE, false))
         .collect();
     let mut rows = vec![row("Continue watching", STYLE_WIDE, watching)];
-    rows.extend(seerr_rows);
+    // Fetch every library's "latest" row concurrently.
+    let pending: Vec<_> = views
+        .items
+        .iter()
+        .map(|v| {
+            let (c, id) = (c.clone(), v.id.clone());
+            tokio::spawn(async move { c.latest(&id, 20).await })
+        })
+        .collect();
+    for (view, handle) in views.items.iter().zip(pending) {
+        let items = handle.await??;
+        rows.push(row(
+            format!("Latest in {}", view.name),
+            STYLE_POSTER,
+            items.iter().map(|i| item_card(c, i, STYLE_POSTER, false)).collect(),
+        ));
+    }
+    rows.extend(extra_rows);
     rows.push(
         row(
             "Libraries",
@@ -500,23 +517,6 @@ pub async fn home(
                 .collect(),
         ),
     );
-    // Fetch every library's "latest" row concurrently.
-    let pending: Vec<_> = views
-        .items
-        .iter()
-        .map(|v| {
-            let (c, id) = (c.clone(), v.id.clone());
-            tokio::spawn(async move { c.latest(&id, 20).await })
-        })
-        .collect();
-    for (view, handle) in views.items.iter().zip(pending) {
-        let items = handle.await??;
-        rows.push(row(
-            format!("Latest in {}", view.name),
-            STYLE_POSTER,
-            items.iter().map(|i| item_card(c, i, STYLE_POSTER, false)).collect(),
-        ));
-    }
     rows.retain(|r| !r.cards.is_empty());
     // The same buttons on top (press Up from the first row) and at the
     // bottom; focus still starts on the first content row.

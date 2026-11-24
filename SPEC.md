@@ -339,7 +339,7 @@ a progress bar. Target: 2 h film transcribed in < 5 min on a recent NVIDIA GPU.
 ## 8. UI screens
 
 Login / user switcher (Quick Connect + password) → Home (Continue watching incl. next episodes,
-Latest per library) → Library grid (sort, filter, A–Z jump) → Series → Season →
+Latest per library, then Live on VRT, Requests, Popular & well rated, Libraries) → Library grid (sort, filter, A–Z jump) → Series → Season →
 Episode/Movie detail (versions, audio/sub info, "subs: nl missing" badge) → Player
 (OSD, track menus, subtitle panel, AI job progress) → Search → Settings (Server &
 users, Playback, Languages, Subtitles & providers, AI, Keybindings, Gamepad,
@@ -393,7 +393,7 @@ Home and title pages refresh silently every 30 s while on screen (no panel open)
 keeping already-loaded images.
 
 **VRT MAX** (Settings → VRT MAX, off by default; Home toolbar **VRT MAX** and a
-**Live on VRT** row after Continue watching): live channels with what's on now
+**Live on VRT** row after the Latest rows): live channels with what's on now
 (guide from VRT's `tv-gids` pages), a guide per channel and day (7 days back), VRT
 MAX's own home lists, Continue watching and My list (with a VRT account), categories,
 programme pages (seasons; older seasons load on demand), "See all" grids and search
